@@ -1,0 +1,106 @@
+.section {
+    padding: 40px 0 60px;
+    background-color: white;
+    border-top: 1px solid var(--galaxy-border);
+    overflow: hidden;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #333;
+    border-left: 4px solid var(--galaxy-orange);
+    padding-left: 12px;
+    line-height: 1;
+}
+
+.sliderContainer {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Simulate slider track */
+.track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.5s ease;
+    width: max-content;
+    /* Allow content to dictate width for sliding */
+    padding-bottom: 16px;
+    /* Space for shadow */
+}
+
+.promoItem {
+    width: 280px;
+    /* Fixed width for slider items */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.imageWrapper {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imageWrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.promoTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+    transition: color 0.2s;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.promoItem:hover .promoTitle {
+    color: var(--galaxy-orange);
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.activeDot {
+    background-color: var(--galaxy-orange);
+}

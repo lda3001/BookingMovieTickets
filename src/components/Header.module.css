@@ -1,0 +1,185 @@
+.header {
+    background-color: white;
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.limitContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo {
+    margin-right: 60px;
+}
+
+.nav {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+}
+
+.navItemWrapper {
+    position: relative;
+    height: 100%;
+    /* Full height to make hover easier */
+    display: flex;
+    align-items: center;
+}
+
+.navItem {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+}
+
+.navItem:hover {
+    color: var(--galaxy-orange);
+}
+
+.navItem::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--galaxy-orange);
+    transition: width 0.2s;
+}
+
+.navItemWrapper:hover .navItem::after {
+    width: 100%;
+}
+
+.chevron {
+    transition: transform 0.2s ease;
+    margin-left: 2px;
+}
+
+.chevronActive {
+    transform: rotate(180deg);
+}
+
+/* Submenu Styles */
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1100;
+    pointer-events: none;
+}
+
+/* Triangular caret */
+.dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid white;
+    filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.dropdownActive {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.subItem {
+    display: block;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.subItem::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background-color: var(--galaxy-orange);
+    transition: height 0.2s ease;
+}
+
+.subItem:hover {
+    background-color: #f9f9f9;
+    color: var(--galaxy-orange);
+    padding-left: 24px;
+}
+
+.subItem:hover::before {
+    height: 60%;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.loginBtn {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.loginBtn:hover {
+    color: var(--galaxy-orange);
+}
+
+.separator {
+    height: 20px;
+    width: 1px;
+    background-color: #e0e0e0;
+}

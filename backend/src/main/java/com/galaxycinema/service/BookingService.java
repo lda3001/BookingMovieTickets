@@ -1,0 +1,109 @@
+package com.galaxycinema.service;
+
+import com.galaxycinema.entity.*;
+import com.galaxycinema.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class BookingService {
+    private final BookingRepository bookingRepository;
+    private final BookedSeatRepository bookedSeatRepository;
+    private final ShowtimeRepository showtimeRepository;
+    private final SeatRepository seatRepository;
+    private final UserRepository userRepository;
+
+    public List<Booking> getUserBookings(Long userId) {
+        return bookingRepository.findByUserId(userId);
+    }
+
+    public Booking getBookingByCode(String bookingCode) {
+        return bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
+
+    @Transactional
+    public Booking createBooking(Long userId, Long showtimeId, List<String> seatCodes) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new RuntimeException("Showtime not found"));
+
+        // Fetch room to avoid LazyInitializationException
+        Room room = showtime.getRoom();
+        if (room == null) {
+            throw new RuntimeException("Showtime room not found");
+        }
+
+        // Check if seats are available
+        List<String> bookedSeats = bookedSeatRepository.findBookedSeatCodesByShowtimeId(showtimeId);
+        for (String seatCode : seatCodes) {
+            if (bookedSeats.contains(seatCode)) {
+                throw new RuntimeException("Seat " + seatCode + " is already booked");
+            }
+        }
+
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setShowtime(showtime);
+        booking.setStatus(Booking.BookingStatus.PENDING);
+        
+        double totalPrice = 0.0;
+        
+        for (String seatCode : seatCodes) {
+            Seat seat = seatRepository.findBySeatCodeAndRoomId(seatCode, room.getId())
+                    .orElseThrow(() -> new RuntimeException("Seat not found: " + seatCode));
+            
+            BookedSeat bookedSeat = new BookedSeat();
+            bookedSeat.setBooking(booking);
+            bookedSeat.setShowtime(showtime);
+            bookedSeat.setSeat(seat);
+            bookedSeat.setSeatCode(seatCode);
+            bookedSeat.setPrice(seat.getPrice());
+            
+            booking.getBookedSeats().add(bookedSeat);
+            totalPrice += seat.getPrice();
+        }
+        
+        booking.setTotalPrice(totalPrice);
+        
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // Save booked seats
+        for (BookedSeat bookedSeat : booking.getBookedSeats()) {
+            bookedSeat.setBooking(savedBooking);
+            bookedSeatRepository.save(bookedSeat);
+        }
+        
+        return savedBooking;
+    }
+
+    @Transactional
+    public Booking confirmBooking(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        
+        booking.setStatus(Booking.BookingStatus.CONFIRMED);
+        booking.setPaymentStatus("PAID");
+        
+        return bookingRepository.save(booking);
+    }
+
+    @Transactional
+    public void cancelBooking(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        
+        booking.setStatus(Booking.BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+        
+        // Delete booked seats
+        bookedSeatRepository.deleteAll(booking.getBookedSeats());
+    }
+}
+

@@ -1,0 +1,275 @@
+.sliderContainer {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 30%;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .sliderContainer {
+        padding-top: 56.25%; /* 16:9 on mobile */
+    }
+}
+
+.slidesWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s ease;
+}
+
+.slide:hover .slideImage {
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 60px 80px;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 40px 24px;
+    }
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+}
+
+.subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 24px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+}
+
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--galaxy-orange);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(245, 128, 32, 0.4);
+    cursor: pointer;
+}
+
+.ctaButton:hover {
+    background-color: #d66a15;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(245, 128, 32, 0.6);
+}
+
+.ctaButton:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .ctaButton {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+}
+
+/* Navigation Arrow Buttons */
+.navBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    opacity: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sliderContainer:hover .navBtn {
+    opacity: 1;
+}
+
+.navBtn:hover {
+    background-color: var(--galaxy-orange);
+    border-color: var(--galaxy-orange);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(245, 128, 32, 0.5);
+}
+
+.navBtn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.prevBtn {
+    left: 24px;
+}
+
+.nextBtn {
+    right: 24px;
+}
+
+@media (max-width: 768px) {
+    .navBtn {
+        width: 44px;
+        height: 44px;
+        opacity: 0.7;
+    }
+    
+    .prevBtn {
+        left: 12px;
+    }
+    
+    .nextBtn {
+        right: 12px;
+    }
+}
+
+.dots {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 30;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .dots {
+        bottom: 20px;
+        gap: 8px;
+    }
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    padding: 0;
+    position: relative;
+}
+
+.dot:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.2);
+}
+
+.activeDot {
+    background-color: var(--galaxy-orange);
+    border-color: var(--galaxy-orange);
+    width: 36px;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(245, 128, 32, 0.6);
+}
+
+@media (max-width: 768px) {
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .activeDot {
+        width: 28px;
+        border-radius: 14px;
+    }
+}
+
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    z-index: 25;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--galaxy-orange), #ff9d4d);
+    box-shadow: 0 0 10px rgba(245, 128, 32, 0.6);
+}

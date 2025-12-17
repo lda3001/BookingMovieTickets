@@ -1,0 +1,58 @@
+.section {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Centered tabs usually */
+    margin-bottom: 40px;
+    gap: 40px;
+    position: relative;
+}
+
+.header::after {
+    /* Optional: Small separator line if needed, but tabs usually stand alone or have underline */
+}
+
+.tab {
+    padding: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #888;
+    position: relative;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+    text-transform: capitalize;
+    /* Or none */
+}
+
+.tab:hover {
+    color: #555;
+}
+
+.activeTab {
+    color: var(--galaxy-orange);
+    border-bottom: 3px solid var(--galaxy-orange);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

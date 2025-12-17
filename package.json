@@ -9,6 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@refinedev/antd": "^6.0.3",
+    "@refinedev/core": "^5.0.7",
+    "@refinedev/nextjs-router": "^7.0.4",
+    "@refinedev/simple-rest": "^6.0.1",
+    "antd": "^5.29.1",
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.19",
+    "lucide-react": "^0.556.0",
     "next": "16.0.8",
     "react": "19.2.1",
     "react-dom": "19.2.1"
