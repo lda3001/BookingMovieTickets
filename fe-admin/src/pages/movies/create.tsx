@@ -6,11 +6,32 @@ import TextArea from "antd/es/input/TextArea";
 import AppQuill from "../../components/appQuill";
 import { axiosInstance } from "../../utils/axios";
 import { generateFileWithTimeStamp } from "../../utils/helper";
-import dayjs from "dayjs";
+import dayjs from "../../utils/dayjs";
 
 export const MovieCreate = () => {
   const { formProps, formLoading, saveButtonProps } = useForm<IMovie>({
     action: "create",
+    transform: (values: any) => {
+      return {
+        slug: values.slug,
+        title: values.title,
+        image: values.image,
+        duration: values.duration,
+        rating: values.rating,
+        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("DD/MM/YYYY") : undefined,
+        country: values.country,
+        producer: values.producer,
+        genre: values.genre,
+        director: values.director,
+        cast: values.cast,
+        tagline: values.tagline,
+        subtitle: values.subtitle,
+        trailerUrl: values.trailerUrl,
+        content: values.content,
+        description: values.description,
+        isActive: values.isActive,
+      };
+    },
   });
 
   const apiUrl = useApiUrl();

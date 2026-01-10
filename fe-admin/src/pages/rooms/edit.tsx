@@ -11,6 +11,16 @@ export const RoomEdit = () => {
     query: queryResult,
   } = useForm<IRoom>({
     action: "edit",
+    transform: (values: any) => {
+      return {
+        name: values.name,
+        cinemaId: values.cinemaId,
+        totalRows: values.totalRows,
+        seatsPerRow: values.seatsPerRow,
+        vipRows: values.vipRows,
+        isActive: values.isActive,
+      };
+    },
   });
 
   const postData = queryResult?.data?.data;
@@ -19,7 +29,7 @@ export const RoomEdit = () => {
     resource: "cinemas",
     optionLabel: "name",
     optionValue: "id",
-    defaultValue: postData?.cinema?.id,
+    defaultValue: postData?.cinemaId,
   });
 
   return (
@@ -29,7 +39,7 @@ export const RoomEdit = () => {
         layout="vertical"
         initialValues={{
           ...postData,
-          cinema: postData?.cinema?.id,
+          cinemaId: postData?.cinemaId,
         }}
       >
         <Flex gap={20} justify="right">
@@ -45,7 +55,7 @@ export const RoomEdit = () => {
 
         <Form.Item
           label="Rạp"
-          name={["cinema", "id"]}
+          name="cinemaId"
           rules={[
             {
               required: true,
@@ -105,7 +115,7 @@ export const RoomEdit = () => {
         >
           <Input.TextArea
             rows={3}
-            placeholder='VD: [1, 2] hoặc ["A", "B"]'
+            placeholder='VD: 1,2,3 hoặc A,B,C'
             onBlur={(e) => {
               const value = e.target.value.trim();
               console.log(value);

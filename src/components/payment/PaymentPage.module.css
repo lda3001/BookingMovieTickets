@@ -1,0 +1,449 @@
+.paymentPage {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    font-size: 16px;
+}
+
+.timer strong {
+    color: #ffc107;
+    font-size: 20px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 30px;
+}
+
+.leftColumn,
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cardHeader h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.statusBadge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bookingInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.infoRow:last-child {
+    border-bottom: none;
+}
+
+.label {
+    color: #666;
+    font-weight: 500;
+}
+
+.value {
+    color: #333;
+    font-weight: 600;
+    text-align: right;
+}
+
+.paymentMethods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.methodCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.methodCard:hover {
+    border-color: var(--galaxy-orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+}
+
+.methodCard.active {
+    border-color: var(--galaxy-orange);
+    background: rgba(255, 102, 0, 0.05);
+}
+
+.methodCard svg {
+    color: #666;
+}
+
+.methodCard.active svg {
+    color: var(--galaxy-orange);
+}
+
+.methodCard span {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.radio {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.radio input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.qrSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.qrCode {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qrCode img {
+    display: block;
+    width: 200px;
+    height: 200px;
+}
+
+.qrSection p {
+    margin-top: 16px;
+    color: #666;
+    font-weight: 500;
+}
+
+.cardForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cardForm .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.input {
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--galaxy-orange);
+}
+
+.ewalletOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.walletBtn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.walletBtn:hover {
+    border-color: var(--galaxy-orange);
+    background: rgba(255, 102, 0, 0.05);
+}
+
+.walletBtn img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.priceBreakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.priceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 8px 0;
+}
+
+.payButton {
+    width: 100%;
+    padding: 16px;
+    background: var(--galaxy-orange);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.3s ease;
+}
+
+.payButton:hover:not(:disabled) {
+    background: #e65a00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.3);
+}
+
+.payButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    width: 100%;
+    padding: 14px;
+    background: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: #dc3545;
+    color: white;
+}
+
+.cancelButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.note {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.note h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.note ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.note li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.note li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--galaxy-orange);
+    font-weight: bold;
+}
+
+.successOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.successCard {
+    background: white;
+    padding: 60px;
+    border-radius: 20px;
+    text-align: center;
+    animation: scaleIn 0.3s ease;
+}
+
+.successCard h2 {
+    font-size: 28px;
+    margin: 20px 0 10px;
+    color: #333;
+}
+
+.successCard p {
+    color: #666;
+    font-size: 16px;
+}
+
+.cancelledMessage,
+.confirmedMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.cancelledMessage p,
+.confirmedMessage p {
+    margin: 0;
+    font-weight: 600;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 992px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+    .paymentMethods {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .paymentPage {
+        padding: 20px 10px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .cardHeader h2 {
+        font-size: 20px;
+    }
+}

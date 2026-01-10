@@ -48,10 +48,11 @@ public class BookingService {
             }
         }
 
-        Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setShowtime(showtime);
-        booking.setStatus(Booking.BookingStatus.PENDING);
+        Booking booking = Booking.builder()
+                .user(user)
+                .showtime(showtime)
+                .status(Booking.BookingStatus.PENDING)
+                .build();
         
         double totalPrice = 0.0;
         
@@ -59,12 +60,13 @@ public class BookingService {
             Seat seat = seatRepository.findBySeatCodeAndRoomId(seatCode, room.getId())
                     .orElseThrow(() -> new RuntimeException("Seat not found: " + seatCode));
             
-            BookedSeat bookedSeat = new BookedSeat();
-            bookedSeat.setBooking(booking);
-            bookedSeat.setShowtime(showtime);
-            bookedSeat.setSeat(seat);
-            bookedSeat.setSeatCode(seatCode);
-            bookedSeat.setPrice(seat.getPrice());
+            BookedSeat bookedSeat = BookedSeat.builder()
+                    .booking(booking)
+                    .showtime(showtime)
+                    .seat(seat)
+                    .seatCode(seatCode)
+                    .price(seat.getPrice())
+                    .build();
             
             booking.getBookedSeats().add(bookedSeat);
             totalPrice += seat.getPrice();

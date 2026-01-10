@@ -12,7 +12,7 @@ export const showtimeService = {
   getShowtimesByMovieAndCinemaAndDate: async (
     movieId: number,
     cinemaId: number,
-    date: string // Format: YYYY-MM-DD
+    date: string // Format: YYYY-MM-DD hoặc LocalDate
   ): Promise<Showtime[]> => {
     const response = await apiClient.get<Showtime[]>(
       `/showtimes/movie/${movieId}/cinema/${cinemaId}/date/${date}`
@@ -55,6 +55,12 @@ export const showtimeService = {
   // Xóa lịch chiếu
   deleteShowtime: async (id: number): Promise<void> => {
     await apiClient.delete(`/showtimes/${id}`);
+  },
+
+  // Lấy danh sách ghế đã đặt của một lịch chiếu
+  getBookedSeats: async (showtimeId: number): Promise<string[]> => {
+    const response = await apiClient.get<string[]>(`/showtimes/${showtimeId}/booked-seats`);
+    return response.data;
   },
 };
 

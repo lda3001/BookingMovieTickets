@@ -35,7 +35,7 @@ export default async function BookingPage({ params }: { params: Promise<{ slug: 
                         {/* Left Column: Movie Info + Filters */}
                         <div>
                             <MovieInfo movie={movie} />
-                            <BookingFilters movieTitle={movie.title} />
+                            <BookingFilters movieId={movie.id} movieTitle={movie.title} />
                         </div>
 
                         {/* Right Column: Sidebar */}

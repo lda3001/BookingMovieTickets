@@ -2,6 +2,7 @@ package com.galaxycinema.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,12 +37,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
+    @Builder.Default
     private Role role = Role.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Booking> bookings = new ArrayList<>();
 
     @Column(name = "is_active")
+    @Builder.Default
     private Boolean isActive = true;
 
     @Column(name = "created_at")

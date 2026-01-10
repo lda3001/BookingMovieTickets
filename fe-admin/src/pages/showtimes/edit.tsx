@@ -2,7 +2,7 @@ import React from "react";
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { Flex, Form, Input, Switch, DatePicker, InputNumber, Select } from "antd";
 import type { IShowtime, IMovie, ICinema, IRoom } from "../../interfaces";
-import dayjs from "dayjs";
+import dayjs from "../../utils/dayjs";
 
 export const ShowtimeEdit = () => {
   const {
@@ -10,9 +10,24 @@ export const ShowtimeEdit = () => {
     formLoading,
     saveButtonProps,
     query: queryResult,
+    onFinish,
   } = useForm<IShowtime>({
     action: "edit",
   });
+
+  const handleFinish = async (values: any) => {
+    const transformedValues = {
+      movieId: values.movieId,
+      cinemaId: values.cinemaId,
+      roomId: values.roomId,
+      showTime: values.showTime ? dayjs(values.showTime).format("DD/MM/YYYY HH:mm") : undefined,
+      endTime: values.endTime ? dayjs(values.endTime).format("DD/MM/YYYY HH:mm") : undefined,
+      format: values.format,
+      price: values.price,
+      isActive: values.isActive,
+    };
+    await onFinish(transformedValues);
+  };
 
   const postData = queryResult?.data?.data;
 
@@ -20,31 +35,23 @@ export const ShowtimeEdit = () => {
     resource: "movies",
     optionLabel: "title",
     optionValue: "id",
-    defaultValue: postData?.movie?.id,
+    defaultValue: postData?.movieId,
   });
 
   const { selectProps: cinemaSelectProps } = useSelect<ICinema>({
     resource: "cinemas",
     optionLabel: "name",
     optionValue: "id",
-    defaultValue: postData?.cinema?.id,
+    defaultValue: postData?.cinemaId,
   });
 
-  const selectedCinemaId = Form.useWatch(["cinema", "id"], formProps.form) || postData?.cinema?.id;
+  // if selectedCinemaId is not null, fetch rooms by cinemaId
+  const selectedCinemaId = Form.useWatch("cinemaId", formProps.form) || postData?.cinemaId;
   const { selectProps: roomSelectProps } = useSelect<IRoom>({
-    resource: "rooms",
+    resource: selectedCinemaId ? "rooms/cinema/" + selectedCinemaId : "rooms",
     optionLabel: "name",
     optionValue: "id",
-    defaultValue: postData?.room?.id,
-    filters: selectedCinemaId
-      ? [
-          {
-            field: "cinema.id",
-            operator: "eq",
-            value: selectedCinemaId,
-          },
-        ]
-      : [],
+    defaultValue: postData?.roomId,
     queryOptions: {
       enabled: !!selectedCinemaId,
     },
@@ -55,13 +62,14 @@ export const ShowtimeEdit = () => {
       <Form
         {...formProps}
         layout="vertical"
+        onFinish={handleFinish}
         initialValues={{
           ...postData,
-          showTime: postData?.showTime ? dayjs(postData.showTime) : undefined,
-          endTime: postData?.endTime ? dayjs(postData.endTime) : undefined,
-          movie: postData?.movie?.id,
-          cinema: postData?.cinema?.id,
-          room: postData?.room?.id,
+          showTime: postData?.showTime ? dayjs(postData.showTime, "DD/MM/YYYY HH:mm", true) : undefined,
+          endTime: postData?.endTime ? dayjs(postData.endTime, "DD/MM/YYYY HH:mm", true) : undefined,
+          movieId: postData?.movieId,
+          cinemaId: postData?.cinemaId,
+          roomId: postData?.roomId,
         }}
       >
         <Flex gap={20} justify="right">
@@ -77,7 +85,7 @@ export const ShowtimeEdit = () => {
 
         <Form.Item
           label="Phim"
-          name={["movie", "id"]}
+          name="movieId"
           rules={[
             {
               required: true,
@@ -90,7 +98,7 @@ export const ShowtimeEdit = () => {
 
         <Form.Item
           label="Rạp"
-          name={["cinema", "id"]}
+          name="cinemaId"
           rules={[
             {
               required: true,
@@ -103,7 +111,7 @@ export const ShowtimeEdit = () => {
 
         <Form.Item
           label="Phòng"
-          name={["room", "id"]}
+          name="roomId"
           rules={[
             {
               required: true,
@@ -154,12 +162,10 @@ export const ShowtimeEdit = () => {
           <InputNumber
             min={0}
             style={{ width: "100%" }}
-            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+            placeholder="Nhập giá vé"
           />
         </Form.Item>
       </Form>
     </Edit>
   );
 };
-

@@ -113,7 +113,7 @@ export const CinemaList = () => {
               title: "Số phòng",
               dataIndex: "totalRooms",
               search: false,
-              render: (value) => <TextField value={value || "-"} />,
+              render: (value) => <TextField value={value} />,
             },
             {
               title: "Trạng Thái",

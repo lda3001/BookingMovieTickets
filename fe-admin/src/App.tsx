@@ -48,14 +48,10 @@ import "@refinedev/antd/dist/reset.css";
 import { PostList, PostEdit, PostShow } from "./pages/posts";
 import { DashboardPage } from "./pages/dashboard";
 import { CategoryEdit, CategoryList, CategoryShow } from "./pages/category";
-import { ProductEdit, ProductList } from "./pages/product";
-import { ProductCreate } from "./pages/product/create";
 import { ConfigEdit } from "./pages/config";
-import { OrderList, OrdersShow } from "./pages/orders";
 import ViVn from "antd/locale/vi_VN";
 import { axiosInstance } from "@refinedev/simple-rest";
 import { MenuEdit, MenuList } from "./pages/menu";
-import { TopsSellingProductList } from "./pages/topsSellingProduct";
 import { API_URL } from "./utils/helper";
 import { CategoryPostEdit, CategoryPostList } from "./pages/categoryPost";
 import { PostCreate } from "./pages/posts/create";
@@ -93,46 +89,90 @@ const App: React.FC = () => {
         };
       }
       const request = {
-        username: email,
+        email: email,
         password: password,
       };
-      const response = await axiosInstance.post(
-        `${API_URL}/users/login`,
-        request
-      );
-      if (
-        response.data != "User not found" &&
-        response.data != "Invalid password"
-      ) {
-        localStorage.setItem("email", email);
-        localStorage.setItem("token", response.data.access_token);
+      try {
+        const response = await axiosInstance.post(
+          `${API_URL}/auth/login`,
+          request
+        );
+        if (response.data && response.data.token) {
+          localStorage.setItem("email", email);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", JSON.stringify({
+            userId: response.data.userId,
+            email: response.data.email,
+            fullName: response.data.fullName,
+            role: response.data.role,
+          }));
+          return {
+            success: true,
+            redirectTo: "/",
+          };
+        }
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.message || "Email hoặc mật khẩu không đúng";
         return {
-          success: true,
-          redirectTo: "/",
+          success: false,
+          error: {
+            message: errorMessage,
+            name: "Login failed",
+          },
         };
       }
 
       return {
         success: false,
         error: {
-          message: "Login failed",
-          name: "Invalid email or password",
+          message: "Email hoặc mật khẩu không đúng",
+          name: "Login failed",
         },
       };
     },
     register: async (params) => {
-      if (params.email === authCredentials.email && params.password) {
-        localStorage.setItem("email", params.email);
+      const request = {
+        email: params.email,
+        password: params.password,
+        fullName: params.fullName,
+        phone: params.phone,
+        dateOfBirth: params.dateOfBirth,
+      };
+      try {
+        const response = await axiosInstance.post(
+          `${API_URL}/auth/register`,
+          request
+        );
+        if (response.data && response.data.token) {
+          localStorage.setItem("email", params.email);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", JSON.stringify({
+            userId: response.data.userId,
+            email: response.data.email,
+            fullName: response.data.fullName,
+            role: response.data.role,
+          }));
+          return {
+            success: true,
+            redirectTo: "/",
+          };
+        }
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.message || "Đăng ký thất bại";
         return {
-          success: true,
-          redirectTo: "/",
+          success: false,
+          error: {
+            message: errorMessage,
+            name: "Register failed",
+          },
         };
       }
+
       return {
         success: false,
         error: {
-          message: "Register failed",
-          name: "Invalid email or password",
+          message: "Đăng ký thất bại",
+          name: "Register failed",
         },
       };
     },
@@ -168,6 +208,8 @@ const App: React.FC = () => {
     },
     logout: async () => {
       localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("user");
       return {
         success: true,
         redirectTo: "/login",

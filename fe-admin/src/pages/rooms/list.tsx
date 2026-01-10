@@ -116,9 +116,9 @@ export const RoomList = () => {
             },
             {
               title: "Rạp",
-              dataIndex: ["cinema", "name"],
+              dataIndex: "cinemaName",
               render: (_, record) => (
-                <TextField value={record.cinema?.name || "-"} />
+                <TextField value={record.cinemaName || "-"} />
               ),
               width: 200,
             },

@@ -157,6 +157,8 @@ export interface ICinema {
 export interface IRoom {
   id: number;
   name: string;
+  cinemaId?: number;
+  cinemaName?: string;
   cinema?: ICinema;
   totalRows?: number;
   seatsPerRow?: number;
@@ -168,6 +170,13 @@ export interface IRoom {
 
 export interface IShowtime {
   id: number;
+  movieId?: number;
+  movieTitle?: string;
+  movieSlug?: string;
+  cinemaId?: number;
+  cinemaName?: string;
+  roomId?: number;
+  roomName?: string;
   movie?: IMovie;
   cinema?: ICinema;
   room?: IRoom;

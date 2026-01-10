@@ -7,7 +7,7 @@ import TextArea from "antd/es/input/TextArea";
 import AppQuill from "../../components/appQuill";
 import { axiosInstance } from "../../utils/axios";
 import { generateFileWithTimeStamp } from "../../utils/helper";
-import dayjs from "dayjs";
+import dayjs from "../../utils/dayjs";
 
 export const MovieEdit = () => {
   const {
@@ -17,6 +17,27 @@ export const MovieEdit = () => {
     query: queryResult,
   } = useForm<IMovie>({
     action: "edit",
+    transform: (values: any) => {
+      return {
+        slug: values.slug,
+        title: values.title,
+        image: values.image,
+        duration: values.duration,
+        rating: values.rating,
+        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("DD/MM/YYYY") : undefined,
+        country: values.country,
+        producer: values.producer,
+        genre: values.genre,
+        director: values.director,
+        cast: values.cast,
+        tagline: values.tagline,
+        subtitle: values.subtitle,
+        trailerUrl: values.trailerUrl,
+        content: values.content,
+        description: values.description,
+        isActive: values.isActive,
+      };
+    },
   });
 
   const postData = queryResult?.data?.data;
@@ -30,7 +51,7 @@ export const MovieEdit = () => {
         layout="vertical"
         initialValues={{
           ...postData,
-          releaseDate: postData?.releaseDate ? dayjs(postData.releaseDate) : undefined,
+          releaseDate: postData?.releaseDate ? dayjs(postData.releaseDate, "DD/MM/YYYY", true) : undefined,
         }}
       >
         <Flex gap={20} justify="right">

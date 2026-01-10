@@ -1,10 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, User, LogOut } from 'lucide-react';
 import styles from './Header.module.css';
 import LoginModal from './LoginModal';
+import { authService } from '@/services/authService';
 
 const NAV_ITEMS = [
     { label: 'Mua vé', href: '#' }, // No submenu
@@ -46,6 +47,38 @@ const NAV_ITEMS = [
 export default function Header() {
     const [isLoginOpen, setIsLoginOpen] = React.useState(false);
     const [activeSubMenu, setActiveSubMenu] = React.useState<string | null>(null);
+    const [user, setUser] = useState<any>(null);
+    const [showUserMenu, setShowUserMenu] = useState(false);
+
+    useEffect(() => {
+        // Kiểm tra user khi component mount và khi login thành công
+        const checkUser = () => {
+            const userData = authService.getUser();
+            setUser(userData);
+        };
+        
+        checkUser();
+        
+        // Lắng nghe sự kiện storage change để cập nhật khi login/logout từ tab khác
+        const handleStorageChange = () => {
+            checkUser();
+        };
+        
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
+
+    const handleLoginSuccess = () => {
+        const userData = authService.getUser();
+        setUser(userData);
+        setIsLoginOpen(false);
+    };
+
+    const handleLogout = () => {
+        authService.logout();
+        setUser(null);
+        setShowUserMenu(false);
+    };
 
     return (
         <>
@@ -104,12 +137,44 @@ export default function Header() {
 
                         <div className={styles.separator}></div>
 
-                        <div
-                            className={styles.loginBtn}
-                            onClick={() => setIsLoginOpen(true)}
-                        >
-                            Đăng nhập
-                        </div>
+                        {user ? (
+                            <div 
+                                className={styles.userMenu}
+                                onMouseEnter={() => setShowUserMenu(true)}
+                                onMouseLeave={() => setShowUserMenu(false)}
+                            >
+                                <div className={styles.userInfo}>
+                                    <User size={18} />
+                                    <span style={{ marginLeft: 8, fontSize: 14 }}>
+                                        {user.fullName || user.email}
+                                    </span>
+                                </div>
+                                {showUserMenu && (
+                                    <div className={styles.userDropdown}>
+                                        <div className={styles.userDropdownItem}>
+                                            <User size={16} />
+                                            <span>{user.email}</span>
+                                        </div>
+                                        <div className={styles.userDropdownDivider}></div>
+                                        <div 
+                                            className={styles.userDropdownItem}
+                                            onClick={handleLogout}
+                                            style={{ cursor: 'pointer', color: '#ff4444' }}
+                                        >
+                                            <LogOut size={16} />
+                                            <span>Đăng xuất</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div
+                                className={styles.loginBtn}
+                                onClick={() => setIsLoginOpen(true)}
+                            >
+                                Đăng nhập
+                            </div>
+                        )}
                     </div>
                 </div>
             </header>
@@ -117,6 +182,7 @@ export default function Header() {
             <LoginModal
                 isOpen={isLoginOpen}
                 onClose={() => setIsLoginOpen(false)}
+                onLoginSuccess={handleLoginSuccess}
             />
         </>
     );

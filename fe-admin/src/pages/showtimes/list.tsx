@@ -25,6 +25,7 @@ import { CrudFilters, useCustom } from "@refinedev/core";
 import { useApiUrl } from "@refinedev/core";
 import { axiosInstance } from "../../utils/axios";
 import { useEffect, useState } from "react";
+import dayjs from "../../utils/dayjs";
 
 const Actions = ({
   record,
@@ -127,49 +128,51 @@ export const ShowtimeList = () => {
           columns={[
             {
               title: "Phim",
-              dataIndex: ["movie", "title"],
+              dataIndex: "movieTitle",
               render: (_, record) => (
-                <TextField value={record.movie?.title || "-"} />
+                <TextField value={record.movieTitle || "-"} />
               ),
               width: 200,
             },
             {
               title: "Rạp",
-              dataIndex: ["cinema", "name"],
+              dataIndex: "cinemaName",
               render: (_, record) => (
-                <TextField value={record.cinema?.name || "-"} />
+                <TextField value={record.cinemaName || "-"} />
               ),
             },
             {
               title: "Phòng",
-              dataIndex: ["room", "name"],
+              dataIndex: "roomName",
               render: (_, record) => (
-                <TextField value={record.room?.name || "-"} />
+                <TextField value={record.roomName || "-"} />
               ),
             },
             {
               title: "Thời gian chiếu",
               dataIndex: "showTime",
-              render: (value) =>
-                value ? (
-                  <TextField
-                    value={new Date(value).toLocaleString("vi-VN")}
-                  />
+              render: (value) => {
+                if (!value || typeof value !== "string") return "-";
+                const date = dayjs(value, "DD/MM/YYYY HH:mm", true);
+                return date.isValid() ? (
+                  <TextField value={date.format("DD/MM/YYYY HH:mm")} />
                 ) : (
-                  "-"
-                ),
+                  <TextField value={value} />
+                );
+              },
             },
             {
               title: "Thời gian kết thúc",
               dataIndex: "endTime",
-              render: (value) =>
-                value ? (
-                  <TextField
-                    value={new Date(value).toLocaleString("vi-VN")}
-                  />
+              render: (value) => {
+                if (!value || typeof value !== "string") return "-";
+                const date = dayjs(value, "DD/MM/YYYY HH:mm", true);
+                return date.isValid() ? (
+                  <TextField value={date.format("DD/MM/YYYY HH:mm")} />
                 ) : (
-                  "-"
-                ),
+                  <TextField value={value} />
+                );
+              },
             },
             {
               title: "Định dạng",

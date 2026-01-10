@@ -20,8 +20,13 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
                                                  @Param("cinemaId") Long cinemaId, 
                                                  @Param("date") LocalDate date);
     
-    @Query("SELECT DISTINCT DATE(s.showTime) FROM Showtime s WHERE s.movie.id = :movieId AND s.cinema.id = :cinemaId AND s.showTime >= CURRENT_DATE AND s.isActive = true ORDER BY DATE(s.showTime)")
-    List<LocalDate> findAvailableDates(@Param("movieId") Long movieId, @Param("cinemaId") Long cinemaId);
+    @Query("SELECT s FROM Showtime s WHERE s.movie.id = :movieId AND s.cinema.id = :cinemaId AND s.showTime >= CURRENT_DATE AND s.isActive = true ORDER BY s.showTime")
+    List<Showtime> findAvailableDates(@Param("movieId") Long movieId, @Param("cinemaId") Long cinemaId);
+
+    @Query("SELECT s FROM Showtime s WHERE s.room.id = :roomId AND DATE(s.showTime) = :date AND s.isActive = true")
+    List<Showtime> findByRoomAndDate(@Param("roomId") Long roomId, @Param("date") LocalDate date);
+    
+   
     
     List<Showtime> findByShowTimeBetween(LocalDateTime start, LocalDateTime end);
 }

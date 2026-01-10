@@ -5,6 +5,16 @@ import type { IRoom, ICinema } from "../../interfaces";
 export const RoomCreate = () => {
   const { formProps, formLoading, saveButtonProps } = useForm<IRoom>({
     action: "create",
+    transform: (values: any) => {
+      return {
+        name: values.name,
+        cinemaId: values.cinemaId,
+        totalRows: values.totalRows,
+        seatsPerRow: values.seatsPerRow,
+        vipRows: values.vipRows,
+        isActive: values.isActive,
+      };
+    },
   });
 
   const { selectProps: cinemaSelectProps } = useSelect<ICinema>({
@@ -35,7 +45,7 @@ export const RoomCreate = () => {
 
         <Form.Item
           label="Rạp"
-          name={["cinema", "id"]}
+          name="cinemaId"
           rules={[
             {
               required: true,
@@ -103,7 +113,7 @@ export const RoomCreate = () => {
                   JSON.parse(value);
                   formProps.form?.setFieldsValue({ vipRows: value });
                 } catch (error) {
-                  formProps.form?.setFieldsError([
+                  formProps.form?.setFields([
                     {
                       name: "vipRows",
                       errors: ["Định dạng JSON không hợp lệ"],

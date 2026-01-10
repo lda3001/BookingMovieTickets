@@ -2,6 +2,7 @@ package com.galaxycinema.service;
 
 import com.galaxycinema.entity.Movie;
 import com.galaxycinema.repository.MovieRepository;
+import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,10 +11,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final Slugify slg = Slugify.builder().build();
 
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
@@ -41,6 +44,7 @@ public class MovieService {
 
     @Transactional
     public Movie createMovie(Movie movie) {
+        movie.setSlug(slg.slugify(movie.getTitle()));
         return movieRepository.save(movie);
     }
 

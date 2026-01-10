@@ -3,6 +3,7 @@ package com.galaxycinema.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Showtime {
     @Id
@@ -50,13 +52,16 @@ public class Showtime {
 
     @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties(value = {"showtime", "hibernateLazyInitializer", "handler"}, allowSetters = true)
+    @Builder.Default
     private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties(value = {"showtime", "hibernateLazyInitializer", "handler"}, allowSetters = true)
+    @Builder.Default
     private List<BookedSeat> bookedSeats = new ArrayList<>();
 
     @Column(name = "is_active")
+    @Builder.Default
     private Boolean isActive = true;
 
     @Column(name = "created_at")

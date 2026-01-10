@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +20,17 @@ public class ShowtimeService {
     }
 
     public List<Showtime> getShowtimesByMovieAndCinemaAndDate(Long movieId, Long cinemaId, LocalDate date) {
+        // convert date to LocalDateTime
         return showtimeRepository.findByMovieAndCinemaAndDate(movieId, cinemaId, date);
     }
 
     public List<LocalDate> getAvailableDates(Long movieId, Long cinemaId) {
-        return showtimeRepository.findAvailableDates(movieId, cinemaId);
+        List<Showtime> showtimes = showtimeRepository.findAvailableDates(movieId, cinemaId);
+        return showtimes.stream()
+                .map(s -> s.getShowTime().toLocalDate())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public Showtime getShowtimeById(Long id) {
@@ -33,6 +40,15 @@ public class ShowtimeService {
 
     @Transactional
     public Showtime createShowtime(Showtime showtime) {
+        // check if showtime already exists in the same room
+        List<Showtime> existingShowtimes = showtimeRepository.findByRoomAndDate(showtime.getRoom().getId(), showtime.getShowTime().toLocalDate());
+        if (existingShowtimes.size() > 0) {
+            throw new RuntimeException("Showtime already exists in the same room");
+        }
+
+        
+        
+
         return showtimeRepository.save(showtime);
     }
 

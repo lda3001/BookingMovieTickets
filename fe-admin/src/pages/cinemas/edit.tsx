@@ -11,6 +11,16 @@ export const CinemaEdit = () => {
     query: queryResult,
   } = useForm<ICinema>({
     action: "edit",
+    transform: (values: any) => {
+      return {
+        name: values.name,
+        address: values.address,
+        phone: values.phone,
+        city: values.city,
+        totalRooms: values.totalRooms,
+        isActive: values.isActive,
+      };
+    },
   });
 
   const postData = queryResult?.data?.data;

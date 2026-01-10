@@ -12,11 +12,13 @@ const apiClient = axios.create({
 // Request interceptor - thêm token nếu có
 apiClient.interceptors.request.use(
   (config) => {
-    // Có thể thêm token authentication ở đây
-    // const token = localStorage.getItem('token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    // Thêm token authentication
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
     return config;
   },
   (error) => {
@@ -33,6 +35,16 @@ apiClient.interceptors.response.use(
     // Xử lý lỗi chung
     if (error.response) {
       // Server trả về lỗi
+      const status = error.response.status;
+      
+      // Nếu lỗi 401 (Unauthorized), xóa token và redirect về trang đăng nhập
+      if (status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Có thể redirect về trang login nếu cần
+        // window.location.href = '/login';
+      }
+      
       console.error('API Error:', error.response.data);
     } else if (error.request) {
       // Request được gửi nhưng không nhận được response

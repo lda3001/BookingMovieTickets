@@ -1,10 +1,12 @@
 package com.galaxycinema.controller;
 
-import com.galaxycinema.entity.Booking;
+import com.galaxycinema.dto.request.BookingRequest;
+import com.galaxycinema.dto.response.BookingResponse;
 import com.galaxycinema.service.BookingService;
+import com.galaxycinema.util.Mappers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Data;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,33 +19,35 @@ import java.util.List;
 @Tag(name = "Bookings", description = "API quản lý đặt vé")
 public class BookingController {
     private final BookingService bookingService;
+    private final Mappers mappers;
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Lấy đặt vé của user", description = "Trả về danh sách tất cả đặt vé của một user")
-    public ResponseEntity<List<Booking>> getUserBookings(@PathVariable Long userId) {
-        return ResponseEntity.ok(bookingService.getUserBookings(userId));
+    public ResponseEntity<List<BookingResponse>> getUserBookings(@PathVariable Long userId) {
+        return ResponseEntity.ok(mappers.toBookingResponseList(bookingService.getUserBookings(userId)));
     }
 
     @GetMapping("/code/{bookingCode}")
     @Operation(summary = "Lấy đặt vé theo mã", description = "Trả về thông tin chi tiết của một đặt vé theo mã đặt vé")
-    public ResponseEntity<Booking> getBookingByCode(@PathVariable String bookingCode) {
-        return ResponseEntity.ok(bookingService.getBookingByCode(bookingCode));
+    public ResponseEntity<BookingResponse> getBookingByCode(@PathVariable String bookingCode) {
+        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.getBookingByCode(bookingCode)));
     }
 
     @PostMapping
     @Operation(summary = "Tạo đặt vé mới", description = "Tạo một đặt vé mới với các ghế đã chọn")
-    public ResponseEntity<Booking> createBooking(@RequestBody CreateBookingRequest request) {
-        return ResponseEntity.ok(bookingService.createBooking(
-                request.getUserId(),
-                request.getShowtimeId(),
-                request.getSeatCodes()
-        ));
+    public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request) {
+        return ResponseEntity.ok(mappers.toBookingResponse(
+                bookingService.createBooking(
+                        request.userId(),
+                        request.showtimeId(),
+                        request.seatCodes()
+                )));
     }
 
     @PostMapping("/{bookingCode}/confirm")
     @Operation(summary = "Xác nhận đặt vé", description = "Xác nhận và thanh toán cho một đặt vé")
-    public ResponseEntity<Booking> confirmBooking(@PathVariable String bookingCode) {
-        return ResponseEntity.ok(bookingService.confirmBooking(bookingCode));
+    public ResponseEntity<BookingResponse> confirmBooking(@PathVariable String bookingCode) {
+        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.confirmBooking(bookingCode)));
     }
 
     @PostMapping("/{bookingCode}/cancel")
@@ -52,12 +56,4 @@ public class BookingController {
         bookingService.cancelBooking(bookingCode);
         return ResponseEntity.noContent().build();
     }
-
-    @Data
-    static class CreateBookingRequest {
-        private Long userId;
-        private Long showtimeId;
-        private List<String> seatCodes;
-    }
 }
-

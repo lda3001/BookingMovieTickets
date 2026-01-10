@@ -2,6 +2,7 @@ package com.galaxycinema.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,7 @@ public class Booking {
     private Showtime showtime;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<BookedSeat> bookedSeats = new ArrayList<>();
 
     @Column(name = "total_price")
@@ -38,6 +41,7 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
+    @Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
 
     @Column(name = "payment_method", length = 50)

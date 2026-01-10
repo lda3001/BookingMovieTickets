@@ -1,11 +1,26 @@
 import { Create, useForm, useSelect } from "@refinedev/antd";
 import { Flex, Form, Input, Switch, DatePicker, InputNumber, Select } from "antd";
 import type { IShowtime, IMovie, ICinema, IRoom } from "../../interfaces";
+import dayjs from "../../utils/dayjs";
 
 export const ShowtimeCreate = () => {
-  const { formProps, formLoading, saveButtonProps } = useForm<IShowtime>({
+  const { formProps, formLoading, saveButtonProps, onFinish } = useForm<IShowtime>({
     action: "create",
   });
+
+  const handleFinish = async (values: any) => {
+    const transformedValues = {
+      movieId: values.movieId,
+      cinemaId: values.cinemaId,
+      roomId: values.roomId,
+      showTime: values.showTime ? dayjs(values.showTime).format("DD/MM/YYYY HH:mm") : undefined,
+      endTime: values.endTime ? dayjs(values.endTime).format("DD/MM/YYYY HH:mm") : undefined,
+      format: values.format,
+      price: values.price,
+      isActive: values.isActive,
+    };
+    await onFinish(transformedValues);
+  };
 
   const { selectProps: movieSelectProps } = useSelect<IMovie>({
     resource: "movies",
@@ -20,20 +35,12 @@ export const ShowtimeCreate = () => {
   });
 
   // For rooms, fetch based on selected cinema
-  const selectedCinemaId = Form.useWatch(["cinema", "id"], formProps.form);
+  // if selectedCinemaId is not null, fetch rooms by cinemaId
+  const selectedCinemaId = Form.useWatch("cinemaId", formProps.form);
   const { selectProps: roomSelectProps } = useSelect<IRoom>({
-    resource: "rooms",
+    resource: selectedCinemaId ? "rooms/cinema/" + selectedCinemaId : "rooms",
     optionLabel: "name",
     optionValue: "id",
-    filters: selectedCinemaId
-      ? [
-          {
-            field: "cinema.id",
-            operator: "eq",
-            value: selectedCinemaId,
-          },
-        ]
-      : [],
     queryOptions: {
       enabled: !!selectedCinemaId,
     },
@@ -44,6 +51,7 @@ export const ShowtimeCreate = () => {
       <Form
         {...formProps}
         layout="vertical"
+        onFinish={handleFinish}
         initialValues={{
           isActive: true,
         }}
@@ -61,7 +69,7 @@ export const ShowtimeCreate = () => {
 
         <Form.Item
           label="Phim"
-          name={["movie", "id"]}
+          name="movieId"
           rules={[
             {
               required: true,
@@ -74,7 +82,7 @@ export const ShowtimeCreate = () => {
 
         <Form.Item
           label="Rạp"
-          name={["cinema", "id"]}
+          name="cinemaId"
           rules={[
             {
               required: true,
@@ -87,7 +95,7 @@ export const ShowtimeCreate = () => {
 
         <Form.Item
           label="Phòng"
-          name={["room", "id"]}
+          name="roomId"
           rules={[
             {
               required: true,
@@ -139,12 +147,9 @@ export const ShowtimeCreate = () => {
             min={0}
             style={{ width: "100%" }}
             placeholder="Nhập giá vé"
-            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
           />
         </Form.Item>
       </Form>
     </Create>
   );
 };
-
