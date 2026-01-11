@@ -1,0 +1,35 @@
+.accountLayout {
+  min-height: calc(100vh - 200px);
+  padding: 40px 0;
+  background-color: #f9f9f9;
+}
+
+.layoutContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.mainContent {
+  min-height: 500px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  .layoutContainer {
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .accountLayout {
+    padding: 20px 0;
+  }
+
+  .layoutContainer {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

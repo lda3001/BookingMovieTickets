@@ -61,6 +61,9 @@ export const authService = {
   // Đăng xuất
   logout: () => {
     authService.removeToken();
+    if (typeof window !== 'undefined') {
+     window.location.href = '/';
+    }
   },
 };
 

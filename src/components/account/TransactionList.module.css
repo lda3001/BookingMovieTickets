@@ -1,0 +1,246 @@
+.container {
+  background: white;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--galaxy-border);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--galaxy-text-dark);
+  margin: 0 0 16px 0;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  color: var(--galaxy-text-gray);
+  border: 1px solid var(--galaxy-border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterButton:hover {
+  background-color: #e0e0e0;
+}
+
+.filterButton.active {
+  background-color: var(--galaxy-orange);
+  color: white;
+  border-color: var(--galaxy-orange);
+}
+
+.loading,
+.error,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--galaxy-text-gray);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--galaxy-orange);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.retryButton {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background-color: var(--galaxy-orange);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryButton:hover {
+  background-color: #d66a15;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bookingCard {
+  display: block;
+  background: white;
+  border: 1px solid var(--galaxy-border);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.bookingCard:hover {
+  border-color: var(--galaxy-orange);
+  box-shadow: 0 4px 12px rgba(245, 128, 32, 0.15);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.movieInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.movieTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--galaxy-text-dark);
+  margin: 0;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.statusPending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.statusConfirmed {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.statusCompleted {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.statusCancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.chevron {
+  color: var(--galaxy-text-gray);
+  flex-shrink: 0;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--galaxy-text-gray);
+}
+
+.infoRow svg {
+  flex-shrink: 0;
+  color: var(--galaxy-orange);
+}
+
+.price {
+  font-weight: 700;
+  color: var(--galaxy-orange);
+  font-size: 16px;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--galaxy-text-gray);
+}
+
+.bookingCode {
+  font-weight: 600;
+  color: var(--galaxy-text-dark);
+}
+
+.date {
+  font-style: italic;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .filterButton {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .bookingCard {
+    padding: 16px;
+  }
+
+  .movieTitle {
+    font-size: 16px;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

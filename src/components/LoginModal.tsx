@@ -92,6 +92,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     email: response.email,
                     fullName: response.fullName,
                     role: response.role,
+                    phone: response.phone,
+                    dateOfBirth: response.dateOfBirth,
                 });
 
                 resetForm();
@@ -116,6 +118,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     userId: response.userId,
                     email: response.email,
                     fullName: response.fullName,
+                    phone: response.phone,
+                    dateOfBirth: response.dateOfBirth,
                     role: response.role,
                 });
 

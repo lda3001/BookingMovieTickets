@@ -1,4 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --color-galaxy-orange: #f58020;
+  --color-galaxy-bg-dark: #1A1A1A;
+  --color-galaxy-text-dark: #333333;
+  --color-galaxy-text-gray: #777777;
+  --color-galaxy-border: #E0E0E0;
+}
 
 :root {
   --galaxy-orange: #f58020;

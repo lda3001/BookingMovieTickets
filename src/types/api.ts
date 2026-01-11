@@ -162,6 +162,8 @@ export interface AuthResponse {
   userId: number;
   email: string;
   fullName?: string;
+  phone?: string;
+  dateOfBirth?: string; // Format: "dd/MM/yyyy"
   role: UserRole;
 }
 

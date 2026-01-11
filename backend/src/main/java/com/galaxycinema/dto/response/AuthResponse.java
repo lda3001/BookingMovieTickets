@@ -1,5 +1,6 @@
 package com.galaxycinema.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.galaxycinema.entity.User;
 
 public record AuthResponse(
@@ -8,7 +9,10 @@ public record AuthResponse(
         Long userId,
         String email,
         String fullName,
-        User.Role role
+        String phone,
+        User.Role role,
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        java.time.LocalDate dateOfBirth
 ) {
     public static AuthResponse of(String token, User user) {
         return new AuthResponse(
@@ -17,7 +21,9 @@ public record AuthResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getFullName(),
-                user.getRole()
+                user.getPhone(),
+                user.getRole(),
+                user.getDateOfBirth()
         );
     }
 }

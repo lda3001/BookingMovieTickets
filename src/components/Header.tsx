@@ -149,23 +149,26 @@ export default function Header() {
                                         {user.fullName || user.email}
                                     </span>
                                 </div>
-                                {showUserMenu && (
-                                    <div className={styles.userDropdown}>
-                                        <div className={styles.userDropdownItem}>
-                                            <User size={16} />
-                                            <span>{user.email}</span>
-                                        </div>
-                                        <div className={styles.userDropdownDivider}></div>
-                                        <div 
-                                            className={styles.userDropdownItem}
-                                            onClick={handleLogout}
-                                            style={{ cursor: 'pointer', color: '#ff4444' }}
-                                        >
-                                            <LogOut size={16} />
-                                            <span>Đăng xuất</span>
-                                        </div>
+                                <div className={`${styles.userDropdown} ${showUserMenu ? styles.userDropdownActive : ''}`}>
+                                    <div className={styles.userDropdownItem}>
+                                        <User size={16} />
+                                        <span>{user.email}</span>
                                     </div>
-                                )}
+                                    <div className={styles.userDropdownDivider}></div>
+                                    <Link href="/tai-khoan" className={styles.userDropdownItem}>
+                                        <User size={16} />
+                                        <span>Tài khoản của tôi</span>
+                                    </Link>
+                                    <div className={styles.userDropdownDivider}></div>
+                                    <div 
+                                        className={styles.userDropdownItem}
+                                        onClick={handleLogout}
+                                        style={{ cursor: 'pointer', color: '#ff4444' }}
+                                    >
+                                        <LogOut size={16} />
+                                        <span>Đăng xuất</span>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             <div
