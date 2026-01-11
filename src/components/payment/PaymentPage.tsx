@@ -22,6 +22,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [processing, setProcessing] = useState(false);
     const [timeLeft, setTimeLeft] = useState(getTimeLeftFromTicketCode(booking.bookingCode)); // 10 minutes in seconds
     const [showSuccess, setShowSuccess] = useState(false);
+    console.log("Booking status:", booking.status);
 
     // Countdown timer
     useEffect(() => {
@@ -31,8 +32,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
             setTimeLeft((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    // Auto cancel booking
-                    handleCancelBooking();
+                    //handleCancelBooking();
                     return 0;
                 }
                 return prev - 1;
@@ -83,12 +83,12 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
             // Confirm booking
             const confirmedBooking = await bookingService.confirmBooking(booking.bookingCode, selectedMethod as PaymentMethod);
             setBooking(confirmedBooking);
-            setShowSuccess(true);
-
-            // Redirect to success page after 3 seconds
-            setTimeout(() => {
-                router.push(`/booking/success/${booking.bookingCode}`);
-            }, 3000);
+            if (confirmedBooking.status === "CONFIRMED") {
+                setShowSuccess(true);
+                setTimeout(() => {
+                    router.push(`/booking/success/${booking.bookingCode}`);
+                }, 3000);
+            }
         } catch (error: any) {
             alert(error.response?.data?.message || 'Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.');
             console.error('Error processing payment:', error);

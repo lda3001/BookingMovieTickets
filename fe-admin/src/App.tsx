@@ -31,6 +31,7 @@ import {
   CalendarOutlined,
   CreditCardOutlined,
   HomeOutlined,
+  QrcodeOutlined,
 } from "@ant-design/icons";
 
 import { appDataProvider } from "./utils/provider";
@@ -62,6 +63,7 @@ import { CinemaList, CinemaEdit, CinemaShow } from "./pages/cinemas";
 import { RoomList, RoomCreate, RoomEdit, RoomShow } from "./pages/rooms";
 import { ShowtimeList, ShowtimeCreate, ShowtimeEdit, ShowtimeShow } from "./pages/showtimes";
 import { BookingList, BookingShow } from "./pages/bookings";
+import { ScanQR, ScanQRShow } from "./pages/scan";
 
 console.log("API_URL", API_URL);
 /**
@@ -97,7 +99,7 @@ const App: React.FC = () => {
           `${API_URL}/auth/login`,
           request
         );
-        if (response.data && response.data.token) {
+        if (response.data && response.data.token && response.data.role === "ADMIN") {
           localStorage.setItem("email", email);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("user", JSON.stringify({
@@ -110,6 +112,14 @@ const App: React.FC = () => {
             success: true,
             redirectTo: "/",
           };
+        } else {
+          return {
+            success: false,
+            error: {
+              message: "Bạn không có quyền truy cập vào trang này",
+              name: "Access denied",
+            },
+          };
         }
       } catch (error: any) {
         const errorMessage = error.response?.data?.message || "Email hoặc mật khẩu không đúng";
@@ -121,6 +131,7 @@ const App: React.FC = () => {
           },
         };
       }
+      
 
       return {
         success: false,
@@ -241,7 +252,7 @@ const App: React.FC = () => {
     getPermissions: async (params) => params?.permissions,
     getIdentity: async () => ({
       id: 1,
-      name: "Nguyễn Văn Hoàng",
+      name: JSON.parse(localStorage.getItem("user") || "{}").fullName,
       avatar:
         "https://unsplash.com/photos/IWLOvomUmWU/download?force=true&w=640",
     }),
@@ -359,6 +370,14 @@ const App: React.FC = () => {
                 },
               },
               {
+                name: "scanQR",
+                list: "/scanQR",
+                meta: {
+                  label: "Quét QR",
+                  icon: <QrcodeOutlined />,
+                },
+              },
+              {
                 name: "configs",
                 list: "/configs",
                 meta: {
@@ -461,6 +480,10 @@ const App: React.FC = () => {
                 <Route path="/bookings">
                   <Route index element={<BookingList />} />
                   <Route path="show/:id" element={<BookingShow />} />
+                </Route>
+                <Route path="/scanQR">
+                  <Route index element={<ScanQR />} />
+                  <Route path="show/:id" element={<ScanQRShow />} />
                 </Route>
               </Route>
 

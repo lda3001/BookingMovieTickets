@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -74,6 +75,7 @@ public class ShowtimeController {
 
     @PostMapping
     @Operation(summary = "Tạo lịch chiếu mới", description = "Tạo một lịch chiếu mới trong hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ShowtimeResponse> createShowtime(@Valid @RequestBody ShowtimeRequest request) {
         Movie movie = movieRepository.findById(request.movieId())
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
@@ -101,6 +103,7 @@ public class ShowtimeController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Cập nhật lịch chiếu", description = "Cập nhật thông tin của một lịch chiếu")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ShowtimeResponse> updateShowtime(@PathVariable Long id, @Valid @RequestBody ShowtimeRequest request) {
         Showtime showtime = showtimeService.getShowtimeById(id);
         
@@ -144,6 +147,7 @@ public class ShowtimeController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa lịch chiếu", description = "Xóa (vô hiệu hóa) một lịch chiếu khỏi hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteShowtime(@PathVariable Long id) {
         showtimeService.deleteShowtime(id);
         return ResponseEntity.noContent().build();

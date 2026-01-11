@@ -41,26 +41,8 @@ export const BookingList = () => {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      // Since there's no GET all endpoint, we'll fetch from users
-      // For now, let's create a custom endpoint call or fetch from users
-      // This is a workaround - ideally backend should have GET /bookings endpoint
-      const usersResponse = await axiosInstance.get(`${apiUrl}/users`);
-      const users = usersResponse.data;
-      
-      const allBookings: IBooking[] = [];
-      for (const user of users) {
-        try {
-          const bookingsResponse = await axiosInstance.get(
-            `${apiUrl}/bookings/user/${user.id}`
-          );
-          if (bookingsResponse.data && Array.isArray(bookingsResponse.data)) {
-            allBookings.push(...bookingsResponse.data);
-          }
-        } catch (error) {
-          // User might not have bookings, skip
-        }
-      }
-      setBookings(allBookings);
+      const allBookings = await axiosInstance.get(`${apiUrl}/bookings/all`);
+      setBookings(allBookings.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
     } finally {
@@ -119,16 +101,16 @@ export const BookingList = () => {
             },
             {
               title: "Khách hàng",
-              dataIndex: ["user", "username"],
+              dataIndex: "userId",
               render: (_, record) => (
-                <TextField value={record.user?.username || record.user?.email || "-"} />
+                <TextField value={record.userId || "-"} />
               ),
             },
             {
               title: "Phim",
               dataIndex: ["showtime", "movie", "title"],
               render: (_, record) => (
-                <TextField value={record.showtime?.movie?.title || "-"} />
+                <TextField value={record.movieTitle || "-"} />
               ),
               width: 200,
             },
@@ -136,16 +118,16 @@ export const BookingList = () => {
               title: "Rạp",
               dataIndex: ["showtime", "cinema", "name"],
               render: (_, record) => (
-                <TextField value={record.showtime?.cinema?.name || "-"} />
+                <TextField value={record.cinemaName || "-"} />
               ),
             },
             {
               title: "Thời gian chiếu",
-              dataIndex: ["showtime", "showTime"],
+              dataIndex: "showTime",
               render: (_, record) =>
-                record.showtime?.showTime ? (
+                record.showTime ? (
                   <TextField
-                    value={new Date(record.showtime.showTime).toLocaleString("vi-VN")}
+                    value={new Date(record.showTime).toLocaleString("vi-VN")}
                   />
                 ) : (
                   "-"
@@ -157,8 +139,8 @@ export const BookingList = () => {
               render: (_, record) => (
                 <TextField
                   value={
-                    record.bookedSeats?.length
-                      ? record.bookedSeats.map((s) => s.seatCode).join(", ")
+                    record.seatCodes?.length
+                      ? record.seatCodes.join(", ")
                       : "-"
                   }
                 />

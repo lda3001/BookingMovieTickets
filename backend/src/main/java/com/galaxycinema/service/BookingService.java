@@ -5,6 +5,7 @@ import com.galaxycinema.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,12 +19,17 @@ public class BookingService {
     private final UserRepository userRepository;
 
     public List<Booking> getUserBookings(Long userId) {
+        
         return bookingRepository.findByUserId(userId);
     }
 
     public Booking getBookingByCode(String bookingCode) {
         return bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
     }
 
     @Transactional
@@ -89,11 +95,16 @@ public class BookingService {
     public Booking confirmBooking(String bookingCode, String paymentMethod) {
         Booking booking = bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+                RestTemplate restTemplate = new RestTemplate();
+
+                String url = "http://localhost:8668/api/payment/initiate";
+                String response = restTemplate.getForObject(url, String.class);
+
         
-        booking.setStatus(Booking.BookingStatus.CONFIRMED);
-        booking.setPaymentMethod(paymentMethod);
-        
-            booking.setPaymentStatus("PAID");
+             
+                booking.setPaymentMethod(paymentMethod);
+                
         
         
         return bookingRepository.save(booking);

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -68,6 +69,7 @@ public class MovieController {
 
     @PostMapping
     @Operation(summary = "Tạo phim mới", description = "Tạo một phim mới trong hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest request) {
         Movie movie = Movie.builder()
                 .slug(request.slug())
@@ -95,6 +97,7 @@ public class MovieController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Cập nhật phim", description = "Cập nhật thông tin của một phim")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieRequest request) {
         Movie movie = movieService.getMovieById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
@@ -123,6 +126,7 @@ public class MovieController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa phim", description = "Xóa (vô hiệu hóa) một phim khỏi hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();

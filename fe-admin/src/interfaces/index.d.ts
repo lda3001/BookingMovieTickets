@@ -199,8 +199,11 @@ export interface IBookedSeat {
 export interface IBooking {
   id: number;
   bookingCode: string;
-  user?: IUser;
-  showtime?: IShowtime;
+  userId?: string;
+  showtimeId?: number;
+  showTime?: string;
+  movieTitle?: string;
+  seatCodes?: string[];
   bookedSeats?: IBookedSeat[];
   totalPrice?: number;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
@@ -209,3 +212,4 @@ export interface IBooking {
   createdAt?: string;
   updatedAt?: string;
 } 
+

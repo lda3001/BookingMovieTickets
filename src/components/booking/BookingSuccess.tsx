@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import styles from './BookingSuccess.module.css';
 import { Booking } from '@/types/api';
 import dayjs from '@/lib/dayjs';
@@ -13,6 +13,10 @@ interface BookingSuccessProps {
 
 export default function BookingSuccess({ booking }: BookingSuccessProps) {
     const router = useRouter();
+    if (booking.status !== "CONFIRMED") {
+        notFound();
+        return;
+    }
 
     const formatShowtime = (timeStr: string | undefined) => {
         if (!timeStr) return '';

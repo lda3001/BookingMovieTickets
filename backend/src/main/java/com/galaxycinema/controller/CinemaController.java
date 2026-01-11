@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +52,7 @@ public class CinemaController {
 
     @PostMapping
     @Operation(summary = "Tạo rạp mới", description = "Tạo một rạp chiếu phim mới trong hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CinemaResponse> createCinema(@Valid @RequestBody CinemaRequest request) {
         Cinema cinema = Cinema.builder()
                 .name(request.name())
@@ -67,6 +69,7 @@ public class CinemaController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Cập nhật rạp", description = "Cập nhật thông tin của một rạp chiếu phim")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CinemaResponse> updateCinema(@PathVariable Long id, @Valid @RequestBody CinemaRequest request) {
         Cinema cinema = Cinema.builder()
                 .name(request.name())
@@ -83,6 +86,7 @@ public class CinemaController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa rạp", description = "Xóa (vô hiệu hóa) một rạp chiếu phim khỏi hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCinema(@PathVariable Long id) {
         cinemaService.deleteCinema(id);
         return ResponseEntity.noContent().build();

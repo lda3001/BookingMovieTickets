@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,6 +73,7 @@ public class RoomController {
 
     @PostMapping
     @Operation(summary = "Tạo phòng mới", description = "Tạo một phòng chiếu phim mới trong hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request) {
         Cinema cinema = cinemaRepository.findById(request.cinemaId())
                 .orElseThrow(() -> new RuntimeException("Cinema not found"));
@@ -93,6 +95,7 @@ public class RoomController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Cập nhật phòng", description = "Cập nhật thông tin của một phòng chiếu phim")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long id, @Valid @RequestBody RoomRequest request) {
         Room room = roomService.getRoomById(id)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -117,6 +120,7 @@ public class RoomController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Xóa phòng", description = "Xóa (vô hiệu hóa) một phòng chiếu phim khỏi hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRoom(@PathVariable Long id) {
         roomService.deleteRoom(id);
         return ResponseEntity.noContent().build();
