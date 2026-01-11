@@ -44,11 +44,46 @@
     align-items: center;
     gap: 4px;
     padding: 6px 10px;
-    border-radius: 20px;
+    border-radius: 4px;
+    /* More rectangular like Galaxy */
     font-size: 13px;
     font-weight: 700;
     z-index: 2;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ageBadge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ageBadgeT18 {
+    background-color: #C90000;
+    /* Red */
+}
+
+.ageBadgeT16 {
+    background-color: #F58020;
+    /* Orange */
+}
+
+.ageBadgeT13 {
+    background-color: #E8B702;
+    /* Yellow/Gold */
+}
+
+.ageBadgeK,
+.ageBadgeP {
+    background-color: #4CAF50;
+    /* Green */
 }
 
 .ratingBadge svg {

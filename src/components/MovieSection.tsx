@@ -28,8 +28,16 @@ export default function MovieSection({ nowShowingMovies, comingSoonMovies }: { n
             </div>
 
             <div className={styles.grid}>
-                {(tab === 'now' ? nowShowingMovies : comingSoonMovies).map(movie => (
-                    <MovieCard key={movie.id} title={movie.title} image={movie.image || ''} rating={movie.rating} duration={movie.duration} slug={movie.slug} />
+                {(tab === 'now' ? nowShowingMovies : comingSoonMovies).slice(0, 8).map(movie => (
+                    <MovieCard
+                        key={movie.id}
+                        title={movie.title}
+                        image={movie.image || ''}
+                        rating={movie.rating}
+                        duration={movie.duration}
+                        slug={movie.slug}
+                        ageRating={movie.ageRating}
+                    />
                 ))}
             </div>
         </section>

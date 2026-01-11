@@ -7,12 +7,20 @@ interface MovieProps {
     image: string;
     rating?: string;
     duration?: string;
+    ageRating?: string;
     slug?: string;
 }
 
-export default function MovieCard({ title, image, rating, duration, slug }: MovieProps) {
-    const hasRating = rating && rating !== 'N/A';
-    
+export default function MovieCard({ title, image, rating, duration, slug, ageRating }: MovieProps) {
+    const hasRating = rating && rating !== 'N/A' && parseFloat(rating) > 0;
+
+    // Determine class for age rating
+    let ageClass = styles.ageBadgeP;
+    if (ageRating === 'T18') ageClass = styles.ageBadgeT18;
+    else if (ageRating === 'T16') ageClass = styles.ageBadgeT16;
+    else if (ageRating === 'T13') ageClass = styles.ageBadgeT13;
+    else if (ageRating === 'K' || ageRating === 'P') ageClass = styles.ageBadgeP;
+
     return (
         <div className={styles.card}>
             <div className={styles.posterWrapper}>
@@ -23,8 +31,13 @@ export default function MovieCard({ title, image, rating, duration, slug }: Movi
                         <span>{rating}</span>
                     </div>
                 )}
+                {ageRating && (
+                    <div className={`${styles.ageBadge} ${ageClass}`}>
+                        {ageRating}
+                    </div>
+                )}
                 <div className={styles.overlay}>
-                    <Link href={`/dat-ve/${slug || 'kung-fu-panda-4'}`} className={styles.buyBtn}>
+                    <Link href={`/dat-ve/${slug || '#'}`} className={styles.buyBtn}>
                         <Ticket size={18} />
                         <span>Mua vé</span>
                     </Link>

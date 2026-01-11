@@ -7,9 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Centered tabs usually */
-    margin-bottom: 40px;
-    gap: 40px;
+    margin-bottom: 48px;
     position: relative;
 }
 
@@ -18,16 +16,20 @@
 }
 
 .tab {
-    padding: 0 0 12px 0;
-    font-size: 20px;
+    padding: 0 0 8px 0;
+    font-size: 22px;
+    /* Larger font */
     font-weight: 700;
     cursor: pointer;
-    color: #888;
+    color: #333;
+    /* Darker default color */
     position: relative;
-    border-bottom: 3px solid transparent;
+    border-bottom: 4px solid transparent;
+    /* Match active border width */
     transition: all 0.3s;
     text-transform: capitalize;
-    /* Or none */
+    margin: 0 16px;
+    /* Spacing between tabs */
 }
 
 .tab:hover {
@@ -36,13 +38,32 @@
 
 .activeTab {
     color: var(--galaxy-orange);
-    border-bottom: 3px solid var(--galaxy-orange);
+    border-bottom: 4px solid var(--galaxy-orange);
+    /* Thicker underline */
+}
+
+.tab::after {
+    /* Hover effect line */
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background-color: var(--galaxy-orange);
+    transition: width 0.3s;
+}
+
+.tab:hover::after {
+    width: 100%;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
+    gap: 24px;
+    /* Reduced gap slightly for tighter look */
+    row-gap: 40px;
 }
 
 @media (max-width: 1024px) {

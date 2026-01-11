@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Search, ChevronDown, User, LogOut } from 'lucide-react';
+import { Search, ChevronDown, User, LogOut, History } from 'lucide-react';
 import styles from './Header.module.css';
 import LoginModal from './LoginModal';
 import { authService } from '@/services/authService';
@@ -13,8 +13,8 @@ const NAV_ITEMS = [
         label: 'Phim',
         href: '#',
         subMenu: [
-            { label: 'Phim Đang Chiếu', href: '#' },
-            { label: 'Phim Sắp Chiếu', href: '#' },
+            { label: 'Phim Đang Chiếu', href: '/phim-dang-chieu' },
+            { label: 'Phim Sắp Chiếu', href: '/phim-sap-chieu' },
         ]
     },
     {
@@ -56,14 +56,14 @@ export default function Header() {
             const userData = authService.getUser();
             setUser(userData);
         };
-        
+
         checkUser();
-        
+
         // Lắng nghe sự kiện storage change để cập nhật khi login/logout từ tab khác
         const handleStorageChange = () => {
             checkUser();
         };
-        
+
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
@@ -86,7 +86,7 @@ export default function Header() {
                 <div className={`container ${styles.limitContainer}`}>
                     <Link href="/" className={styles.logo}>
                         <img
-                            src="https://www.galaxycine.vn/_next/image/?url=%2F_next%2Fstatic%2Fmedia%2Fgalaxy-logo-mobile.074abeac.png&w=128&q=75"
+                            src="https://www.galaxycine.vn/_next/static/media/galaxy-logo-mobile.074abeac.png"
                             alt="Galaxy Cinema"
                             width={120}
                             height={40}
@@ -96,8 +96,8 @@ export default function Header() {
 
                     <nav className={styles.nav}>
                         {NAV_ITEMS.map((item) => (
-                            <div 
-                                key={item.label} 
+                            <div
+                                key={item.label}
                                 className={styles.navItemWrapper}
                                 onMouseEnter={() => item.subMenu && setActiveSubMenu(item.label)}
                                 onMouseLeave={() => setActiveSubMenu(null)}
@@ -105,8 +105,8 @@ export default function Header() {
                                 <Link href={item.href} className={styles.navItem}>
                                     {item.label}
                                     {item.subMenu && (
-                                        <ChevronDown 
-                                            size={16} 
+                                        <ChevronDown
+                                            size={16}
                                             className={`${styles.chevron} ${activeSubMenu === item.label ? styles.chevronActive : ''}`}
                                         />
                                     )}
@@ -114,9 +114,9 @@ export default function Header() {
                                 {item.subMenu && (
                                     <div className={`${styles.dropdown} ${activeSubMenu === item.label ? styles.dropdownActive : ''}`}>
                                         {item.subMenu.map(sub => (
-                                            <Link 
-                                                key={sub.label} 
-                                                href={sub.href} 
+                                            <Link
+                                                key={sub.label}
+                                                href={sub.href}
                                                 className={styles.subItem}
                                                 onClick={() => setActiveSubMenu(null)}
                                             >
@@ -138,7 +138,7 @@ export default function Header() {
                         <div className={styles.separator}></div>
 
                         {user ? (
-                            <div 
+                            <div
                                 className={styles.userMenu}
                                 onMouseEnter={() => setShowUserMenu(true)}
                                 onMouseLeave={() => setShowUserMenu(false)}
@@ -150,17 +150,22 @@ export default function Header() {
                                     </span>
                                 </div>
                                 <div className={`${styles.userDropdown} ${showUserMenu ? styles.userDropdownActive : ''}`}>
-                                    <div className={styles.userDropdownItem}>
+                                    {/* <div className={styles.userDropdownItem}>
                                         <User size={16} />
                                         <span>{user.email}</span>
-                                    </div>
+                                    </div> */}
                                     <div className={styles.userDropdownDivider}></div>
                                     <Link href="/tai-khoan" className={styles.userDropdownItem}>
                                         <User size={16} />
                                         <span>Tài khoản của tôi</span>
                                     </Link>
                                     <div className={styles.userDropdownDivider}></div>
-                                    <div 
+                                    <Link href="/tai-khoan/lich-su-giao-dich" className={styles.userDropdownItem}>
+                                        <History size={16} />
+                                        <span>Lịch sử giao dịch</span>
+                                    </Link>
+                                    <div className={styles.userDropdownDivider}></div>
+                                    <div
                                         className={styles.userDropdownItem}
                                         onClick={handleLogout}
                                         style={{ cursor: 'pointer', color: '#ff4444' }}

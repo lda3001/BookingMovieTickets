@@ -6,6 +6,7 @@ export const MOVIES = [
         title: "Zootopia 2",
         image: "https://cdn.galaxycine.vn/media/2025/11/3/zootopia-500_1762159348935.jpg",
         rating: "9.5",
+        ageRating: "P",
         duration: "94p",
         releaseDate: "01/12/2025",
         country: "Mỹ",
@@ -22,6 +23,7 @@ export const MOVIES = [
         title: "Scarlet",
         image: "https://cdn.galaxycine.vn/media/2025/11/11/scarlet-500_1762835510228.jpg",
         rating: "7.5",
+        ageRating: "T16",
         duration: "120p",
         trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Example YouTube URL
     },
@@ -31,6 +33,7 @@ export const MOVIES = [
         title: "Die My Love",
         image: "https://cdn.galaxycine.vn/media/2025/12/4/die-my-love-2_1764835569045.jpg",
         rating: "8.5",
+        ageRating: "T18",
         duration: "110p"
     },
     {
@@ -39,6 +42,7 @@ export const MOVIES = [
         title: "Thế Hệ Kỳ Tích",
         image: "https://cdn.galaxycine.vn/media/2025/11/7/the-he-ki-tich-500_1762499297656.jpg",
         rating: "7.0",
+        ageRating: "T13",
         duration: "105p"
     },
     {
@@ -47,6 +51,7 @@ export const MOVIES = [
         title: "Chân Trời Rực Rỡ",
         image: "https://cdn.galaxycine.vn/media/2025/12/4/ctrr-4_1764834048615.jpg",
         rating: "9.3",
+        ageRating: "K",
         duration: "130p"
     },
     {
@@ -55,6 +60,7 @@ export const MOVIES = [
         title: "Avatar: Fire And Ash",
         image: "https://cdn.galaxycine.vn/media/2025/11/20/avatar-fire-and-ash-2_1763629183877.jpg",
         rating: "9.6",
+        ageRating: "T13",
         duration: "190p"
     },
     {
@@ -63,6 +69,7 @@ export const MOVIES = [
         title: "Dollhouse",
         image: "https://cdn.galaxycine.vn/media/2025/12/9/kumathong-japan-500_1765252390520.jpg",
         rating: "8.2",
+        ageRating: "T18",
         duration: "95p"
     },
     {
@@ -71,6 +78,7 @@ export const MOVIES = [
         title: "Anh Trai Tôi Là Khủng Long",
         image: "https://cdn.galaxycine.vn/media/2025/11/28/anh-trai-toi-la-khung-long--tuong-lai-cua-qua-khu-500_1764315278678.jpg",
         rating: "8.3",
+        ageRating: "P",
         duration: "100p"
     },
     // Coming Soon
@@ -80,6 +88,7 @@ export const MOVIES = [
         title: "Chú Thuật Hồi Chiến: Biến Cố Shibuya x Tử Diệt Hồi Du - The Movie",
         image: "https://cdn.galaxycine.vn/media/2025/11/27/jujutsu-kaisen-execution-2025-4_1764214883066.jpg",
         rating: "8.1",
+        ageRating: "T16",
         duration: "88p",
         releaseDate: "05/12/2025",
         country: "Nhật Bản",
@@ -106,6 +115,7 @@ Sự hỗn loạn của lời nguyền ngày càng gia tăng. Trận tử chiế
         title: "Project Hail Mary",
         image: "https://cdn.galaxycine.vn/media/2025/7/30/project-mary-500_1753848924810.jpg",
         rating: "N/A",
+        ageRating: "T13",
         duration: "120p"
     },
     {
@@ -114,6 +124,7 @@ Sự hỗn loạn của lời nguyền ngày càng gia tăng. Trận tử chiế
         title: "Mufasa: The Lion King",
         image: "https://cdn.galaxycine.vn/media/2024/2/6/glx-qr-mobile-120x120_1707191834164.jpg",
         rating: "N/A",
+        ageRating: "P",
         duration: "118p"
     },
     {
@@ -122,6 +133,7 @@ Sự hỗn loạn của lời nguyền ngày càng gia tăng. Trận tử chiế
         title: "Captain America 4",
         image: "https://cdn.galaxycine.vn/media/2025/11/25/2048_1764057654567.jpg",
         rating: "N/A",
+        ageRating: "C16",
         duration: "130p"
     },
     {
@@ -130,6 +142,7 @@ Sự hỗn loạn của lời nguyền ngày càng gia tăng. Trận tử chiế
         title: "Kung Fu Panda 4",
         image: "https://image.tmdb.org/t/p/w500/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg",
         rating: "9.5",
+        ageRating: "P",
         duration: "94p"
     }
 ];

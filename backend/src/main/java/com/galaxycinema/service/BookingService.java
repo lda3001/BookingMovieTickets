@@ -86,12 +86,15 @@ public class BookingService {
     }
 
     @Transactional
-    public Booking confirmBooking(String bookingCode) {
+    public Booking confirmBooking(String bookingCode, String paymentMethod) {
         Booking booking = bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         
         booking.setStatus(Booking.BookingStatus.CONFIRMED);
-        booking.setPaymentStatus("PAID");
+        booking.setPaymentMethod(paymentMethod);
+        
+            booking.setPaymentStatus("PAID");
+        
         
         return bookingRepository.save(booking);
     }

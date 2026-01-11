@@ -11,7 +11,7 @@ export default function TransactionDetailPage() {
   const params = useParams();
   const router = useRouter();
   const bookingCode = params.id as string;
-  
+
   const [booking, setBooking] = useState<Booking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,19 +57,27 @@ export default function TransactionDetailPage() {
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return 'N/A';
+
     try {
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+
+      // Kiểm tra input có chứa giây không
+      const hasSeconds = /:\d{2}:\d{2}/.test(dateString);
+
       return date.toLocaleDateString('vi-VN', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        ...(hasSeconds && { second: '2-digit' }),
       });
     } catch {
       return dateString;
     }
   };
+
 
   const formatPrice = (price?: number): string => {
     if (!price) return '0đ';
@@ -180,6 +188,18 @@ export default function TransactionDetailPage() {
         </div>
 
         <div className={styles.divider}></div>
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Mã QR Vé</h2>
+          <div className={styles.qrCode}>
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.bookingCode}`}
+              alt="QR Code"
+            />
+          </div>
+        </div>
+
+        <div className={styles.divider}></div>
+
 
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Thông tin khác</h2>

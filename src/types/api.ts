@@ -7,6 +7,7 @@ export interface Movie {
   image?: string;
   duration?: string;
   rating?: string;
+  ageRating?: string; // T18, T16, T13, K, P, C16, C13
   releaseDate?: string; // Format: "dd/MM/yyyy"
   country?: string;
   producer?: string;

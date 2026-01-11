@@ -10,6 +10,7 @@ import { CheckCircle, Clock, CreditCard, QrCode, Smartphone, XCircle } from 'luc
 
 interface PaymentPageProps {
     booking: Booking;
+
 }
 
 type PaymentMethod = 'qr' | 'card' | 'ewallet';
@@ -19,7 +20,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [booking, setBooking] = useState<Booking>(initialBooking);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('qr');
     const [processing, setProcessing] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(getTimeLeftFromTicketCode(booking.bookingCode)); // 10 minutes in seconds
     const [showSuccess, setShowSuccess] = useState(false);
 
     // Countdown timer
@@ -40,6 +41,20 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
 
         return () => clearInterval(timer);
     }, [booking.status]);
+
+    function getTimeLeftFromTicketCode(ticketCode: string) {
+        // Lấy timestamp từ ticket code
+        const timestamp = Number(ticketCode.replace('GC', '')); // ms
+      
+        const createdAt = timestamp;
+        const now = Date.now();
+      
+        // Thời gian đã trôi qua (giây)
+        const elapsedSeconds = Math.floor((now - createdAt) / 1000);
+      
+        // Thời gian còn lại
+        return Math.max(600 - elapsedSeconds, 0);
+      }
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -66,7 +81,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             // Confirm booking
-            const confirmedBooking = await bookingService.confirmBooking(booking.bookingCode);
+            const confirmedBooking = await bookingService.confirmBooking(booking.bookingCode, selectedMethod as PaymentMethod);
             setBooking(confirmedBooking);
             setShowSuccess(true);
 
@@ -237,7 +252,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                                     <div className={styles.qrSection}>
                                         <div className={styles.qrCode}>
                                             <img 
-                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${booking.bookingCode}`}
+                                                src={`https://img.vietqr.io/image/MBBank-3018686868686-qr_only.png?amount=${booking.totalPrice}&addInfo=${booking.bookingCode}&accountName=LE%20DUC%20ANH`}
                                                 alt="QR Code"
                                             />
                                         </div>

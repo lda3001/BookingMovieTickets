@@ -21,9 +21,9 @@ export const bookingService = {
   },
 
   // Xác nhận đặt vé
-  confirmBooking: async (bookingCode: string): Promise<Booking> => {
+  confirmBooking: async (bookingCode: string, paymentMethod: string): Promise<Booking> => {
     const response = await apiClient.post<Booking>(
-      `/bookings/${bookingCode}/confirm`
+      `/bookings/${bookingCode}/confirm?paymentMethod=${paymentMethod}`
     );
     return response.data;
   },

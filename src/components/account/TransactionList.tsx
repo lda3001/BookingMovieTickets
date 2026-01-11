@@ -67,19 +67,27 @@ export default function TransactionList() {
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return 'N/A';
+  
     try {
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+  
+      // Kiểm tra input có chứa giây không
+      const hasSeconds = /:\d{2}:\d{2}/.test(dateString);
+  
       return date.toLocaleDateString('vi-VN', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        ...(hasSeconds && { second: '2-digit' }),
       });
     } catch {
       return dateString;
     }
   };
+  
 
   const formatPrice = (price?: number): string => {
     if (!price) return '0đ';

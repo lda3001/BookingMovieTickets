@@ -46,8 +46,8 @@ public class BookingController {
 
     @PostMapping("/{bookingCode}/confirm")
     @Operation(summary = "Xác nhận đặt vé", description = "Xác nhận và thanh toán cho một đặt vé")
-    public ResponseEntity<BookingResponse> confirmBooking(@PathVariable String bookingCode) {
-        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.confirmBooking(bookingCode)));
+    public ResponseEntity<BookingResponse> confirmBooking(@PathVariable String bookingCode, @RequestParam String paymentMethod) {
+        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.confirmBooking(bookingCode, paymentMethod)));
     }
 
     @PostMapping("/{bookingCode}/cancel")

@@ -201,6 +201,14 @@
   color: var(--galaxy-text-gray);
 }
 
+.qrCode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .container {
