@@ -30,7 +30,6 @@ export default function SeatSelector({ movieTitle, showtime, onClose }: SeatSele
     const [room, setRoom] = useState<Room | null>(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [userId] = useState<number>(1); // TODO: Get from auth context
 
     useEffect(() => {
         const fetchData = async () => {
@@ -111,7 +110,6 @@ export default function SeatSelector({ movieTitle, showtime, onClose }: SeatSele
         try {
             setSubmitting(true);
             const booking = await bookingService.createBooking({
-                userId,
                 showtimeId: showtime.id,
                 seatCodes: selectedSeats,
             });

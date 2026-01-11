@@ -12,7 +12,7 @@ public record MovieResponse(
         String image,
         String duration,
         String rating,
-        @JsonFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate releaseDate,
         String country,
         String producer,

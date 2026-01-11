@@ -24,7 +24,7 @@ export const MovieEdit = () => {
         image: values.image,
         duration: values.duration,
         rating: values.rating,
-        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("DD/MM/YYYY") : undefined,
+        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("YYYY-MM-DD") : undefined,
         country: values.country,
         producer: values.producer,
         genre: values.genre,
@@ -51,7 +51,6 @@ export const MovieEdit = () => {
         layout="vertical"
         initialValues={{
           ...postData,
-          releaseDate: postData?.releaseDate ? dayjs(postData.releaseDate, "DD/MM/YYYY", true) : undefined,
         }}
       >
         <Flex gap={20} justify="right">
@@ -167,7 +166,17 @@ export const MovieEdit = () => {
           <Form.Item label="Đánh giá" name="rating" style={{ flex: 1 }}>
             <Input />
           </Form.Item>
-          <Form.Item label="Ngày phát hành" name="releaseDate" style={{ flex: 1 }}>
+          <Form.Item 
+            label="Ngày phát hành" 
+            name="releaseDate" 
+            style={{ flex: 1 }}
+            getValueProps={(value) => ({
+              value: value ? dayjs(value) : undefined,
+            })}
+            normalize={(value) => {
+              return value ? dayjs(value).format("YYYY-MM-DD") : undefined;
+            }}
+          >
             <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
           </Form.Item>
         </Flex>

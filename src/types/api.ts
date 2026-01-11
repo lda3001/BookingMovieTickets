@@ -132,7 +132,6 @@ export enum UserRole {
 
 // Request/Response types
 export interface CreateBookingRequest {
-  userId: number;
   showtimeId: number;
   seatCodes: string[];
 }

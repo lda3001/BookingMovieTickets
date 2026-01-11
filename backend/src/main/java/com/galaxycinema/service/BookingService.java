@@ -23,13 +23,21 @@ public class BookingService {
         return bookingRepository.findByUserId(userId);
     }
 
-    public Booking getBookingByCode(String bookingCode) {
-        return bookingRepository.findByBookingCode(bookingCode)
+    public Booking getBookingByCode(String bookingCode, Long userId) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+        if (booking.getUser().getId() != userId) {
+            throw new RuntimeException("You are not authorized to access this booking");
+        }
+        return booking;
     }
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
+    }
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
     @Transactional

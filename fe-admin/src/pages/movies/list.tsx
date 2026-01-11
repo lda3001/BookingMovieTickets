@@ -26,6 +26,7 @@ import {
 import { useRef } from "react";
 import { useNavigate } from "react-router";
 import { CrudFilters, useApiUrl } from "@refinedev/core";
+import { getUrlImage } from "../../utils/helper";
 
 const Actions = ({
   record,
@@ -115,7 +116,7 @@ export const MovieList = () => {
               dataIndex: "image",
               render: (value) =>
                 value ? (
-                  <Image src={value} width={80} height={120} style={{ objectFit: "cover" }} />
+                  <Image src={getUrlImage(value)} width={80} height={120} style={{ objectFit: "cover" }} />
                 ) : (
                   "-"
                 ),

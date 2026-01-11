@@ -3,8 +3,8 @@ import { Booking, CreateBookingRequest } from '@/types/api';
 
 export const bookingService = {
   // Lấy đặt vé của user
-  getUserBookings: async (userId: number): Promise<Booking[]> => {
-    const response = await apiClient.get<Booking[]>(`/bookings/user/${userId}`);
+  getUserBookings: async (): Promise<Booking[]> => {
+    const response = await apiClient.get<Booking[]>(`/bookings/user`);
     return response.data;
   },
 

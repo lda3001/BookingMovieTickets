@@ -27,5 +27,9 @@ export const generateFileWithTimeStamp = (file: RcFile) => {
   return {newFile, newFileName};
 };
 
+export const getUrlImage = (image: string) => {
+  return image.startsWith("http") || image.startsWith("https") ? image : API_URL + image;
+};
+
 export const API_URL =
   import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:8080/api";

@@ -127,7 +127,7 @@ export const BookingList = () => {
               render: (_, record) =>
                 record.showTime ? (
                   <TextField
-                    value={new Date(record.showTime).toLocaleString("vi-VN")}
+                    value={record.showTime}
                   />
                 ) : (
                   "-"

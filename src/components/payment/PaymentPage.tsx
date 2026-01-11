@@ -22,7 +22,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [processing, setProcessing] = useState(false);
     const [timeLeft, setTimeLeft] = useState(getTimeLeftFromTicketCode(booking.bookingCode)); // 10 minutes in seconds
     const [showSuccess, setShowSuccess] = useState(false);
-    console.log("Booking status:", booking.status);
+    
 
     // Countdown timer
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
             setTimeLeft((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    //handleCancelBooking();
+                    handleCancelBooking();
                     return 0;
                 }
                 return prev - 1;
@@ -53,7 +53,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
         const elapsedSeconds = Math.floor((now - createdAt) / 1000);
       
         // Thời gian còn lại
-        return Math.max(600 - elapsedSeconds, 0);
+        return Math.max(180 - elapsedSeconds, 0);
       }
 
     const formatTime = (seconds: number) => {

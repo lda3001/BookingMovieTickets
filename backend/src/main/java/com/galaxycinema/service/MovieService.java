@@ -53,20 +53,58 @@ public class MovieService {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
         
-        movie.setTitle(movieDetails.getTitle());
-        movie.setSlug(movieDetails.getSlug());
-        movie.setImage(movieDetails.getImage());
-        movie.setDuration(movieDetails.getDuration());
-        movie.setRating(movieDetails.getRating());
-        movie.setReleaseDate(movieDetails.getReleaseDate());
-        movie.setCountry(movieDetails.getCountry());
-        movie.setProducer(movieDetails.getProducer());
-        movie.setGenre(movieDetails.getGenre());
-        movie.setDirector(movieDetails.getDirector());
-        movie.setCast(movieDetails.getCast());
-        movie.setContent(movieDetails.getContent());
-        movie.setDescription(movieDetails.getDescription());
-        movie.setTrailerUrl(movieDetails.getTrailerUrl());
+        // Update all fields
+        if (movieDetails.getTitle() != null) {
+            movie.setTitle(movieDetails.getTitle());
+        }
+        if (movieDetails.getSlug() != null) {
+            movie.setSlug(movieDetails.getSlug());
+        }
+        if (movieDetails.getImage() != null) {
+            movie.setImage(movieDetails.getImage());
+        }
+        if (movieDetails.getDuration() != null) {
+            movie.setDuration(movieDetails.getDuration());
+        }
+        if (movieDetails.getRating() != null) {
+            movie.setRating(movieDetails.getRating());
+        }
+        if (movieDetails.getReleaseDate() != null) {
+            movie.setReleaseDate(movieDetails.getReleaseDate());
+        }
+        if (movieDetails.getCountry() != null) {
+            movie.setCountry(movieDetails.getCountry());
+        }
+        if (movieDetails.getProducer() != null) {
+            movie.setProducer(movieDetails.getProducer());
+        }
+        if (movieDetails.getGenre() != null) {
+            movie.setGenre(movieDetails.getGenre());
+        }
+        if (movieDetails.getDirector() != null) {
+            movie.setDirector(movieDetails.getDirector());
+        }
+        if (movieDetails.getCast() != null) {
+            movie.setCast(movieDetails.getCast());
+        }
+        if (movieDetails.getTagline() != null) {
+            movie.setTagline(movieDetails.getTagline());
+        }
+        if (movieDetails.getSubtitle() != null) {
+            movie.setSubtitle(movieDetails.getSubtitle());
+        }
+        if (movieDetails.getContent() != null) {
+            movie.setContent(movieDetails.getContent());
+        }
+        if (movieDetails.getDescription() != null) {
+            movie.setDescription(movieDetails.getDescription());
+        }
+        if (movieDetails.getTrailerUrl() != null) {
+            movie.setTrailerUrl(movieDetails.getTrailerUrl());
+        }
+        if (movieDetails.getIsActive() != null) {
+            movie.setIsActive(movieDetails.getIsActive());
+        }
         
         return movieRepository.save(movie);
     }

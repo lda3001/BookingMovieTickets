@@ -199,6 +199,7 @@ export interface IBookedSeat {
 export interface IBooking {
   id: number;
   bookingCode: string;
+  user?: IUser;
   userId?: string;
   showtimeId?: number;
   showTime?: string;

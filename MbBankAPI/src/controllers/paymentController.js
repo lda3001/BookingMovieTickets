@@ -104,6 +104,7 @@ class PaymentController {
 
       // Process new transactions
       let totalProcessed = 0;
+      let newTransactionsCount = 0;
       if (Array.isArray(transactions.transactionHistoryList)) {
         for (const transaction of transactions.transactionHistoryList) {
           try {
@@ -152,12 +153,8 @@ class PaymentController {
                 booking_code: booking.bookingCode,
                 isProcessed: false
               });
+              newTransactionsCount++;
             }
-            res.json({
-              success: true,
-              message: 'Giao dịch đã được ghi nhận!',
-              data: transaction
-            });
           } catch (error) {
             console.error('Error processing transaction:', error);
             continue;

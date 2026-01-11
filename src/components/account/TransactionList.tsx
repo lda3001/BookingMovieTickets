@@ -21,15 +21,8 @@ export default function TransactionList() {
   const loadBookings = async () => {
     try {
       setIsLoading(true);
-      const user = authService.getUser();
 
-      
-      if (!user || !user.userId) {
-        setError('Vui lòng đăng nhập để xem lịch sử giao dịch');
-        return;
-      }
-
-      const data = await bookingService.getUserBookings(user.userId);
+      const data = await bookingService.getUserBookings();
       // Sort by date, newest first
       const sortedData = data.sort((a, b) => {
         const dateA = new Date(a.createdAt || 0).getTime();

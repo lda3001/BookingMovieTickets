@@ -27,6 +27,7 @@ public class MovieController {
 
     @GetMapping
     @Operation(summary = "Lấy tất cả phim", description = "Trả về danh sách tất cả các phim trong hệ thống")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<MovieResponse>> getAllMovies() {
         return ResponseEntity.ok(mappers.toMovieResponseList(movieService.getAllMovies()));
     }
@@ -102,20 +103,55 @@ public class MovieController {
         Movie movie = movieService.getMovieById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
         
-        movie.setTitle(request.title());
-        movie.setSlug(request.slug());
-        movie.setImage(request.image());
-        movie.setDuration(request.duration());
-        movie.setRating(request.rating());
-        movie.setReleaseDate(request.releaseDate());
-        movie.setCountry(request.country());
-        movie.setProducer(request.producer());
-        movie.setGenre(request.genre());
-        movie.setDirector(request.director());
-        movie.setCast(request.cast());
-        movie.setContent(request.content());
-        movie.setDescription(request.description());
-        movie.setTrailerUrl(request.trailerUrl());
+        // Update all fields from request
+        if (request.title() != null) {
+            movie.setTitle(request.title());
+        }
+        if (request.slug() != null) {
+            movie.setSlug(request.slug());
+        }
+        if (request.image() != null) {
+            movie.setImage(request.image());
+        }
+        if (request.duration() != null) {
+            movie.setDuration(request.duration());
+        }
+        if (request.rating() != null) {
+            movie.setRating(request.rating());
+        }
+        if (request.releaseDate() != null) {
+            movie.setReleaseDate(request.releaseDate());
+        }
+        if (request.country() != null) {
+            movie.setCountry(request.country());
+        }
+        if (request.producer() != null) {
+            movie.setProducer(request.producer());
+        }
+        if (request.genre() != null) {
+            movie.setGenre(request.genre());
+        }
+        if (request.director() != null) {
+            movie.setDirector(request.director());
+        }
+        if (request.cast() != null) {
+            movie.setCast(request.cast());
+        }
+        if (request.tagline() != null) {
+            movie.setTagline(request.tagline());
+        }
+        if (request.subtitle() != null) {
+            movie.setSubtitle(request.subtitle());
+        }
+        if (request.content() != null) {
+            movie.setContent(request.content());
+        }
+        if (request.description() != null) {
+            movie.setDescription(request.description());
+        }
+        if (request.trailerUrl() != null) {
+            movie.setTrailerUrl(request.trailerUrl());
+        }
         if (request.isActive() != null) {
             movie.setIsActive(request.isActive());
         }

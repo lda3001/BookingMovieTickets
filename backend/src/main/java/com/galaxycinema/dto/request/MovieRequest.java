@@ -23,7 +23,7 @@ public record MovieRequest(
         @Size(max = 10, message = "Đánh giá không được vượt quá 10 ký tự")
         String rating,
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate releaseDate,
 
         @Size(max = 100, message = "Quốc gia không được vượt quá 100 ký tự")

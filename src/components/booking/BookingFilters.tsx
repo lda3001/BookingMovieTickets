@@ -3,10 +3,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './BookingFilters.module.css';
 import SeatSelector from './SeatSelector';
+import LoginModal from '@/components/LoginModal';
 import { useCinemas, useCinemasByCity } from '@/hooks/useCinemas';
 import { useShowtimesByMovie, useShowtimesByMovieAndCinemaAndDate, useAvailableDates } from '@/hooks/useShowtimes';
 import { Showtime } from '@/types/api';
 import dayjs from '@/lib/dayjs';
+import { authService } from '@/services';
 
 interface BookingFiltersProps {
     movieId: number;
@@ -18,6 +20,14 @@ export default function BookingFilters({ movieId, movieTitle = "Phim" }: Booking
     const [selectedCinemaId, setSelectedCinemaId] = useState<number | undefined>();
     const [selectedDate, setSelectedDate] = useState<string>('');
     const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(null);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Kiểm tra trạng thái đăng nhập
+    useEffect(() => {
+        setIsAuthenticated(authService.isAuthenticated());
+    }, []);
+   
 
     // Fetch cinemas
     const { cinemas: allCinemas } = useCinemas();
@@ -179,6 +189,11 @@ export default function BookingFilters({ movieId, movieTitle = "Phim" }: Booking
         setSelectedShowtime(null);
     };
 
+    const handleLoginSuccess = () => {
+        setIsAuthenticated(true);
+        setIsLoginModalOpen(false);
+    };
+
     return (
         <div className={styles.filterContainer}>
             <div className={styles.navLine}>
@@ -274,7 +289,13 @@ export default function BookingFilters({ movieId, movieTitle = "Phim" }: Booking
                                                 <button
                                                     key={showtime.id}
                                                     className={styles.timeBtn}
-                                                    onClick={() => handleShowtimeSelect(showtime)}
+                                                    onClick={() => {
+                                                        if(isAuthenticated) {
+                                                            handleShowtimeSelect(showtime);
+                                                        } else {
+                                                            setIsLoginModalOpen(true);
+                                                        }
+                                                    }}
                                                 >
                                                     {timeStr}
                                                 </button>
@@ -303,6 +324,12 @@ export default function BookingFilters({ movieId, movieTitle = "Phim" }: Booking
                     onClose={handleCloseSeatSelector}
                 />
             )}
+
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 }

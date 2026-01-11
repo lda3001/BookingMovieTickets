@@ -13,12 +13,11 @@ export const MovieCreate = () => {
     action: "create",
     transform: (values: any) => {
       return {
-        slug: values.slug,
         title: values.title,
         image: values.image,
         duration: values.duration,
         rating: values.rating,
-        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("DD/MM/YYYY") : undefined,
+        releaseDate: values.releaseDate ? dayjs(values.releaseDate).format("YYYY-MM-DD") : undefined,
         country: values.country,
         producer: values.producer,
         genre: values.genre,
@@ -70,18 +69,6 @@ export const MovieCreate = () => {
           <Input placeholder="Nhập tiêu đề phim" />
         </Form.Item>
 
-        <Form.Item
-          label="Slug"
-          name="slug"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập slug",
-            },
-          ]}
-        >
-          <Input placeholder="slug-phim" />
-        </Form.Item>
 
         <Form.Item
           label="Ảnh poster"
@@ -134,7 +121,17 @@ export const MovieCreate = () => {
           <Form.Item label="Đánh giá" name="rating" style={{ flex: 1 }}>
             <Input placeholder="VD: PG-13" />
           </Form.Item>
-          <Form.Item label="Ngày phát hành" name="releaseDate" style={{ flex: 1 }}>
+          <Form.Item 
+            label="Ngày phát hành" 
+            name="releaseDate" 
+            style={{ flex: 1 }}
+            getValueProps={(value) => ({
+              value: value ? dayjs(value) : undefined,
+            })}
+            normalize={(value) => {
+              return value ? dayjs(value).format("YYYY-MM-DD") : undefined;
+            }}
+          >
             <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
           </Form.Item>
         </Flex>
