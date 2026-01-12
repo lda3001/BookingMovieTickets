@@ -19,7 +19,7 @@ public record RoomRequest(
         @Size(max = 50, message = "Hàng VIP không được vượt quá 50 ký tự")
         String vipRows,
 
-        
+        Boolean isActive
 ) {
 }
 
