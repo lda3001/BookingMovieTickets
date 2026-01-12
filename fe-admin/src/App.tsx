@@ -56,8 +56,7 @@ import { MenuEdit, MenuList } from "./pages/menu";
 import { API_URL } from "./utils/helper";
 import { CategoryPostEdit, CategoryPostList } from "./pages/categoryPost";
 import { PostCreate } from "./pages/posts/create";
-import { UserList } from "./pages/users";
-import { OrderUserShow } from "./pages/users/show";
+import { CustomerList, CustomerShow, CustomerCreate, CustomerEdit } from "./pages/customers";
 import { MovieList, MovieCreate, MovieEdit, MovieShow } from "./pages/movies";
 import { CinemaList, CinemaCreate, CinemaEdit, CinemaShow } from "./pages/cinemas";
 import { RoomList, RoomCreate, RoomEdit, RoomShow } from "./pages/rooms";
@@ -306,8 +305,10 @@ const App: React.FC = () => {
               // },
               {
                 name: "users",
-                list: "/users",
-                show: "/users/show/:id",
+                list: "/customers",
+                create: "/customers/create",
+                edit: "/customers/edit/:id",
+                show: "/customers/show/:id",
                 meta: {
                   label: "Khách Hàng",
                   icon: <UserOutlined />,
@@ -443,10 +444,11 @@ const App: React.FC = () => {
                   <Route path="edit/:id" element={<CategoryPostEdit />} />
                   <Route path="show/:id" element={<CategoryShow />} />
                 </Route>
-                <Route path="/users">
-                  <Route index element={<UserList />} />
-                
-                  <Route path="show/:id" element={<OrderUserShow />} />
+                <Route path="/customers">
+                  <Route index element={<CustomerList />} />
+                  <Route path="create" element={<CustomerCreate />} />
+                  <Route path="edit/:id" element={<CustomerEdit />} />
+                  <Route path="show/:id" element={<CustomerShow />} />
                 </Route>
                
                 

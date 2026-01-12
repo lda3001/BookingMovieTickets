@@ -106,17 +106,20 @@ export interface OrderDetail {
 
 export interface IUser {
   id: string;
-  username: string;
+  fullName: string; // Backend uses fullName
   email: string;
+  phone?: string;
+  dateOfBirth?: string;
   role: string;
-  typeAccount: string;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
-  orders: IOrder[];
+  bookings?: IBooking[]; // Backend uses bookings instead of orders
 }
 export interface IUserResponse {
   status: string;
   data: IUser;
+  bookings?: IBooking[];
 }
 
 export interface IMovie {
