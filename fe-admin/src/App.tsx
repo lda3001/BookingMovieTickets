@@ -59,7 +59,7 @@ import { PostCreate } from "./pages/posts/create";
 import { UserList } from "./pages/users";
 import { OrderUserShow } from "./pages/users/show";
 import { MovieList, MovieCreate, MovieEdit, MovieShow } from "./pages/movies";
-import { CinemaList, CinemaEdit, CinemaShow } from "./pages/cinemas";
+import { CinemaList, CinemaCreate, CinemaEdit, CinemaShow } from "./pages/cinemas";
 import { RoomList, RoomCreate, RoomEdit, RoomShow } from "./pages/rooms";
 import { ShowtimeList, ShowtimeCreate, ShowtimeEdit, ShowtimeShow } from "./pages/showtimes";
 import { BookingList, BookingShow } from "./pages/bookings";
@@ -275,35 +275,35 @@ const App: React.FC = () => {
                   icon: <DashboardOutlined />,
                 },
               },
-              {
-                name: "menus",
-                list: "/menus",
-                edit: "/menus/edit/:id",
-                meta: {
-                  label: "Menu",
-                  icon: <MenuOutlined />,
-                },
-              },
-              {
-                name: "posts",
-                list: "/posts",
-                show: "/posts/show/:id",
-                edit: "/posts/edit/:id",
-                meta: {
-                  label: "Bài Viết",
-                  icon: <FormOutlined />,
-                },
-              },
-              {
-                name: "categoryposts",
-                list: "/categoryposts",
-                show: "/categoryposts/show/:id",
-                edit: "/categoryposts/edit/:id",
-                meta: {
-                  label: "Danh mục Bài Viết",
-                  icon: <ProfileOutlined />,
-                },
-              },
+              // {
+              //   name: "menus",
+              //   list: "/menus",
+              //   edit: "/menus/edit/:id",
+              //   meta: {
+              //     label: "Menu",
+              //     icon: <MenuOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "posts",
+              //   list: "/posts",
+              //   show: "/posts/show/:id",
+              //   edit: "/posts/edit/:id",
+              //   meta: {
+              //     label: "Bài Viết",
+              //     icon: <FormOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "categoryposts",
+              //   list: "/categoryposts",
+              //   show: "/categoryposts/show/:id",
+              //   edit: "/categoryposts/edit/:id",
+              //   meta: {
+              //     label: "Danh mục Bài Viết",
+              //     icon: <ProfileOutlined />,
+              //   },
+              // },
               {
                 name: "users",
                 list: "/users",
@@ -331,6 +331,7 @@ const App: React.FC = () => {
               {
                 name: "cinemas",
                 list: "/cinemas",
+                create: "/cinemas/create",
                 edit: "/cinemas/edit/:id",
                 show: "/cinemas/show/:id",
                 meta: {
@@ -462,6 +463,7 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/cinemas">
                   <Route index element={<CinemaList />} />
+                  <Route path="create" element={<CinemaCreate />} />
                   <Route path="edit/:id" element={<CinemaEdit />} />
                   <Route path="show/:id" element={<CinemaShow />} />
                 </Route>

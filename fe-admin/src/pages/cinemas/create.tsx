@@ -1,34 +1,31 @@
 import React from "react";
-import { Edit, useForm } from "@refinedev/antd";
+import { Create, useForm } from "@refinedev/antd";
 import { Flex, Form, Input, Switch, InputNumber } from "antd";
 import type { ICinema } from "../../interfaces";
 
-export const CinemaEdit = () => {
+export const CinemaCreate = () => {
   const {
     formProps,
     formLoading,
     saveButtonProps,
-    query: queryResult,
   } = useForm<ICinema>({
-    action: "edit",
+    action: "create",
   });
 
-  const postData = queryResult?.data?.data;
-
   return (
-    <Edit isLoading={formLoading} saveButtonProps={saveButtonProps}>
+    <Create isLoading={formLoading} saveButtonProps={saveButtonProps}>
       <Form
         {...formProps}
         layout="vertical"
         initialValues={{
-          ...postData,
+          isActive: true,
+          totalRooms: 0,
         }}
       >
         <Flex gap={20} justify="right">
           <Form.Item
             label="Trạng thái"
             name="isActive"
-            initialValue={true}
             layout="horizontal"
           >
             <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
@@ -45,7 +42,7 @@ export const CinemaEdit = () => {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Nhập tên rạp chiếu phim" />
         </Form.Item>
 
         <Form.Item 
@@ -103,7 +100,6 @@ export const CinemaEdit = () => {
           <InputNumber min={0} max={50} style={{ width: "100%" }} placeholder="Nhập số phòng chiếu" />
         </Form.Item>
       </Form>
-    </Edit>
+    </Create>
   );
 };
-

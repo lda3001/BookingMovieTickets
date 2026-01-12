@@ -22,7 +22,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [processing, setProcessing] = useState(false);
     const [timeLeft, setTimeLeft] = useState(getTimeLeftFromTicketCode(booking.bookingCode)); // 10 minutes in seconds
     const [showSuccess, setShowSuccess] = useState(false);
-    
+
 
     // Countdown timer
     useEffect(() => {
@@ -45,16 +45,16 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     function getTimeLeftFromTicketCode(ticketCode: string) {
         // Lấy timestamp từ ticket code
         const timestamp = Number(ticketCode.replace('GC', '')); // ms
-      
+
         const createdAt = timestamp;
         const now = Date.now();
-      
+
         // Thời gian đã trôi qua (giây)
         const elapsedSeconds = Math.floor((now - createdAt) / 1000);
-      
+
         // Thời gian còn lại
         return Math.max(180 - elapsedSeconds, 0);
-      }
+    }
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -159,7 +159,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                         <div className={styles.card}>
                             <div className={styles.cardHeader}>
                                 <h2>Thông Tin Đặt Vé</h2>
-                                <span 
+                                <span
                                     className={styles.statusBadge}
                                     style={{ backgroundColor: getStatusColor() }}
                                 >
@@ -200,48 +200,48 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                         {booking.status === BookingStatus.PENDING && (
                             <div className={styles.card}>
                                 <h3>Chọn Phương Thức Thanh Toán</h3>
-                                
+
                                 <div className={styles.paymentMethods}>
-                                    <div 
+                                    <div
                                         className={`${styles.methodCard} ${selectedMethod === 'qr' ? styles.active : ''}`}
                                         onClick={() => setSelectedMethod('qr')}
                                     >
                                         <QrCode size={32} />
                                         <span>Quét mã QR</span>
                                         <div className={styles.radio}>
-                                            <input 
-                                                type="radio" 
-                                                checked={selectedMethod === 'qr'} 
+                                            <input
+                                                type="radio"
+                                                checked={selectedMethod === 'qr'}
                                                 readOnly
                                             />
                                         </div>
                                     </div>
 
-                                    <div 
+                                    <div
                                         className={`${styles.methodCard} ${selectedMethod === 'card' ? styles.active : ''}`}
                                         onClick={() => setSelectedMethod('card')}
                                     >
                                         <CreditCard size={32} />
                                         <span>Thẻ tín dụng</span>
                                         <div className={styles.radio}>
-                                            <input 
-                                                type="radio" 
-                                                checked={selectedMethod === 'card'} 
+                                            <input
+                                                type="radio"
+                                                checked={selectedMethod === 'card'}
                                                 readOnly
                                             />
                                         </div>
                                     </div>
 
-                                    <div 
+                                    <div
                                         className={`${styles.methodCard} ${selectedMethod === 'ewallet' ? styles.active : ''}`}
                                         onClick={() => setSelectedMethod('ewallet')}
                                     >
                                         <Smartphone size={32} />
                                         <span>Ví điện tử</span>
                                         <div className={styles.radio}>
-                                            <input 
-                                                type="radio" 
-                                                checked={selectedMethod === 'ewallet'} 
+                                            <input
+                                                type="radio"
+                                                checked={selectedMethod === 'ewallet'}
                                                 readOnly
                                             />
                                         </div>
@@ -251,7 +251,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                                 {selectedMethod === 'qr' && (
                                     <div className={styles.qrSection}>
                                         <div className={styles.qrCode}>
-                                            <img 
+                                            <img
                                                 src={`https://img.vietqr.io/image/MBBank-3018686868686-qr_only.png?amount=${booking.totalPrice}&addInfo=${booking.bookingCode}&accountName=LE%20DUC%20ANH`}
                                                 alt="QR Code"
                                             />
@@ -295,7 +295,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                     <div className={styles.rightColumn}>
                         <div className={styles.card}>
                             <h3>Chi Tiết Giá</h3>
-                            
+
                             <div className={styles.priceBreakdown}>
                                 <div className={styles.priceRow}>
                                     <span>Vé phim ({booking.seatCodes?.length || 0} ghế)</span>
@@ -316,7 +316,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
 
                             {booking.status === BookingStatus.PENDING && (
                                 <>
-                                    <button 
+                                    <button
                                         className={styles.payButton}
                                         onClick={handlePayment}
                                         disabled={processing}
@@ -324,7 +324,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                                         {processing ? 'Đang xử lý...' : 'Thanh Toán'}
                                     </button>
 
-                                    <button 
+                                    <button
                                         className={styles.cancelButton}
                                         onClick={handleCancelBooking}
                                         disabled={processing}

@@ -3,6 +3,8 @@ import {
   useTable,
   EditButton,
   ShowButton,
+  DeleteButton,
+  CreateButton,
 } from "@refinedev/antd";
 import { ProTable } from "@ant-design/pro-components";
 import {
@@ -12,6 +14,7 @@ import {
   Form,
   Input,
   Button,
+  Flex,
 } from "antd";
 import type { ICinema } from "../../interfaces";
 import {
@@ -29,6 +32,14 @@ const Actions = ({
   <Space>
     <ShowButton hideText size="small" recordItemId={record.id} />
     <EditButton hideText size="small" recordItemId={record.id} />
+    <DeleteButton 
+      hideText 
+      size="small" 
+      recordItemId={record.id}
+      confirmTitle="Xác nhận xóa rạp"
+      confirmOkText="Xóa"
+      confirmCancelText="Hủy"
+    />
   </Space>
 );
 
@@ -54,19 +65,22 @@ export const CinemaList = () => {
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={"middle"}>
       <Card>
-        <Form layout="vertical" {...searchFormProps}>
-          <Form.Item label="Tìm kiếm" name="q">
-            <Input
-              placeholder="Tên rạp, thành phố, etc."
-              prefix={<SearchOutlined />}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" type="primary">
-              Tìm kiếm
-            </Button>
-          </Form.Item>
-        </Form>
+        <Flex justify="space-between" align="center" wrap="wrap" gap={16}>
+          <Form layout="inline" {...searchFormProps} style={{ flex: 1 }}>
+            <Form.Item label="Tìm kiếm" name="q" style={{ flex: 1, minWidth: 200 }}>
+              <Input
+                placeholder="Tên rạp, thành phố, etc."
+                prefix={<SearchOutlined />}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" type="primary">
+                Tìm kiếm
+              </Button>
+            </Form.Item>
+          </Form>
+          <CreateButton>Thêm rạp mới</CreateButton>
+        </Flex>
       </Card>
       <Card>
         <ProTable
