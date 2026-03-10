@@ -82,6 +82,7 @@ export const CinemaList = () => {
           <CreateButton>Thêm rạp mới</CreateButton>
         </Flex>
       </Card>
+      <Card>{tableProps.dataSource?.length} rạp</Card>
       <Card>
         <ProTable
           {...tableProps}

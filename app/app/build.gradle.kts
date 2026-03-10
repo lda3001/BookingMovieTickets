@@ -3,13 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bookingticket"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "com.ducanhdev.bookingticket"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.bookingticket"
+        applicationId = "com.ducanhdev.bookingticket"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -38,6 +36,32 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
+    
+    // Glide for image loading
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+    implementation(libs.glide.okhttp3)
+    
+    // ViewPager2 for slider
+    implementation(libs.viewpager2)
+    
+    // RecyclerView
+    implementation(libs.recyclerview)
+    
+    // SwipeRefreshLayout
+    implementation(libs.swiperefreshlayout)
+    
+    // CircleImageView for avatar
+    implementation(libs.circleimageview)
+    
+    // CardView
+    implementation(libs.cardview)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

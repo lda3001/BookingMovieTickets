@@ -148,24 +148,24 @@ export const BookingShow = () => {
         <Descriptions.Item label="Khách hàng">
           <TextField
             value={
-              record?.user?.username ||
-              record?.user?.email ||
+              record?.userFullName +" - "+
+              record?.userEmail ||
               "-"
             }
           />
         </Descriptions.Item>
         <Descriptions.Item label="Phim">
-          <TextField value={record?.showtime?.movie?.title || "-"} />
+          <TextField value={record?.movieTitle || "-"} />
         </Descriptions.Item>
         <Descriptions.Item label="Rạp">
-          <TextField value={record?.showtime?.cinema?.name || "-"} />
+          <TextField value={record?.cinemaName || "-"} />
         </Descriptions.Item>
         <Descriptions.Item label="Phòng">
-          <TextField value={record?.showtime?.room?.name || "-"} />
+          <TextField value={record?.roomName || "-"} />
         </Descriptions.Item>
         <Descriptions.Item label="Thời gian chiếu">
-          {record?.showtime?.showTime ? (
-            <DateField value={record.showtime.showTime} format="DD/MM/YYYY HH:mm" />
+          {record?.showTime ? (
+            <TextField value={record.showTime}  />
           ) : (
             "-"
           )}
@@ -183,10 +183,10 @@ export const BookingShow = () => {
           )}
         </Descriptions.Item>
         <Descriptions.Item label="Số ghế đã đặt">
-          {record?.bookedSeats && record.bookedSeats.length > 0 ? (
+          {record?.seatCodes  && record.seatCodes.length > 0 ? (
             <Space wrap>
-              {record.bookedSeats.map((seat, index) => (
-                <Tag key={index}>{seat.seatCode}</Tag>
+              {record.seatCodes.map((seat, index) => (
+                <Tag key={index}>{seat}</Tag>
               ))}
             </Space>
           ) : (

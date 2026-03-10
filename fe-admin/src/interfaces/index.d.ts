@@ -204,10 +204,14 @@ export interface IBooking {
   bookingCode: string;
   user?: IUser;
   userId?: string;
+  userFullName?: string;
+  userEmail?: string;
   showtimeId?: number;
   showTime?: string;
   movieTitle?: string;
   seatCodes?: string[];
+  cinemaName?: string;
+  roomName?: string;
   bookedSeats?: IBookedSeat[];
   totalPrice?: number;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";

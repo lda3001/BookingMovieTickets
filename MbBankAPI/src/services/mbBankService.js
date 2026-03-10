@@ -110,6 +110,15 @@ class MBBankService {
     }
     
   }
+  async bder(request) {
+    try {
+      const dataEnc = await loadWasm.loadWasm(fs.readFileSync("./main.wasm"), request, "0");
+      return dataEnc;
+    } catch (error) {
+      console.error('Error bder:', error);
+      throw error;
+    }
+  }
 
   async getTransactionHistory(sessionId, accountNo, deviceIdCommon, username) {
     try {

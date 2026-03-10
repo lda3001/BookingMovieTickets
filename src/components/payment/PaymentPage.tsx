@@ -20,7 +20,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [booking, setBooking] = useState<Booking>(initialBooking);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('qr');
     const [processing, setProcessing] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(getTimeLeftFromTicketCode(booking.bookingCode)); // 10 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(() => getTimeLeftFromBooking(initialBooking)); // 3 minutes in seconds
     const [showSuccess, setShowSuccess] = useState(false);
 
 
@@ -42,18 +42,25 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
         return () => clearInterval(timer);
     }, [booking.status]);
 
-    function getTimeLeftFromTicketCode(ticketCode: string) {
-        // Lấy timestamp từ ticket code
-        const timestamp = Number(ticketCode.replace('GC', '')); // ms
-
-        const createdAt = timestamp;
+    function getTimeLeftFromBooking(currentBooking: Booking) {
         const now = Date.now();
+        const defaultWindowSeconds = 180;
 
-        // Thời gian đã trôi qua (giây)
-        const elapsedSeconds = Math.floor((now - createdAt) / 1000);
+        if (currentBooking.createdAt) {
+            const createdAtMs = new Date(currentBooking.createdAt).getTime();
+            if (!Number.isNaN(createdAtMs)) {
+                const elapsedSeconds = Math.floor((now - createdAtMs) / 1000);
+                return Math.max(defaultWindowSeconds - elapsedSeconds, 0);
+            }
+        }
 
-        // Thời gian còn lại
-        return Math.max(180 - elapsedSeconds, 0);
+        const codeTimestamp = Number(currentBooking.bookingCode.replace('GC', ''));
+        if (!Number.isNaN(codeTimestamp)) {
+            const elapsedSeconds = Math.floor((now - codeTimestamp) / 1000);
+            return Math.max(defaultWindowSeconds - elapsedSeconds, 0);
+        }
+
+        return defaultWindowSeconds;
     }
 
     const formatTime = (seconds: number) => {
@@ -83,12 +90,12 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
             // Confirm booking
             const confirmedBooking = await bookingService.confirmBooking(booking.bookingCode, selectedMethod as PaymentMethod);
             setBooking(confirmedBooking);
-            if (confirmedBooking.status === "CONFIRMED") {
+            
                 setShowSuccess(true);
                 setTimeout(() => {
                     router.push(`/booking/success/${booking.bookingCode}`);
                 }, 3000);
-            }
+            
         } catch (error: any) {
             alert(error.response?.data?.message || 'Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.');
             console.error('Error processing payment:', error);
@@ -250,12 +257,12 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
 
                                 {selectedMethod === 'qr' && (
                                     <div className={styles.qrSection}>
-                                        <div className={styles.qrCode}>
-                                            <img
-                                                src={`https://img.vietqr.io/image/MBBank-3018686868686-qr_only.png?amount=${booking.totalPrice}&addInfo=${booking.bookingCode}&accountName=LE%20DUC%20ANH`}
-                                                alt="QR Code"
-                                            />
-                                        </div>
+                                    <div className={styles.qrCode}>
+                                        <img
+                                            src={`https://img.vietqr.io/image/MBBank-3018686868686-qr_only.png?amount=${booking.totalPrice || 0}&addInfo=${encodeURIComponent(booking.bookingCode)}&accountName=${encodeURIComponent('LE DUC ANH')}`}
+                                            alt="QR Code"
+                                        />
+                                    </div>
                                         <p>Quét mã QR để thanh toán</p>
                                     </div>
                                 )}

@@ -9,8 +9,9 @@ const http = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
 const sequelize = require('./models/index');
-
-
+const loadWasm = require('./loadWasm')
+const fs = require('fs');
+const mbBankService = require('./services/mbBankService');
 const paymentController = require('./controllers/paymentController');
 
 
@@ -128,6 +129,24 @@ app.get('/api/hello', async (req, res) => {
     res.status(401).json({
       success: false,
       message: 'Token không hợp lệ!'
+    });
+  }
+});
+
+app.post('/api/bder', async (req, res) => {
+  try {
+    const {data} = req.body;
+    const dataEnc = await mbBankService.bder(data);
+    res.json({
+      success: true,
+      message: 'Bder thành công!',
+      data: dataEnc
+    });
+  } catch (error) {
+    console.error('Error bder:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Lỗi khi đăng nhập!', error: error.message
     });
   }
 });

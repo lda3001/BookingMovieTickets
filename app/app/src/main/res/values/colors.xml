@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Galaxy Cinema Brand Colors -->
+    <color name="primary">#EA580C</color>
+    <color name="primary_dark">#C2410C</color>
+    <color name="primary_light">#FB923C</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#0F0F1A</color>
+    <color name="background_secondary">#1A1A2E</color>
+    <color name="surface">#1E1E2E</color>
+    <color name="surface_variant">#2A2A3E</color>
+    <color name="card_background">#252538</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#9CA3AF</color>
+    <color name="text_hint">#6B7280</color>
+    
+    <!-- Accent Colors -->
+    <color name="rating_star">#FCD34D</color>
+    <color name="success">#22C55E</color>
+    <color name="error">#EF4444</color>
+    <color name="warning">#F59E0B</color>
+    <color name="info">#3B82F6</color>
+    
+    <!-- Seat Colors -->
+    <color name="seat_normal">#4B5563</color>
+    <color name="seat_vip">#7C3AED</color>
+    <color name="seat_booked">#374151</color>
+    <color name="seat_selected">#EA580C</color>
+    
+    <!-- Age Rating Colors -->
+    <color name="age_rating_p">#22C55E</color>
+    <color name="age_rating_k">#22C55E</color>
+    <color name="age_rating_t13">#3B82F6</color>
+    <color name="age_rating_t16">#F59E0B</color>
+    <color name="age_rating_t18">#EF4444</color>
+    
+    <!-- Bottom Navigation -->
+    <color name="nav_selected">#EA580C</color>
+    <color name="nav_unselected">#6B7280</color>
 </resources>

@@ -33,7 +33,12 @@ export default function SeatSelector({ movieTitle, showtime, onClose }: SeatSele
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!showtime.roomId) return;
+            if (!showtime.roomId) {
+                setRoom(null);
+                setBookedSeats([]);
+                setLoading(false);
+                return;
+            }
 
             try {
                 setLoading(true);
@@ -135,7 +140,6 @@ export default function SeatSelector({ movieTitle, showtime, onClose }: SeatSele
             //room.vipRows = A,B
             //convert to array
             vipRows = room.vipRows.split(',').map(row => row.trim());
-            console.log(vipRows);
         } catch {
             vipRows = [];
         }

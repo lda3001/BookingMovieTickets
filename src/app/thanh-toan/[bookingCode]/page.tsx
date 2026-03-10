@@ -1,5 +1,5 @@
 import React from 'react';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { bookingService } from '@/services';
 import PaymentPage from '@/components/payment/PaymentPage';
 
