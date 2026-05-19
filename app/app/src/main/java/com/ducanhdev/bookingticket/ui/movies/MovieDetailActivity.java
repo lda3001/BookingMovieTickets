@@ -1,8 +1,13 @@
 package com.ducanhdev.bookingticket.ui.movies;
 
+import android.app.AlertDialog;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,6 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieDuration;
     private TextView movieGenre;
     private TextView ageBadge;
+    private TextView btnPlayTrailer;
     private LinearLayout detailsContainer;
     private TextView movieDescription;
     private MaterialButton btnBuyTicket;
@@ -67,11 +73,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieDuration = findViewById(R.id.movie_duration);
         movieGenre = findViewById(R.id.movie_genre);
         ageBadge = findViewById(R.id.age_badge);
+        btnPlayTrailer = findViewById(R.id.btn_play_trailer);
         detailsContainer = findViewById(R.id.details_container);
         movieDescription = findViewById(R.id.movie_description);
         btnBuyTicket = findViewById(R.id.btn_buy_ticket);
         loadingProgress = findViewById(R.id.loading_progress);
 
+        btnPlayTrailer.setOnClickListener(v -> playTrailer());
         btnBuyTicket.setOnClickListener(v -> {
             if (currentMovie != null) {
                 Toast.makeText(this, "Chọn suất chiếu cho " + currentMovie.getTitle(), Toast.LENGTH_SHORT).show();
@@ -167,6 +175,80 @@ public class MovieDetailActivity extends AppCompatActivity {
         addDetailItem("Quốc gia", movie.getCountry());
         addDetailItem("Nhà sản xuất", movie.getProducer());
         addDetailItem("Khởi chiếu", movie.getReleaseDate());
+    }
+
+    private void playTrailer() {
+        if (currentMovie == null) {
+            return;
+        }
+
+        String videoId = extractYoutubeVideoId(currentMovie.getTrailerUrl());
+        if (videoId == null) {
+            Toast.makeText(this, "Phim chưa có trailer", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        WebView webView = new WebView(this);
+        webView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                dpToPx(230)
+        ));
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setBackgroundColor(ContextCompat.getColor(this, R.color.black));
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
+
+        String embedUrl = "https://www.youtube.com/embed/" + videoId
+                + "?autoplay=1&playsinline=1&rel=0";
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Trailer")
+                .setView(webView)
+                .setNegativeButton("Đóng", null)
+                .create();
+
+        dialog.setOnDismissListener(d -> {
+            webView.stopLoading();
+            webView.destroy();
+        });
+        dialog.setOnShowListener(d -> webView.loadUrl(embedUrl));
+        dialog.show();
+    }
+
+    private String extractYoutubeVideoId(String trailerUrl) {
+        if (trailerUrl == null) return null;
+
+        String url = trailerUrl.trim();
+        if (url.isEmpty()) return null;
+
+        if (url.matches("^[a-zA-Z0-9_-]{11}$")) {
+            return url;
+        }
+
+        String[] markers = {"v=", "youtu.be/", "embed/", "shorts/"};
+        for (String marker : markers) {
+            int start = url.indexOf(marker);
+            if (start < 0) continue;
+
+            start += marker.length();
+            int end = start;
+            while (end < url.length()) {
+                char c = url.charAt(end);
+                if (!(Character.isLetterOrDigit(c) || c == '_' || c == '-')) {
+                    break;
+                }
+                end++;
+            }
+
+            if (end - start == 11) {
+                return url.substring(start, end);
+            }
+        }
+
+        return null;
     }
 
     private void addDetailItem(String label, String value) {

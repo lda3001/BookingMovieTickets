@@ -35,6 +35,7 @@
                 android:background="@drawable/gradient_backdrop" />
 
             <TextView
+                android:id="@+id/btn_play_trailer"
                 android:layout_width="82dp"
                 android:layout_height="82dp"
                 android:layout_gravity="center"
