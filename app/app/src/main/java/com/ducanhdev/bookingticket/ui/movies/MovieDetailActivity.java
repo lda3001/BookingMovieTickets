@@ -1,13 +1,17 @@
 package com.ducanhdev.bookingticket.ui.movies;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -97,7 +101,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void loadMovieDetails() {
-        loadingProgress.setVisibility(View.VISIBLE);
+        loadingProgress.setVisibility(android.view.View.VISIBLE);
 
         Call<Movie> call;
         if (movieSlug != null && !movieSlug.isEmpty()) {
@@ -105,7 +109,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         } else if (movieId > 0) {
             call = ApiClient.getMovieApi().getMovieById(movieId);
         } else {
-            loadingProgress.setVisibility(View.GONE);
+            loadingProgress.setVisibility(android.view.View.GONE);
             showError("Không tìm thấy thông tin phim");
             return;
         }
@@ -113,7 +117,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                loadingProgress.setVisibility(View.GONE);
+                loadingProgress.setVisibility(android.view.View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     currentMovie = response.body();
                     displayMovie(currentMovie);
@@ -124,7 +128,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                loadingProgress.setVisibility(View.GONE);
+                loadingProgress.setVisibility(android.view.View.GONE);
                 showError("Lỗi kết nối: " + t.getMessage());
             }
         });
@@ -149,13 +153,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         String ageRating = movie.getAgeRating();
         if (ageRating != null && !ageRating.isEmpty()) {
             ageBadge.setText(ageRating);
-            ageBadge.setVisibility(View.VISIBLE);
+            ageBadge.setVisibility(android.view.View.VISIBLE);
 
             int colorRes = getAgeRatingColor(ageRating);
             GradientDrawable background = (GradientDrawable) ageBadge.getBackground();
             background.setColor(ContextCompat.getColor(this, colorRes));
         } else {
-            ageBadge.setVisibility(View.GONE);
+            ageBadge.setVisibility(android.view.View.GONE);
         }
 
         String description = movie.getDescription();
@@ -178,9 +182,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void playTrailer() {
-        if (currentMovie == null) {
-            return;
-        }
+        if (currentMovie == null) return;
 
         String videoId = extractYoutubeVideoId(currentMovie.getTrailerUrl());
         if (videoId == null) {
@@ -188,34 +190,80 @@ public class MovieDetailActivity extends AppCompatActivity {
             return;
         }
 
+        String watchUrl = "https://www.youtube.com/watch?v=" + videoId;
+        String embedUrl = "https://www.youtube.com/embed/" + videoId + "?rel=0&playsinline=1";
+
         WebView webView = new WebView(this);
         webView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 dpToPx(230)
         ));
-        webView.setWebChromeClient(new WebChromeClient());
         webView.setBackgroundColor(ContextCompat.getColor(this, R.color.black));
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClient());
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportMultipleWindows(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
-        String embedUrl = "https://www.youtube.com/embed/" + videoId
-                + "?autoplay=1&playsinline=1&rel=0";
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.setAcceptThirdPartyCookies(webView, true);
+
+        String html = "<!doctype html><html><head>"
+                + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                + "<style>html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;}"
+                + "iframe{border:0;width:100%;height:100%;}</style>"
+                + "</head><body>"
+                + "<iframe src='" + embedUrl + "' "
+                + "allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' "
+                + "allowfullscreen></iframe>"
+                + "</body></html>";
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Trailer")
                 .setView(webView)
+                .setPositiveButton("Mở YouTube", (d, which) -> openYoutube(watchUrl))
                 .setNegativeButton("Đóng", null)
                 .create();
 
+        dialog.setOnShowListener(d -> webView.loadDataWithBaseURL(
+                "https://www.youtube.com",
+                html,
+                "text/html",
+                "UTF-8",
+                null
+        ));
+
         dialog.setOnDismissListener(d -> {
+            webView.loadUrl("about:blank");
             webView.stopLoading();
+
+            ViewParent parent = webView.getParent();
+            if (parent instanceof ViewGroup) {
+                ((ViewGroup) parent).removeView(webView);
+            }
+
             webView.destroy();
         });
-        dialog.setOnShowListener(d -> webView.loadUrl(embedUrl));
+
         dialog.show();
+    }
+
+    private void openYoutube(String url) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        appIntent.setPackage("com.google.android.youtube");
+
+        try {
+            startActivity(appIntent);
+        } catch (Exception ignored) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
     private String extractYoutubeVideoId(String trailerUrl) {
@@ -228,7 +276,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             return url;
         }
 
-        String[] markers = {"v=", "youtu.be/", "embed/", "shorts/"};
+        String[] markers = {"v=", "youtu.be/", "embed/", "shorts/", "live/"};
         for (String marker : markers) {
             int start = url.indexOf(marker);
             if (start < 0) continue;
