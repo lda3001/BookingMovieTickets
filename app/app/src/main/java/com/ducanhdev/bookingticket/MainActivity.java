@@ -20,12 +20,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "navigation_prefs";
+    private static final String KEY_SELECTED_NAV = "selected_nav";
+
     private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
+        getWindow().setWindowAnimations(0);
+        overridePendingTransition(0, 0);
         EdgeToEdge.enable(this);
         configureSystemBars();
         setContentView(R.layout.activity_main);
@@ -40,11 +45,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupBottomNavigation();
-        
-        // Load default fragment
-        if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-        }
+        restoreSelectedDestination();
     }
 
     private void configureSystemBars() {
@@ -58,19 +59,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment fragment = null;
             int itemId = item.getItemId();
-            
-            if (itemId == R.id.nav_home) {
-                fragment = new HomeFragment();
-            } else if (itemId == R.id.nav_movies) {
-                fragment = new MoviesFragment();
-            } else if (itemId == R.id.nav_cinemas) {
-                fragment = new CinemasFragment();
-            } else if (itemId == R.id.nav_account) {
-                fragment = new AccountFragment();
-            }
-            
+            saveSelectedDestination(itemId);
+            Fragment fragment = createFragmentForDestination(itemId);
+
             if (fragment != null) {
                 loadFragment(fragment);
                 return true;
@@ -82,7 +74,41 @@ public class MainActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setReorderingAllowed(true)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    private void restoreSelectedDestination() {
+        int selectedItemId = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getInt(KEY_SELECTED_NAV, R.id.nav_home);
+        if (bottomNavigation.getSelectedItemId() == selectedItemId) {
+            Fragment fragment = createFragmentForDestination(selectedItemId);
+            if (fragment != null) {
+                loadFragment(fragment);
+            }
+        } else {
+            bottomNavigation.setSelectedItemId(selectedItemId);
+        }
+    }
+
+    private void saveSelectedDestination(int itemId) {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putInt(KEY_SELECTED_NAV, itemId)
+                .apply();
+    }
+
+    private Fragment createFragmentForDestination(int itemId) {
+        if (itemId == R.id.nav_home) {
+            return new HomeFragment();
+        } else if (itemId == R.id.nav_movies) {
+            return new MoviesFragment();
+        } else if (itemId == R.id.nav_cinemas) {
+            return new CinemasFragment();
+        } else if (itemId == R.id.nav_account) {
+            return new AccountFragment();
+        }
+        return null;
     }
 }

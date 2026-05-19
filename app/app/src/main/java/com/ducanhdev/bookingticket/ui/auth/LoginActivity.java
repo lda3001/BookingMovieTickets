@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
+        getWindow().setWindowAnimations(0);
+        overridePendingTransition(0, 0);
         configureSystemBars();
         setContentView(R.layout.activity_login);
 

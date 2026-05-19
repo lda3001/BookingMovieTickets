@@ -18,6 +18,8 @@
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
         
         <!-- Error color -->
         <item name="colorError">@color/error</item>

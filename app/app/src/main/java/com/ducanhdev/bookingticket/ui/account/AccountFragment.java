@@ -88,11 +88,14 @@ public class AccountFragment extends Fragment {
         themeSwitch.setChecked(isDarkMode);
         guestThemeSwitch.setChecked(isDarkMode);
         updateThemeLabel(isDarkMode);
+
         themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) return;
             updateThemeLabel(isChecked);
             ThemeManager.setDarkMode(requireContext(), isChecked);
         });
         guestThemeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) return;
             updateThemeLabel(isChecked);
             ThemeManager.setDarkMode(requireContext(), isChecked);
         });
