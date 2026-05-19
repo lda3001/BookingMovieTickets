@@ -4,24 +4,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@drawable/bg_cinelux_screen">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="360dp"
+        android:background="@color/black"
         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="@color/surface"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+            app:contentScrim="@color/background"
             app:expandedTitleTextAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.Material3.TitleLarge">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!-- Background Image -->
             <ImageView
                 android:id="@+id/movie_backdrop"
                 android:layout_width="match_parent"
@@ -29,11 +29,20 @@
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
-            <!-- Gradient Overlay -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/gradient_backdrop" />
+
+            <TextView
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_primary_chip"
+                android:gravity="center"
+                android:text="▶"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -57,174 +66,208 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Movie Title and Info Row -->
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- Poster -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="8dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star" />
 
-                    <ImageView
-                        android:id="@+id/movie_poster"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
+                <TextView
+                    android:id="@+id/movie_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/rating_star"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
-                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/movie_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
 
-                <!-- Info -->
-                <LinearLayout
+                <TextView
+                    android:id="@+id/movie_genre"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/movie_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <!-- Rating -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_star" />
-
-                        <TextView
-                            android:id="@+id/movie_rating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:textColor="@color/rating_star"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <!-- Duration -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_clock" />
-
-                        <TextView
-                            android:id="@+id/movie_duration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <!-- Genre -->
-                    <TextView
-                        android:id="@+id/movie_genre"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
-
-                    <!-- Age Rating Badge -->
-                    <TextView
-                        android:id="@+id/age_badge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_age_badge"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
 
             </LinearLayout>
 
-            <!-- Details Section -->
             <TextView
+                android:id="@+id/age_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Thông tin phim"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_age_badge"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/movie_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Cast"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/details_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical" />
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_panel"
+                android:orientation="vertical"
+                android:padding="12dp" />
 
-            <!-- Description Section -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Nội dung phim"
+                android:layout_marginTop="20dp"
+                android:text="Showtimes"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_primary_chip"
+                    android:gravity="center"
+                    android:text="11:00 AM"
+                    android:textColor="@color/primary_light"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:text="02:30 PM"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:text="06:15 PM"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/movie_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Seat Preview"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:background="@drawable/bg_panel"
+                android:columnCount="8"
+                android:padding="12dp"
+                android:useDefaultMargins="true">
 
-            <!-- Spacer for button -->
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_booked" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_selected" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_selected" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_booked" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_booked" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_booked" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+                <View android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/bg_seat_available" />
+
+            </GridLayout>
+
+            <ImageView
+                android:id="@+id/movie_poster"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="invisible" />
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="80dp" />
+                android:layout_height="88dp" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Buy Ticket Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_buy_ticket"
+        style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:text="Đặt vé ngay"
-        android:textSize="16sp"
-        style="@style/PrimaryButton" />
+        android:background="@drawable/bg_cinelux_button"
+        android:text="Book Tickets"
+        android:textSize="16sp" />
 
-    <!-- Loading -->
     <ProgressBar
         android:id="@+id/loading_progress"
         android:layout_width="48dp"

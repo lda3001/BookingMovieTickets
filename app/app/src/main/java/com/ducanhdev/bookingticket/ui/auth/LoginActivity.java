@@ -60,17 +60,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
-
         btnLogin.setOnClickListener(v -> attemptLogin());
-
-        btnRegister.setOnClickListener(v -> {
-            // TODO: Navigate to register activity
-            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
-        });
+        btnRegister.setOnClickListener(v ->
+                Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
+        );
     }
 
     private void attemptLogin() {
-        // Clear previous errors
         emailLayout.setError(null);
         passwordLayout.setError(null);
         errorText.setVisibility(View.GONE);
@@ -78,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailInput.getText() != null ? emailInput.getText().toString().trim() : "";
         String password = passwordInput.getText() != null ? passwordInput.getText().toString().trim() : "";
 
-        // Validate
         if (email.isEmpty()) {
             emailLayout.setError("Vui lòng nhập email");
             return;
@@ -99,23 +94,19 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Show loading
         setLoading(true);
 
-        // Call API
         LoginRequest request = new LoginRequest(email, password);
         ApiClient.getAuthApi().login(request).enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 setLoading(false);
-                
+
                 if (response.isSuccessful() && response.body() != null) {
                     AuthResponse authResponse = response.body();
                     sessionManager.saveSession(authResponse);
-                    
-                    // Reset API client to use new token
                     ApiClient.resetClient();
-                    
+
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
@@ -137,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             btnLogin.setEnabled(false);
             loadingProgress.setVisibility(View.VISIBLE);
         } else {
-            btnLogin.setText("Đăng nhập");
+            btnLogin.setText("Sign In");
             btnLogin.setEnabled(true);
             loadingProgress.setVisibility(View.GONE);
         }

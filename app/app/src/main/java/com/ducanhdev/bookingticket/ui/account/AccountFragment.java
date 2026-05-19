@@ -40,7 +40,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         sessionManager = new SessionManager(requireContext());
         initViews(view);
         setupClickListeners();
@@ -87,10 +87,10 @@ public class AccountFragment extends Fragment {
         if (sessionManager.isLoggedIn()) {
             notLoggedInLayout.setVisibility(View.GONE);
             loggedInLayout.setVisibility(View.VISIBLE);
-            
+
             String fullName = sessionManager.getFullName();
             String email = sessionManager.getEmail();
-            
+
             userName.setText(fullName != null && !fullName.isEmpty() ? fullName : "Người dùng");
             userEmail.setText(email != null ? email : "");
         } else {

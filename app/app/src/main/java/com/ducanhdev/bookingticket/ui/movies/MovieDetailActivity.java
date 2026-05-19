@@ -74,7 +74,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         btnBuyTicket.setOnClickListener(v -> {
             if (currentMovie != null) {
-                // TODO: Navigate to seat selection
                 Toast.makeText(this, "Chọn suất chiếu cho " + currentMovie.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -98,6 +97,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         } else if (movieId > 0) {
             call = ApiClient.getMovieApi().getMovieById(movieId);
         } else {
+            loadingProgress.setVisibility(View.GONE);
             showError("Không tìm thấy thông tin phim");
             return;
         }
@@ -123,64 +123,45 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void displayMovie(Movie movie) {
+        detailsContainer.removeAllViews();
         collapsingToolbar.setTitle(movie.getTitle());
         movieTitle.setText(movie.getTitle());
 
-        // Rating
         String rating = movie.getRating();
-        if (rating != null && !rating.isEmpty() && !rating.equals("N/A")) {
-            movieRating.setText(rating);
-        } else {
-            movieRating.setText("N/A");
-        }
+        movieRating.setText(rating != null && !rating.isEmpty() && !rating.equals("N/A") ? rating : "N/A");
 
-        // Duration
         if (movie.getDuration() != null) {
             movieDuration.setText(movie.getDuration());
         }
 
-        // Genre
         if (movie.getGenre() != null) {
             movieGenre.setText(movie.getGenre());
         }
 
-        // Age Rating
         String ageRating = movie.getAgeRating();
         if (ageRating != null && !ageRating.isEmpty()) {
             ageBadge.setText(ageRating);
             ageBadge.setVisibility(View.VISIBLE);
-            
+
             int colorRes = getAgeRatingColor(ageRating);
             GradientDrawable background = (GradientDrawable) ageBadge.getBackground();
             background.setColor(ContextCompat.getColor(this, colorRes));
+        } else {
+            ageBadge.setVisibility(View.GONE);
         }
 
-        // Description
         String description = movie.getDescription();
         if (description == null || description.isEmpty()) {
             description = movie.getContent();
         }
-        if (description != null && !description.isEmpty()) {
-            movieDescription.setText(description);
-        } else {
-            movieDescription.setText("Chưa có mô tả");
-        }
+        movieDescription.setText(description != null && !description.isEmpty() ? description : "Chưa có mô tả");
 
-        // Load images
         String imageUrl = movie.getFullImageUrl();
         if (imageUrl != null) {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .centerCrop()
-                    .into(movieBackdrop);
-            
-            Glide.with(this)
-                    .load(imageUrl)
-                    .centerCrop()
-                    .into(moviePoster);
+            Glide.with(this).load(imageUrl).centerCrop().into(movieBackdrop);
+            Glide.with(this).load(imageUrl).centerCrop().into(moviePoster);
         }
 
-        // Add detail items
         addDetailItem("Đạo diễn", movie.getDirector());
         addDetailItem("Diễn viên", movie.getCast());
         addDetailItem("Quốc gia", movie.getCountry());
@@ -199,7 +180,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         labelView.setText(label + ": ");
         labelView.setTextColor(ContextCompat.getColor(this, R.color.text_hint));
         labelView.setTextSize(14);
-        labelView.setMinWidth(dpToPx(100));
+        labelView.setMinWidth(dpToPx(104));
 
         TextView valueView = new TextView(this);
         valueView.setText(value);
