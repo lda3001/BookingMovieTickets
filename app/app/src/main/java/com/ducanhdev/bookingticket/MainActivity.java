@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ducanhdev.bookingticket.api.ApiClient;
@@ -14,6 +15,7 @@ import com.ducanhdev.bookingticket.ui.account.AccountFragment;
 import com.ducanhdev.bookingticket.ui.cinemas.CinemasFragment;
 import com.ducanhdev.bookingticket.ui.home.HomeFragment;
 import com.ducanhdev.bookingticket.ui.movies.MoviesFragment;
+import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        configureSystemBars();
         setContentView(R.layout.activity_main);
         
         // Initialize API client
@@ -41,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
         }
+    }
+
+    private void configureSystemBars() {
+        boolean isLightMode = !ThemeManager.isDarkMode(this);
+        WindowInsetsControllerCompat controller =
+                new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+        controller.setAppearanceLightStatusBars(isLightMode);
+        controller.setAppearanceLightNavigationBars(isLightMode);
     }
 
     private void setupBottomNavigation() {

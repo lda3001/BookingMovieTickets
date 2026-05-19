@@ -8,12 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.AuthResponse;
 import com.ducanhdev.bookingticket.model.LoginRequest;
 import com.ducanhdev.bookingticket.utils.SessionManager;
+import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,12 +40,22 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
+        configureSystemBars();
         setContentView(R.layout.activity_login);
 
         sessionManager = new SessionManager(this);
         initViews();
         setupClickListeners();
+    }
+
+    private void configureSystemBars() {
+        boolean isLightMode = !ThemeManager.isDarkMode(this);
+        WindowInsetsControllerCompat controller =
+                new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+        controller.setAppearanceLightStatusBars(isLightMode);
+        controller.setAppearanceLightNavigationBars(isLightMode);
     }
 
     private void initViews() {

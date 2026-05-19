@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary">#E91B38</color>
+    <color name="primary_dark">#A80F24</color>
+    <color name="primary_light">#FF4A63</color>
+    <color name="accent_purple">#7C4DFF</color>
+    <color name="accent_blue">#245BFF</color>
+    <color name="accent_teal">#26D7D0</color>
+    <color name="accent_rose">#FF2F68</color>
+
+    <color name="background">#050812</color>
+    <color name="background_secondary">#09111E</color>
+    <color name="surface">#0B1320</color>
+    <color name="surface_variant">#17202E</color>
+    <color name="card_background">#101824</color>
+
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A9B2C3</color>
+    <color name="text_hint">#6F7A8C</color>
+
+    <color name="screen_gradient_start">#140407</color>
+    <color name="screen_gradient_center">#050812</color>
+    <color name="screen_gradient_end">#07133A</color>
+    <color name="header_gradient_start">#3A0610</color>
+    <color name="header_gradient_center">#080D1A</color>
+    <color name="header_gradient_end">#0A1234</color>
+    <color name="panel_fill">#DD0B1320</color>
+    <color name="panel_stroke">#263448</color>
+    <color name="chip_fill">#151D2B</color>
+    <color name="chip_stroke">#2C3547</color>
+    <color name="input_fill">#D30C1421</color>
+    <color name="input_stroke">#273246</color>
+    <color name="bottom_nav_fill">#F2070C15</color>
+    <color name="movie_overlay_start">#E6050812</color>
+    <color name="movie_overlay_center">#66050812</color>
+    <color name="movie_overlay_end">#00050812</color>
+    <color name="neon_frame_fill">#9A050812</color>
+    <color name="neon_frame_stroke">#355CFF</color>
+    <color name="primary_chip_fill">#4DE91B38</color>
+    <color name="purple_chip_fill">#4A2A78</color>
+
+    <color name="rating_star">#FCD34D</color>
+    <color name="success">#22C55E</color>
+    <color name="error">#EF4444</color>
+    <color name="warning">#F59E0B</color>
+    <color name="info">#3B82F6</color>
+
+    <color name="seat_normal">#6357D9</color>
+    <color name="seat_vip">#F59E0B</color>
+    <color name="seat_booked">#2E3542</color>
+    <color name="seat_selected">#E91B38</color>
+
+    <color name="age_rating_p">#22C55E</color>
+    <color name="age_rating_k">#22C55E</color>
+    <color name="age_rating_t13">#3B82F6</color>
+    <color name="age_rating_t16">#F59E0B</color>
+    <color name="age_rating_t18">#EF4444</color>
+
+    <color name="nav_selected">#E91B38</color>
+    <color name="nav_unselected">#7A8495</color>
+</resources>

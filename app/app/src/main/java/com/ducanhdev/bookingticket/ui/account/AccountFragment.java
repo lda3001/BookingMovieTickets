@@ -16,7 +16,9 @@ import androidx.fragment.app.Fragment;
 import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.ui.auth.LoginActivity;
 import com.ducanhdev.bookingticket.utils.SessionManager;
+import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class AccountFragment extends Fragment {
 
@@ -26,6 +28,10 @@ public class AccountFragment extends Fragment {
     private MaterialButton btnLogout;
     private TextView userName;
     private TextView userEmail;
+    private TextView themeLabel;
+    private SwitchMaterial themeSwitch;
+    private TextView guestThemeLabel;
+    private SwitchMaterial guestThemeSwitch;
     private LinearLayout menuProfile;
     private LinearLayout menuTransactions;
 
@@ -59,6 +65,10 @@ public class AccountFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_logout);
         userName = view.findViewById(R.id.user_name);
         userEmail = view.findViewById(R.id.user_email);
+        themeLabel = view.findViewById(R.id.theme_label);
+        themeSwitch = view.findViewById(R.id.theme_switch);
+        guestThemeLabel = view.findViewById(R.id.guest_theme_label);
+        guestThemeSwitch = view.findViewById(R.id.guest_theme_switch);
         menuProfile = view.findViewById(R.id.menu_profile);
         menuTransactions = view.findViewById(R.id.menu_transactions);
     }
@@ -72,6 +82,19 @@ public class AccountFragment extends Fragment {
         btnLogout.setOnClickListener(v -> {
             sessionManager.logout();
             updateUI();
+        });
+
+        boolean isDarkMode = ThemeManager.isDarkMode(requireContext());
+        themeSwitch.setChecked(isDarkMode);
+        guestThemeSwitch.setChecked(isDarkMode);
+        updateThemeLabel(isDarkMode);
+        themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            updateThemeLabel(isChecked);
+            ThemeManager.setDarkMode(requireContext(), isChecked);
+        });
+        guestThemeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            updateThemeLabel(isChecked);
+            ThemeManager.setDarkMode(requireContext(), isChecked);
         });
 
         menuProfile.setOnClickListener(v -> {
@@ -97,5 +120,10 @@ public class AccountFragment extends Fragment {
             notLoggedInLayout.setVisibility(View.VISIBLE);
             loggedInLayout.setVisibility(View.GONE);
         }
+    }
+
+    private void updateThemeLabel(boolean isDarkMode) {
+        themeLabel.setText(isDarkMode ? "Dark Mode" : "Light Mode");
+        guestThemeLabel.setText(isDarkMode ? "Dark Mode" : "Light Mode");
     }
 }
