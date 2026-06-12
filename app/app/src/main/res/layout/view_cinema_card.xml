@@ -32,6 +32,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/cinema_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,15 +42,17 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/cinema_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.8 km"
+                android:text="City"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp" />
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/cinema_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -64,6 +67,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/cinema_rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_primary_chip"
@@ -74,6 +78,7 @@
                 android:textSize="10sp" />
 
             <TextView
+                android:id="@+id/cinema_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -85,6 +90,7 @@
                 android:textSize="10sp" />
 
             <TextView
+                android:id="@+id/cinema_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"

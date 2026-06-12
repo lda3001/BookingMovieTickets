@@ -17,6 +17,9 @@ const paymentController = require('./controllers/paymentController');
 
 const { Op } = require('sequelize');
 const Transaction = require('./models/Transaction');
+const PAYMENT_SYNC_INTERVAL_MS = Number(process.env.PAYMENT_SYNC_INTERVAL_MS || 15000);
+const PAYMENT_AUTO_SYNC_ENABLED = process.env.PAYMENT_AUTO_SYNC_ENABLED !== 'false';
+let paymentSyncRunning = false;
 
 
 // Import associations
@@ -171,9 +174,43 @@ app.get('/api/payment/verify/:transactionId', async (req, res) => {
   }
 });
 
+function startPaymentSyncWorker() {
+  if (!PAYMENT_AUTO_SYNC_ENABLED) {
+    console.log('Payment auto sync disabled');
+    return;
+  }
+
+  if (!process.env.MB_USERNAME || !process.env.MB_PASSWORD || !process.env.MB_ACCOUNT_NO) {
+    console.log('Payment auto sync skipped: missing MB bank environment variables');
+    return;
+  }
+
+  const runPaymentSync = async () => {
+    if (paymentSyncRunning) return;
+
+    paymentSyncRunning = true;
+    try {
+      const result = await paymentController.syncPendingPayments();
+      const processed = result?.payload?.data?.totalProcessed || 0;
+      if (processed > 0) {
+        console.log(`[PAYMENT SYNC] Confirmed ${processed} booking(s)`);
+      }
+    } catch (error) {
+      console.error('[PAYMENT SYNC] Error:', error.message);
+    } finally {
+      paymentSyncRunning = false;
+    }
+  };
+
+  setTimeout(runPaymentSync, 5000);
+  setInterval(runPaymentSync, PAYMENT_SYNC_INTERVAL_MS);
+  console.log(`Payment auto sync started: every ${PAYMENT_SYNC_INTERVAL_MS}ms`);
+}
+
 
 // Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  startPaymentSyncWorker();
 }); 

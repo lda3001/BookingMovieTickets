@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface BookingApi {
     
@@ -24,4 +25,13 @@ public interface BookingApi {
     
     @GET("bookings/code/{code}")
     Call<Booking> getBookingByCode(@Path("code") String code);
+
+    @POST("bookings/{code}/confirm")
+    Call<Booking> confirmBooking(
+            @Path("code") String code,
+            @Query("paymentMethod") String paymentMethod
+    );
+
+    @POST("bookings/{code}/cancel")
+    Call<Void> cancelBooking(@Path("code") String code);
 }

@@ -20,7 +20,7 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
     const [booking, setBooking] = useState<Booking>(initialBooking);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('qr');
     const [processing, setProcessing] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(() => getTimeLeftFromBooking(initialBooking)); // 3 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(() => getTimeLeftFromBooking(initialBooking));
     const [showSuccess, setShowSuccess] = useState(false);
 
 
@@ -44,10 +44,13 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
 
     function getTimeLeftFromBooking(currentBooking: Booking) {
         const now = Date.now();
-        const defaultWindowSeconds = 180;
+        const defaultWindowSeconds = 600;
 
         if (currentBooking.createdAt) {
-            const createdAtMs = new Date(currentBooking.createdAt).getTime();
+            const parsedCreatedAt = dayjs(currentBooking.createdAt, 'DD/MM/YYYY HH:mm:ss', true);
+            const createdAtMs = parsedCreatedAt.isValid()
+                ? parsedCreatedAt.valueOf()
+                : new Date(currentBooking.createdAt).getTime();
             if (!Number.isNaN(createdAtMs)) {
                 const elapsedSeconds = Math.floor((now - createdAtMs) / 1000);
                 return Math.max(defaultWindowSeconds - elapsedSeconds, 0);
@@ -96,8 +99,9 @@ export default function PaymentPage({ booking: initialBooking }: PaymentPageProp
                     router.push(`/booking/success/${booking.bookingCode}`);
                 }, 3000);
             
-        } catch (error: any) {
-            alert(error.response?.data?.message || 'Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.');
+        } catch (error: unknown) {
+            const apiError = error as { response?: { data?: { message?: string } } };
+            alert(apiError.response?.data?.message || 'Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.');
             console.error('Error processing payment:', error);
         } finally {
             setProcessing(false);

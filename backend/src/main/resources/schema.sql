@@ -130,7 +130,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE,
     INDEX idx_booking_code (booking_code),
     INDEX idx_user_id (user_id),
-    INDEX idx_showtime_id (showtime_id)
+    INDEX idx_showtime_id (showtime_id),
+    INDEX idx_booking_expiration (status, payment_status, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Booked Seats Table

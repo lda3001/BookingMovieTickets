@@ -10,6 +10,7 @@ import com.galaxycinema.repository.MovieRepository;
 import com.galaxycinema.repository.CinemaRepository;
 import com.galaxycinema.repository.RoomRepository;
 import com.galaxycinema.repository.BookedSeatRepository;
+import com.galaxycinema.service.BookingService;
 import com.galaxycinema.service.ShowtimeService;
 import com.galaxycinema.util.Mappers;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +36,7 @@ public class ShowtimeController {
     private final CinemaRepository cinemaRepository;
     private final RoomRepository roomRepository;
     private final BookedSeatRepository bookedSeatRepository;
+    private final BookingService bookingService;
 
     @GetMapping("/movie/{movieId}")
     @Operation(summary = "Lấy lịch chiếu theo phim", description = "Trả về danh sách lịch chiếu của một phim")
@@ -69,6 +71,7 @@ public class ShowtimeController {
     @GetMapping("/{id}/booked-seats")
     @Operation(summary = "Lấy danh sách ghế đã đặt", description = "Trả về danh sách mã ghế đã được đặt cho một lịch chiếu")
     public ResponseEntity<List<String>> getBookedSeats(@PathVariable Long id) {
+        bookingService.cancelExpiredUnpaidBookings();
         List<String> bookedSeats = bookedSeatRepository.findBookedSeatCodesByShowtimeId(id);
         return ResponseEntity.ok(bookedSeats);
     }

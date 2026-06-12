@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -31,6 +32,12 @@
         
         <activity
             android:name=".ui.movies.MovieDetailActivity"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.BookingTicket" />
+
+        <activity
+            android:name=".ui.payment.PaymentActivity"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:theme="@style/Theme.BookingTicket" />

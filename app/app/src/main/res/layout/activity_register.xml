@@ -121,20 +121,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:hint="Date of birth (dd/MM/yyyy)"
+            android:hint="Date of birth"
             app:boxBackgroundColor="@color/surface"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:boxStrokeColor="@color/surface_variant"
+            app:endIconDrawable="@android:drawable/ic_menu_my_calendar"
+            app:endIconMode="custom"
             app:hintTextColor="@color/text_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dob_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="none"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_hint" />
 

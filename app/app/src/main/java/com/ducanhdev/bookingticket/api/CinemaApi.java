@@ -12,6 +12,9 @@ public interface CinemaApi {
     
     @GET("cinemas")
     Call<List<Cinema>> getAllCinemas();
+
+    @GET("cinemas/active")
+    Call<List<Cinema>> getActiveCinemas();
     
     @GET("cinemas/{id}")
     Call<Cinema> getCinemaById(@Path("id") int id);

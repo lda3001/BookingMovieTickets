@@ -14,6 +14,37 @@ class PaymentController {
   }
 
   // Hàm trích xuất bookingCode từ nội dung chuyển khoản
+  async syncPendingPayments() {
+    return new Promise((resolve) => {
+      const result = {
+        statusCode: 200,
+        payload: null
+      };
+
+      const res = {
+        status(code) {
+          result.statusCode = code;
+          return this;
+        },
+        json(payload) {
+          result.payload = payload;
+          resolve(result);
+          return payload;
+        }
+      };
+
+      this.initiatePayment({}, res).catch((error) => {
+        resolve({
+          statusCode: 500,
+          payload: {
+            success: false,
+            message: 'Payment sync failed: ' + error.message
+          }
+        });
+      });
+    });
+  }
+
    extractBookingCode(description) {
   // for BANK ACB
 

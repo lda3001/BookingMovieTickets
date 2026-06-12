@@ -46,6 +46,7 @@ D:\code\java\backend\src\main\java\com\galaxycinema\util\Mappers.java
 D:\code\java\backend\src\main\java\com\galaxycinema\repository\BookedSeatRepository.java
 D:\code\java\backend\src\main\java\com\galaxycinema\dto\request\UserRequest.java
 D:\code\java\backend\src\main\java\com\galaxycinema\controller\MovieController.java
+D:\code\java\backend\src\main\java\com\galaxycinema\service\BookingExpirationScheduler.java
 D:\code\java\backend\src\main\java\com\galaxycinema\dto\request\ImageMetadata.java
 D:\code\java\backend\src\main\java\com\galaxycinema\util\implementation\MappersImpl.java
 D:\code\java\backend\src\main\java\com\galaxycinema\repository\UserRepository.java

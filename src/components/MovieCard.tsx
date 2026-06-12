@@ -21,7 +21,7 @@ export default function MovieCard({ title, image, rating, duration, slug, ageRat
     else if (ageRating === 'T13') ageClass = styles.ageBadgeT13;
     else if (ageRating === 'K' || ageRating === 'P') ageClass = styles.ageBadgeP;
     function getUrlImg(image: string) {
-        return image.startsWith('http') && image.startsWith('https') ? image : `http://localhost:8080/api${image}`;
+        return image.startsWith('http://') || image.startsWith('https://') ? image : `http://localhost:8080/api${image}`;
     }
 
     return (

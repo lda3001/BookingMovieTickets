@@ -1,5 +1,6 @@
 package com.ducanhdev.bookingticket.ui.auth;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -29,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String DOB_PATTERN = "dd/MM/yyyy";
 
     private ImageView btnBack;
     private TextInputLayout fullNameLayout;
@@ -95,6 +99,8 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
         btnLogin.setOnClickListener(v -> finish());
+        dobInput.setOnClickListener(v -> showDateOfBirthPicker());
+        dobLayout.setEndIconOnClickListener(v -> showDateOfBirthPicker());
         btnRegister.setOnClickListener(v -> attemptRegister());
     }
 
@@ -190,7 +196,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isValidDate(String value) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat(DOB_PATTERN, Locale.US);
         format.setLenient(false);
         try {
             format.parse(value);
@@ -198,6 +204,53 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    private void showDateOfBirthPicker() {
+        Calendar selectedDate = Calendar.getInstance();
+        String currentValue = textOf(dobInput);
+        if (!currentValue.isEmpty()) {
+            Date parsedDate = parseDate(currentValue);
+            if (parsedDate != null) {
+                selectedDate.setTime(parsedDate);
+            }
+        }
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar pickedDate = Calendar.getInstance();
+                    pickedDate.set(year, month, dayOfMonth);
+                    dobInput.setText(formatDate(pickedDate.getTime()));
+                    dobLayout.setError(null);
+                },
+                selectedDate.get(Calendar.YEAR),
+                selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH)
+        );
+
+        Calendar today = Calendar.getInstance();
+        dialog.getDatePicker().setMaxDate(today.getTimeInMillis());
+
+        Calendar oldestAllowedDate = Calendar.getInstance();
+        oldestAllowedDate.add(Calendar.YEAR, -120);
+        dialog.getDatePicker().setMinDate(oldestAllowedDate.getTimeInMillis());
+
+        dialog.show();
+    }
+
+    private Date parseDate(String value) {
+        SimpleDateFormat format = new SimpleDateFormat(DOB_PATTERN, Locale.US);
+        format.setLenient(false);
+        try {
+            return format.parse(value);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    private String formatDate(Date date) {
+        return new SimpleDateFormat(DOB_PATTERN, Locale.US).format(date);
     }
 
     private String textOf(TextInputEditText input) {
