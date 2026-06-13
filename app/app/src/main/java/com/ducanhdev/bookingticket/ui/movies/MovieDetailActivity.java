@@ -31,6 +31,7 @@ import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.Movie;
 import com.ducanhdev.bookingticket.model.Showtime;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 
@@ -77,6 +78,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LanguageManager.applySavedLanguage(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
@@ -120,7 +122,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         btnPlayTrailer.setOnClickListener(v -> playTrailer());
         btnBuyTicket.setOnClickListener(v -> {
             if (selectedShowtime == null) {
-                Toast.makeText(this, "Vui lòng chọn ngày, rạp và giờ chiếu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.select_showtime_required), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -154,7 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             call = ApiClient.getMovieApi().getMovieById(movieId);
         } else {
             loadingProgress.setVisibility(View.GONE);
-            showError("Không tìm thấy thông tin phim");
+            showError(getString(R.string.movie_not_found));
             return;
         }
 
@@ -167,14 +169,14 @@ public class MovieDetailActivity extends AppCompatActivity {
                     displayMovie(currentMovie);
                     loadShowtimes(currentMovie);
                 } else {
-                    showError("Không tìm thấy thông tin phim");
+                    showError(getString(R.string.movie_not_found));
                 }
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 loadingProgress.setVisibility(View.GONE);
-                showError("Lỗi kết nối: " + t.getMessage());
+                showError(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
     }
@@ -210,7 +212,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (description == null || description.isEmpty()) {
             description = movie.getContent();
         }
-        movieDescription.setText(description != null && !description.isEmpty() ? description : "Chưa có mô tả");
+        movieDescription.setText(description != null && !description.isEmpty() ? description : getString(R.string.movie_no_description));
 
         String imageUrl = movie.getFullImageUrl();
         if (imageUrl != null) {
@@ -218,11 +220,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             Glide.with(this).load(imageUrl).centerCrop().into(moviePoster);
         }
 
-        addDetailItem("Đạo diễn", movie.getDirector());
-        addDetailItem("Diễn viên", movie.getCast());
-        addDetailItem("Quốc gia", movie.getCountry());
-        addDetailItem("Nhà sản xuất", movie.getProducer());
-        addDetailItem("Khởi chiếu", movie.getReleaseDate());
+        addDetailItem(getString(R.string.movie_director), movie.getDirector());
+        addDetailItem(getString(R.string.movie_cast), movie.getCast());
+        addDetailItem(getString(R.string.movie_country), movie.getCountry());
+        addDetailItem(getString(R.string.movie_producer), movie.getProducer());
+        addDetailItem(getString(R.string.movie_release_date), movie.getReleaseDate());
     }
 
     private void loadShowtimes(Movie movie) {
@@ -230,7 +232,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             showtimeCall.cancel();
         }
 
-        resetShowtimeUi("Đang tải lịch chiếu...");
+        resetShowtimeUi(getString(R.string.showtime_loading));
         showtimeCall = ApiClient.getShowtimeApi().getShowtimesByMovie(movie.getId());
 
         showtimeCall.enqueue(new Callback<List<Showtime>>() {
@@ -244,14 +246,14 @@ public class MovieDetailActivity extends AppCompatActivity {
                     selectedShowtime = null;
                     renderShowtimeDates();
                 } else {
-                    resetShowtimeUi("Không thể tải lịch chiếu");
+                    resetShowtimeUi(getString(R.string.showtime_load_error));
                 }
             }
 
             @Override
             public void onFailure(Call<List<Showtime>> call, Throwable t) {
                 if (call.isCanceled()) return;
-                resetShowtimeUi("Lỗi tải lịch chiếu: " + t.getMessage());
+                resetShowtimeUi(getString(R.string.showtime_load_error_format, t.getMessage()));
             }
         });
     }
@@ -262,7 +264,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Map<String, List<Showtime>> byDate = groupShowtimesByDate(allShowtimes);
         if (byDate.isEmpty()) {
-            resetShowtimeUi("Chưa có lịch chiếu cho phim này");
+            resetShowtimeUi(getString(R.string.showtime_empty));
             return;
         }
 
@@ -296,7 +298,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         if (byCinema.isEmpty()) {
-            showtimeStateText.setText("Không có suất chiếu trong ngày đã chọn");
+            showtimeStateText.setText(R.string.showtime_empty_for_day);
             showtimeStateText.setVisibility(View.VISIBLE);
             return;
         }
@@ -391,18 +393,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         showtimeDateContainer.removeAllViews();
         cinemaShowtimeContainer.removeAllViews();
         selectedShowtime = null;
-        btnBuyTicket.setText("Chọn suất chiếu");
+        btnBuyTicket.setText(R.string.select_showtime);
         showtimeStateText.setText(message);
         showtimeStateText.setVisibility(View.VISIBLE);
     }
 
     private void updateBookingButton() {
         if (selectedShowtime == null) {
-            btnBuyTicket.setText("Chọn suất chiếu");
+            btnBuyTicket.setText(R.string.select_showtime);
             return;
         }
 
-        btnBuyTicket.setText("Đặt vé - " + formatShowtime(selectedShowtime));
+        btnBuyTicket.setText(getString(R.string.book_ticket_showtime_format, formatShowtime(selectedShowtime)));
     }
 
     private void showSeatSelectionFragment() {
@@ -439,7 +441,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (showtime.getCinema() != null && showtime.getCinema().getName() != null) {
             return showtime.getCinema().getName();
         }
-        return "Cinema";
+        return getString(R.string.cinema_fallback);
     }
 
     private String buildRoomSummary(List<Showtime> showtimes) {
@@ -486,7 +488,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String formatDisplayDate(String date) {
         try {
             SimpleDateFormat input = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-            SimpleDateFormat output = new SimpleDateFormat("EEE, dd/MM", Locale.US);
+            SimpleDateFormat output = new SimpleDateFormat("EEE, dd/MM", Locale.getDefault());
             return output.format(input.parse(date));
         } catch (ParseException e) {
             return date;
@@ -498,7 +500,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         String videoId = extractYoutubeVideoId(currentMovie.getTrailerUrl());
         if (videoId == null) {
-            Toast.makeText(this, "Phim chưa có trailer", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.movie_no_trailer), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -539,8 +541,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Trailer")
                 .setView(webView)
-                .setPositiveButton("Mở YouTube", (d, which) -> openYoutube(watchUrl))
-                .setNegativeButton("Đóng", null)
+                .setPositiveButton(getString(R.string.open_youtube), (d, which) -> openYoutube(watchUrl))
+                .setNegativeButton(getString(R.string.close), null)
                 .create();
 
         dialog.setOnShowListener(d -> webView.loadDataWithBaseURL(

@@ -15,6 +15,7 @@ import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.AuthResponse;
 import com.ducanhdev.bookingticket.model.LoginRequest;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
 import com.ducanhdev.bookingticket.utils.SessionManager;
 import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.button.MaterialButton;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LanguageManager.applySavedLanguage(this);
         ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
         getWindow().setWindowAnimations(0);
@@ -88,22 +90,22 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordInput.getText() != null ? passwordInput.getText().toString().trim() : "";
 
         if (email.isEmpty()) {
-            emailLayout.setError("Vui lòng nhập email");
+            emailLayout.setError(getString(R.string.login_email_required));
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailLayout.setError("Email không hợp lệ");
+            emailLayout.setError(getString(R.string.login_email_invalid));
             return;
         }
 
         if (password.isEmpty()) {
-            passwordLayout.setError("Vui lòng nhập mật khẩu");
+            passwordLayout.setError(getString(R.string.login_password_required));
             return;
         }
 
         if (password.length() < 6) {
-            passwordLayout.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            passwordLayout.setError(getString(R.string.login_password_min));
             return;
         }
 
@@ -120,17 +122,17 @@ public class LoginActivity extends AppCompatActivity {
                     sessionManager.saveSession(authResponse);
                     ApiClient.resetClient();
 
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    showError("Email hoặc mật khẩu không đúng");
+                    showError(getString(R.string.login_failed));
                 }
             }
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 setLoading(false);
-                showError("Lỗi kết nối: " + t.getMessage());
+                showError(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
     }
@@ -141,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
             btnLogin.setEnabled(false);
             loadingProgress.setVisibility(View.VISIBLE);
         } else {
-            btnLogin.setText("Sign In");
+            btnLogin.setText(R.string.sign_in);
             btnLogin.setEnabled(true);
             loadingProgress.setVisibility(View.GONE);
         }

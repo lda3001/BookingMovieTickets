@@ -41,6 +41,9 @@
     <color name="neon_frame_stroke">#B9C7FF</color>
     <color name="primary_chip_fill">#22E91B38</color>
     <color name="purple_chip_fill">#EEE8FF</color>
+    <color name="movie_tab_selected_fill">#E91B38</color>
+    <color name="movie_tab_selected_stroke">#A80F24</color>
+    <color name="movie_tab_selected_text">#FFFFFFFF</color>
 
     <color name="rating_star">#FCD34D</color>
     <color name="success">#22C55E</color>

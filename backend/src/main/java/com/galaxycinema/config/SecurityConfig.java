@@ -4,6 +4,7 @@ import com.galaxycinema.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -53,6 +54,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/bookings/user").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/bookings").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/bookings/*/confirm").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/bookings/*/cancel").authenticated()
                         // .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Các endpoint công khai
                         .anyRequest().permitAll()) // Các endpoint khác yêu cầu xác thực
                 .exceptionHandling(exception -> exception

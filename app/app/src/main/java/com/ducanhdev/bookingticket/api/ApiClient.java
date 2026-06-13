@@ -40,7 +40,7 @@ public class ApiClient {
             // OkHttp client with auth interceptor
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
-                        Request original = chain.request();
+                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder();
 
                         // Add auth token if available

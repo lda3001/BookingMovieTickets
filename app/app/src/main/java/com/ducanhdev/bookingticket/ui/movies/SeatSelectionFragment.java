@@ -171,7 +171,7 @@ public class SeatSelectionFragment extends Fragment {
             @Override
             public void onFailure(Call<Room> call, Throwable t) {
                 if (call.isCanceled() || !isAdded()) return;
-                showState("Không tải được sơ đồ phòng, đang dùng sơ đồ mặc định");
+                showState(getString(R.string.room_map_fallback));
             }
         });
     }
@@ -179,7 +179,7 @@ public class SeatSelectionFragment extends Fragment {
     private void loadBookedSeats() {
         if (showtimeId <= 0) return;
 
-        showState("Đang tải ghế đã đặt...");
+        showState(getString(R.string.booked_seats_loading));
         bookedSeatsCall = ApiClient.getShowtimeApi().getBookedSeats(showtimeId);
         bookedSeatsCall.enqueue(new Callback<List<String>>() {
             @Override
@@ -191,7 +191,7 @@ public class SeatSelectionFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     bookedSeats.addAll(response.body());
                 } else {
-                    showState("Không tải được ghế đã đặt");
+                    showState(getString(R.string.booked_seats_load_error));
                 }
                 selectedSeats.removeAll(bookedSeats);
                 renderSeats();
@@ -201,7 +201,7 @@ public class SeatSelectionFragment extends Fragment {
             @Override
             public void onFailure(Call<List<String>> call, Throwable t) {
                 if (call.isCanceled() || !isAdded()) return;
-                showState("Lỗi tải ghế đã đặt: " + t.getMessage());
+                showState(getString(R.string.booked_seats_load_error_format, t.getMessage()));
             }
         });
     }
@@ -283,10 +283,10 @@ public class SeatSelectionFragment extends Fragment {
 
     private void updateSummary() {
         if (selectedSeats.isEmpty()) {
-            selectedSeatsText.setText("Chưa chọn ghế");
+            selectedSeatsText.setText(R.string.seat_none_selected);
             checkoutButton.setEnabled(false);
         } else {
-            selectedSeatsText.setText("Ghế: " + String.join(", ", selectedSeats));
+            selectedSeatsText.setText(getString(R.string.seat_selected_format, String.join(", ", selectedSeats)));
             checkoutButton.setEnabled(true);
         }
         totalPriceText.setText(formatCurrency(calculateTotal()));
@@ -303,32 +303,32 @@ public class SeatSelectionFragment extends Fragment {
 
     private void createBooking() {
         if (selectedSeats.isEmpty()) {
-            Toast.makeText(requireContext(), "Vui lòng chọn ghế", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.select_seat_required), Toast.LENGTH_SHORT).show();
             return;
         }
 
         checkoutButton.setEnabled(false);
-        checkoutButton.setText("Đang xử lý...");
+        checkoutButton.setText(R.string.processing);
         bookingCall = ApiClient.getBookingApi().createBooking(new CreateBookingRequest(showtimeId, new ArrayList<>(selectedSeats)));
         bookingCall.enqueue(new Callback<Booking>() {
             @Override
             public void onResponse(Call<Booking> call, Response<Booking> response) {
                 if (call.isCanceled() || !isAdded()) return;
 
-                checkoutButton.setText("Thanh toán");
+                checkoutButton.setText(R.string.checkout);
                 checkoutButton.setEnabled(true);
                 if (response.isSuccessful() && response.body() != null) {
                     Booking booking = response.body();
                     String code = booking.getBookingCode() != null ? booking.getBookingCode() : String.valueOf(booking.getId());
-                    Toast.makeText(requireContext(), "Đặt vé thành công: " + code, Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), getString(R.string.booking_success_format, code), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(requireContext(), PaymentActivity.class);
                     intent.putExtra(Constants.EXTRA_BOOKING_CODE, code);
                     startActivity(intent);
                     closeFragment();
                 } else if (response.code() == 401 || response.code() == 403) {
-                    Toast.makeText(requireContext(), "Vui lòng đăng nhập để đặt vé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.booking_login_required), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(requireContext(), "Không thể đặt vé, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.booking_create_error), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -336,9 +336,9 @@ public class SeatSelectionFragment extends Fragment {
             public void onFailure(Call<Booking> call, Throwable t) {
                 if (call.isCanceled() || !isAdded()) return;
 
-                checkoutButton.setText("Thanh toán");
+                checkoutButton.setText(R.string.checkout);
                 checkoutButton.setEnabled(true);
-                Toast.makeText(requireContext(), "Lỗi đặt vé: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.booking_create_error_format, t.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -366,7 +366,7 @@ public class SeatSelectionFragment extends Fragment {
         if (cinemaName != null && !cinemaName.isEmpty()) parts.add(cinemaName);
         if (roomName != null && !roomName.isEmpty()) parts.add(roomName);
         if (showTime != null && !showTime.isEmpty()) parts.add(showTime);
-        return String.join(" • ", parts);
+        return String.join(" - ", parts);
     }
 
     private String formatCurrency(double value) {

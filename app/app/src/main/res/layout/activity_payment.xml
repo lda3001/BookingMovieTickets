@@ -29,7 +29,7 @@
             android:layout_marginHorizontal="12dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Thanh toán"
+            android:text="@string/payment_title"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -108,21 +108,32 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/payment_qr_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
                 <ImageView
                     android:id="@+id/payment_qr_image"
                     android:layout_width="230dp"
                     android:layout_height="230dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/bg_qr_box"
-                    android:contentDescription="Mã QR thanh toán"
+                    android:contentDescription="@string/payment_qr_payment_title"
                     android:padding="12dp"
                     android:scaleType="fitCenter" />
 
                 <TextView
+                    android:id="@+id/payment_qr_caption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:gravity="center"
-                    android:text="Quét mã QR và ghi đúng mã đặt vé trong nội dung chuyển khoản."
+                    android:text="@string/payment_qr_payment_caption"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
@@ -139,7 +150,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Thông tin vé"
+                    android:text="@string/payment_ticket_info"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -162,6 +173,14 @@
 
                 <TextView
                     android:id="@+id/payment_showtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/payment_created_at"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -221,7 +240,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_cinelux_button"
-            android:text="Xong"
+            android:text="@string/done"
             android:textSize="15sp"
             app:cornerRadius="8dp" />
 
@@ -231,7 +250,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:backgroundTint="@android:color/transparent"
-            android:text="Hủy đặt vé"
+            android:text="@string/cancel_booking"
             android:textColor="@color/error"
             android:textSize="14sp"
             app:cornerRadius="8dp"

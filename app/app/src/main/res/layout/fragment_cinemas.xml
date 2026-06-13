@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Select Cinema"
+                android:text="@string/select_cinema"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="⌖\nCineLux city map"
+                android:text="@string/cinelux_city_map"
                 android:textColor="@color/text_secondary"
                 android:textSize="16sp" />
 

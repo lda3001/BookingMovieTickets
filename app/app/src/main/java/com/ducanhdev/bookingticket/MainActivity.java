@@ -15,6 +15,7 @@ import com.ducanhdev.bookingticket.ui.account.AccountFragment;
 import com.ducanhdev.bookingticket.ui.cinemas.CinemasFragment;
 import com.ducanhdev.bookingticket.ui.home.HomeFragment;
 import com.ducanhdev.bookingticket.ui.movies.MoviesFragment;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
 import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LanguageManager.applySavedLanguage(this);
         ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
         getWindow().setWindowAnimations(0);

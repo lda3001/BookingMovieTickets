@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Movies"
+                android:text="@string/movies_title"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -46,6 +46,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_search"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_movie"
+                app:tint="@color/text_hint" />
+
+            <EditText
+                android:id="@+id/movie_search_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/home_search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="18dp"
             android:orientation="horizontal">
@@ -55,10 +88,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_purple_chip"
+                android:background="@drawable/bg_movie_tab_selected"
                 android:gravity="center"
-                android:text="Now Playing"
-                android:textColor="@color/white"
+                android:text="@string/now_playing"
+                android:textColor="@color/movie_tab_selected_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -70,7 +103,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_chip"
                 android:gravity="center"
-                android:text="Coming Soon"
+                android:text="@string/coming_soon"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -82,7 +115,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_chip"
                 android:gravity="center"
-                android:text="All Movies"
+                android:text="@string/all_movies"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -96,7 +129,7 @@
             android:background="@drawable/bg_chip"
             android:paddingHorizontal="12dp"
             android:paddingVertical="7dp"
-            android:text="Sort by Popularity"
+            android:text="@string/sort_by_popularity"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 

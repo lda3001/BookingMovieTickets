@@ -88,7 +88,7 @@
                 android:background="@drawable/bg_cinelux_button"
                 android:gravity="center"
                 android:paddingHorizontal="18dp"
-                android:text="Book"
+                android:text="@string/book"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />

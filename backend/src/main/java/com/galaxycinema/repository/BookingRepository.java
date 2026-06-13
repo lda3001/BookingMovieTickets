@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Optional<Booking> findByBookingCode(String bookingCode);
     
-    List<Booking> findByUserId(Long userId);
+    List<Booking> findByUserIdOrderByCreatedAtDesc(Long userId);
     
     @Query("SELECT b FROM Booking b WHERE b.showtime.id = :showtimeId")
     List<Booking> findByShowtimeId(@Param("showtimeId") Long showtimeId);

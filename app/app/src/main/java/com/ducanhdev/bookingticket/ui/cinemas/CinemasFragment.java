@@ -91,10 +91,10 @@ public class CinemasFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Cinema> cinemas = response.body();
                     cinemaAdapter.setCinemas(cinemas);
-                    showState(cinemas.isEmpty() ? "Khong co rap de hien thi" : null);
+                    showState(cinemas.isEmpty() ? getString(R.string.cinema_empty) : null);
                 } else {
                     cinemaAdapter.setCinemas(null);
-                    showState("Khong the tai danh sach rap");
+                    showState(getString(R.string.cinema_load_error));
                 }
             }
 
@@ -103,7 +103,7 @@ public class CinemasFragment extends Fragment {
                 if (!isAdded() || call.isCanceled()) return;
                 hideLoading();
                 cinemaAdapter.setCinemas(null);
-                showState("Loi ket noi: " + t.getMessage());
+                showState(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
     }

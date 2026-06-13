@@ -28,8 +28,8 @@ public class BookingService {
     private long paymentTimeoutMinutes;
 
     public List<Booking> getUserBookings(Long userId) {
-        
-        return bookingRepository.findByUserId(userId);
+        cancelExpiredUnpaidBookings();
+        return bookingRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     @Transactional

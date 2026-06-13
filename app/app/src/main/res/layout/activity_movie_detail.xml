@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Thông tin phim"
+                android:text="@string/movie_info_title"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -161,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Lịch chiếu"
+                android:text="@string/showtimes_title"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -223,7 +223,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:background="@drawable/bg_cinelux_button"
-        android:text="Chọn suất chiếu"
+        android:text="@string/select_showtime"
         android:textSize="16sp" />
 
     <ProgressBar

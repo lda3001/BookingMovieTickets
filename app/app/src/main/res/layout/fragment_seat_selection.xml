@@ -29,7 +29,7 @@
             android:layout_marginHorizontal="12dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Chọn ghế"
+            android:text="@string/seat_selection_title"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:gravity="center"
-                android:text="SCREEN"
+                android:text="@string/screen_label"
                 android:textColor="@color/text_hint"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="Thường"
+                    android:text="@string/seat_normal"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="VIP"
+                    android:text="@string/seat_vip"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="Đã chọn"
+                    android:text="@string/seat_selected"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -182,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="Đã đặt"
+                    android:text="@string/seat_booked"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -215,7 +215,7 @@
                 android:id="@+id/selected_seats_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chưa chọn ghế"
+                android:text="@string/seat_none_selected"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -239,7 +239,7 @@
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_cinelux_button"
             android:enabled="false"
-            android:text="Thanh toán"
+            android:text="@string/checkout"
             android:textSize="14sp"
             app:cornerRadius="8dp" />
 

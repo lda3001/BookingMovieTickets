@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +31,7 @@ import com.ducanhdev.bookingticket.adapter.MovieAdapter;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.Movie;
 import com.ducanhdev.bookingticket.ui.movies.MovieDetailActivity;
+import com.ducanhdev.bookingticket.utils.MovieSearchUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -48,12 +52,14 @@ public class HomeFragment extends Fragment implements
     private SwipeRefreshLayout swipeRefresh;
     private ProgressBar loadingProgress;
     private TextView errorText;
+    private EditText searchInput;
 
     private HeroSliderAdapter sliderAdapter;
     private MovieAdapter movieAdapter;
 
     private List<Movie> nowShowingMovies = new ArrayList<>();
     private List<Movie> comingSoonMovies = new ArrayList<>();
+    private String searchQuery = "";
 
     private Handler sliderHandler = new Handler(Looper.getMainLooper());
     private Runnable sliderRunnable;
@@ -73,6 +79,7 @@ public class HomeFragment extends Fragment implements
         setupSlider();
         setupMovieGrid();
         setupTabs();
+        setupSearch();
         setupSwipeRefresh();
         loadData();
     }
@@ -85,6 +92,7 @@ public class HomeFragment extends Fragment implements
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         loadingProgress = view.findViewById(R.id.loading_progress);
         errorText = view.findViewById(R.id.error_text);
+        searchInput = view.findViewById(R.id.movie_search_input);
     }
 
     private void setupSlider() {
@@ -150,11 +158,7 @@ public class HomeFragment extends Fragment implements
         movieTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    movieAdapter.setMovies(nowShowingMovies);
-                } else {
-                    movieAdapter.setMovies(comingSoonMovies);
-                }
+                applyMovieSearch();
             }
 
             @Override
@@ -162,6 +166,24 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void setupSearch() {
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchQuery = s == null ? "" : s.toString().trim();
+                applyMovieSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
@@ -192,20 +214,20 @@ public class HomeFragment extends Fragment implements
                     setupIndicators(sliderMovies.size());
                     resetSliderTimer();
 
+                    hideLoading();
+
                     // Update grid if on "Now Showing" tab
                     if (movieTabs.getSelectedTabPosition() == 0) {
-                        movieAdapter.setMovies(nowShowingMovies);
+                        applyMovieSearch();
                     }
-                    
-                    hideLoading();
                 } else {
-                    showError("Không thể tải danh sách phim");
+                    showError(getString(R.string.movies_load_error));
                 }
             }
 
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
-                showError("Lỗi kết nối: " + t.getMessage());
+                showError(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
     }
@@ -219,7 +241,7 @@ public class HomeFragment extends Fragment implements
                     
                     // Update grid if on "Coming Soon" tab
                     if (movieTabs.getSelectedTabPosition() == 1) {
-                        movieAdapter.setMovies(comingSoonMovies);
+                        applyMovieSearch();
                     }
                 }
             }
@@ -245,8 +267,26 @@ public class HomeFragment extends Fragment implements
     private void showError(String message) {
         loadingProgress.setVisibility(View.GONE);
         errorText.setText(message);
+        errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.error));
         errorText.setVisibility(View.VISIBLE);
         swipeRefresh.setRefreshing(false);
+    }
+
+    private void applyMovieSearch() {
+        List<Movie> sourceMovies = movieTabs.getSelectedTabPosition() == 1
+                ? comingSoonMovies
+                : nowShowingMovies;
+        List<Movie> filteredMovies = MovieSearchUtils.filterMovies(sourceMovies, searchQuery);
+        movieAdapter.setMovies(filteredMovies);
+
+        if (!sourceMovies.isEmpty() && filteredMovies.isEmpty() && !searchQuery.isEmpty()) {
+            errorText.setText(R.string.movies_search_empty);
+            errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+            errorText.setVisibility(View.VISIBLE);
+        } else if (loadingProgress.getVisibility() != View.VISIBLE) {
+            errorText.setVisibility(View.GONE);
+            errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.error));
+        }
     }
 
     private int dpToPx(int dp) {

@@ -30,7 +30,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CineLux"
+                    android:text="@string/brand_name"
                     android:textColor="@color/primary_light"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -62,12 +62,19 @@
                     app:tint="@color/text_hint" />
 
                 <EditText
+                    android:id="@+id/movie_search_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:hint="Search movies, cinemas..."
-                    android:textColor="@color/text_hint"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/home_search_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
                     android:textSize="13sp" />
 
             </LinearLayout>
@@ -104,7 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Trending Now"
+                    android:text="@string/trending_now"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -112,7 +119,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See All"
+                    android:text="@string/see_all"
                     android:textColor="@color/accent_purple"
                     android:textSize="12sp" />
 
@@ -137,12 +144,12 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Now Playing" />
+                    android:text="@string/now_playing" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Coming Soon" />
+                    android:text="@string/coming_soon" />
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -165,7 +172,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Nearby Cinemas"
+                    android:text="@string/nearby_cinemas"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -173,7 +180,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See All"
+                    android:text="@string/see_all"
                     android:textColor="@color/accent_purple"
                     android:textSize="12sp" />
 
@@ -206,7 +213,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="CineLux Downtown"
+                        android:text="@string/cinelux_downtown"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -215,7 +222,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="0.8 km away"
+                        android:text="@string/cinema_distance_away"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 

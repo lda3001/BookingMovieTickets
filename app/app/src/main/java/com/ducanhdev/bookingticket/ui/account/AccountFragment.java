@@ -1,6 +1,7 @@
 package com.ducanhdev.bookingticket.ui.account;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.ui.auth.LoginActivity;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
 import com.ducanhdev.bookingticket.utils.SessionManager;
 import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.button.MaterialButton;
@@ -32,6 +35,10 @@ public class AccountFragment extends Fragment {
     private SwitchMaterial themeSwitch;
     private TextView guestThemeLabel;
     private SwitchMaterial guestThemeSwitch;
+    private TextView languageVi;
+    private TextView languageEn;
+    private TextView guestLanguageVi;
+    private TextView guestLanguageEn;
     private LinearLayout menuProfile;
     private LinearLayout menuTransactions;
 
@@ -69,6 +76,10 @@ public class AccountFragment extends Fragment {
         themeSwitch = view.findViewById(R.id.theme_switch);
         guestThemeLabel = view.findViewById(R.id.guest_theme_label);
         guestThemeSwitch = view.findViewById(R.id.guest_theme_switch);
+        languageVi = view.findViewById(R.id.language_vi);
+        languageEn = view.findViewById(R.id.language_en);
+        guestLanguageVi = view.findViewById(R.id.guest_language_vi);
+        guestLanguageEn = view.findViewById(R.id.guest_language_en);
         menuProfile = view.findViewById(R.id.menu_profile);
         menuTransactions = view.findViewById(R.id.menu_transactions);
     }
@@ -99,34 +110,74 @@ public class AccountFragment extends Fragment {
             updateThemeLabel(isChecked);
             ThemeManager.setDarkMode(requireContext(), isChecked);
         });
+        setupLanguageControls();
 
         menuProfile.setOnClickListener(v -> {
             // TODO: Open profile activity
         });
 
         menuTransactions.setOnClickListener(v -> {
-            // TODO: Open transaction history activity
+            Intent intent = new Intent(requireContext(), BookingHistoryActivity.class);
+            startActivity(intent);
         });
     }
 
     private void updateUI() {
-        if (sessionManager.isLoggedIn()) {
+        if (sessionManager.isLoggedIn() && hasAuthToken()) {
             notLoggedInLayout.setVisibility(View.GONE);
             loggedInLayout.setVisibility(View.VISIBLE);
 
             String fullName = sessionManager.getFullName();
             String email = sessionManager.getEmail();
 
-            userName.setText(fullName != null && !fullName.isEmpty() ? fullName : "Người dùng");
+            userName.setText(fullName != null && !fullName.isEmpty() ? fullName : getString(R.string.user_fallback));
             userEmail.setText(email != null ? email : "");
         } else {
             notLoggedInLayout.setVisibility(View.VISIBLE);
             loggedInLayout.setVisibility(View.GONE);
         }
+        updateLanguageSelection();
     }
 
     private void updateThemeLabel(boolean isDarkMode) {
-        themeLabel.setText(isDarkMode ? "Dark Mode" : "Light Mode");
-        guestThemeLabel.setText(isDarkMode ? "Dark Mode" : "Light Mode");
+        String label = getString(isDarkMode ? R.string.dark_mode : R.string.light_mode);
+        themeLabel.setText(label);
+        guestThemeLabel.setText(label);
+    }
+
+    private void setupLanguageControls() {
+        languageVi.setOnClickListener(v -> setLanguage(LanguageManager.LANGUAGE_VI));
+        guestLanguageVi.setOnClickListener(v -> setLanguage(LanguageManager.LANGUAGE_VI));
+        languageEn.setOnClickListener(v -> setLanguage(LanguageManager.LANGUAGE_EN));
+        guestLanguageEn.setOnClickListener(v -> setLanguage(LanguageManager.LANGUAGE_EN));
+        updateLanguageSelection();
+    }
+
+    private void setLanguage(String language) {
+        LanguageManager.setLanguage(requireContext(), language);
+        updateLanguageSelection();
+    }
+
+    private void updateLanguageSelection() {
+        String selectedLanguage = LanguageManager.getLanguage(requireContext());
+        boolean isVietnamese = LanguageManager.LANGUAGE_VI.equals(selectedLanguage);
+        updateLanguageChip(languageVi, isVietnamese);
+        updateLanguageChip(guestLanguageVi, isVietnamese);
+        updateLanguageChip(languageEn, !isVietnamese);
+        updateLanguageChip(guestLanguageEn, !isVietnamese);
+    }
+
+    private void updateLanguageChip(TextView chip, boolean selected) {
+        chip.setBackgroundResource(selected ? R.drawable.bg_primary_chip : R.drawable.bg_chip);
+        chip.setTextColor(ContextCompat.getColor(
+                requireContext(),
+                selected ? R.color.primary_light : R.color.text_secondary
+        ));
+        chip.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
+    }
+
+    private boolean hasAuthToken() {
+        String token = sessionManager.getToken();
+        return token != null && !token.trim().isEmpty();
     }
 }

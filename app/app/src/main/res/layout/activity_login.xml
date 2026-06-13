@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="72dp"
-            android:text="Welcome Back"
+            android:text="@string/welcome_back"
             android:textColor="@color/text_primary"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Sign in to continue"
+            android:text="@string/sign_in_to_continue"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_cinelux_button"
                 android:gravity="center"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Phone"
+                android:text="@string/phone"
                 android:textColor="@color/text_secondary" />
 
         </LinearLayout>
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:hint="Email address"
+            android:hint="@string/email_address"
             app:boxBackgroundColor="@color/surface"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:hint="Password"
+            android:hint="@string/password"
             app:boxBackgroundColor="@color/surface"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
@@ -135,7 +135,7 @@
             android:layout_height="54dp"
             android:layout_marginTop="22dp"
             android:background="@drawable/bg_cinelux_button"
-            android:text="Sign In"
+            android:text="@string/sign_in"
             android:textSize="15sp" />
 
         <ProgressBar
@@ -151,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
             android:gravity="center"
-            android:text="or continue with"
+            android:text="@string/or_continue_with"
             android:textColor="@color/text_hint"
             android:textSize="12sp" />
 
@@ -209,7 +209,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don't have an account? "
+                android:text="@string/no_account_prompt"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
@@ -217,7 +217,7 @@
                 android:id="@+id/btn_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign Up"
+                android:text="@string/sign_up"
                 android:textColor="@color/primary_light"
                 android:textSize="13sp"
                 android:textStyle="bold" />

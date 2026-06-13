@@ -15,6 +15,7 @@ import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.AuthResponse;
 import com.ducanhdev.bookingticket.model.RegisterRequest;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
 import com.ducanhdev.bookingticket.utils.SessionManager;
 import com.ducanhdev.bookingticket.utils.ThemeManager;
 import com.google.android.material.button.MaterialButton;
@@ -56,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LanguageManager.applySavedLanguage(this);
         ThemeManager.applySavedTheme(this);
         super.onCreate(savedInstanceState);
         getWindow().setWindowAnimations(0);
@@ -115,42 +117,42 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPassword = textOf(confirmPasswordInput);
 
         if (fullName.isEmpty()) {
-            fullNameLayout.setError("Vui lòng nhập họ tên");
+            fullNameLayout.setError(getString(R.string.register_full_name_required));
             return;
         }
 
         if (email.isEmpty()) {
-            emailLayout.setError("Vui lòng nhập email");
+            emailLayout.setError(getString(R.string.login_email_required));
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailLayout.setError("Email không hợp lệ");
+            emailLayout.setError(getString(R.string.login_email_invalid));
             return;
         }
 
         if (!phone.isEmpty() && phone.length() < 9) {
-            phoneLayout.setError("Số điện thoại không hợp lệ");
+            phoneLayout.setError(getString(R.string.register_phone_invalid));
             return;
         }
 
         if (!dob.isEmpty() && !isValidDate(dob)) {
-            dobLayout.setError("Ngày sinh phải có dạng dd/MM/yyyy");
+            dobLayout.setError(getString(R.string.register_dob_invalid));
             return;
         }
 
         if (password.isEmpty()) {
-            passwordLayout.setError("Vui lòng nhập mật khẩu");
+            passwordLayout.setError(getString(R.string.login_password_required));
             return;
         }
 
         if (password.length() < 6) {
-            passwordLayout.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            passwordLayout.setError(getString(R.string.login_password_min));
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            confirmPasswordLayout.setError("Mật khẩu xác nhận không khớp");
+            confirmPasswordLayout.setError(getString(R.string.register_password_mismatch));
             return;
         }
 
@@ -170,17 +172,17 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     sessionManager.saveSession(response.body());
                     ApiClient.resetClient();
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    showError("Không thể đăng ký. Email có thể đã tồn tại.");
+                    showError(getString(R.string.register_failed));
                 }
             }
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 setLoading(false);
-                showError("Lỗi kết nối: " + t.getMessage());
+                showError(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
     }
@@ -263,7 +265,7 @@ public class RegisterActivity extends AppCompatActivity {
             btnRegister.setEnabled(false);
             loadingProgress.setVisibility(View.VISIBLE);
         } else {
-            btnRegister.setText("Sign Up");
+            btnRegister.setText(R.string.sign_up);
             btnRegister.setEnabled(true);
             loadingProgress.setVisibility(View.GONE);
         }

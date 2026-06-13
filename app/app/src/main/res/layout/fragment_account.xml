@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="Join CineLux"
+            android:text="@string/join_cinelux"
             android:textAlignment="center"
             android:textColor="@color/text_primary"
             android:textSize="22sp"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Sign in to manage tickets, rewards and favorite movies."
+            android:text="@string/join_cinelux_subtitle"
             android:textAlignment="center"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
@@ -57,7 +57,7 @@
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_cinelux_button"
-            android:text="Sign In" />
+            android:text="@string/sign_in" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Dark Mode"
+                android:text="@string/dark_mode"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -82,6 +82,47 @@
                 android:id="@+id/guest_theme_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_chip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/language_label"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/guest_language_vi"
+                android:layout_width="48dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="@string/language_vietnamese"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/guest_language_en"
+                android:layout_width="48dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:text="@string/language_english"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -103,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:gravity="center"
-                android:text="Profile"
+                android:text="@string/profile_title"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -153,7 +194,7 @@
                         android:background="@drawable/bg_purple_chip"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="7dp"
-                        android:text="🏆 CineLux Elite"
+                        android:text="@string/elite_badge"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -173,7 +214,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="28\nBookings"
+                    android:text="@string/account_bookings_stat"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp" />
 
@@ -182,7 +223,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="1,240\nPoints"
+                    android:text="@string/account_points_stat"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp" />
 
@@ -191,7 +232,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="4\nVouchers"
+                    android:text="@string/account_vouchers_stat"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp" />
 
@@ -216,7 +257,7 @@
                         android:id="@+id/theme_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Dark Mode"
+                        android:text="@string/dark_mode"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -225,7 +266,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Switch app appearance"
+                        android:text="@string/switch_app_appearance"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
@@ -238,11 +279,52 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_panel"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/language_label"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/language_vi"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:text="@string/language_vietnamese"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/language_en"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="6dp"
+                    android:gravity="center"
+                    android:text="@string/language_english"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Booking History"
+                android:text="@string/booking_history_title"
                 android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -255,6 +337,37 @@
 
                 <include layout="@layout/view_profile_movie_card" />
                 <include layout="@layout/view_profile_movie_card" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/menu_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_panel"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/view_all_booking_history"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -277,7 +390,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:text="Sign Out"
+                android:text="@string/sign_out"
                 android:textColor="@color/primary_light"
                 app:backgroundTint="@android:color/transparent"
                 app:strokeColor="@color/primary"
@@ -285,12 +398,6 @@
 
             <LinearLayout
                 android:id="@+id/menu_profile"
-                android:layout_width="1dp"
-                android:layout_height="1dp"
-                android:visibility="invisible" />
-
-            <LinearLayout
-                android:id="@+id/menu_transactions"
                 android:layout_width="1dp"
                 android:layout_height="1dp"
                 android:visibility="invisible" />

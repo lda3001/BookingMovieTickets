@@ -19,6 +19,8 @@ import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.Booking;
 import com.ducanhdev.bookingticket.utils.Constants;
+import com.ducanhdev.bookingticket.utils.LanguageManager;
+import com.ducanhdev.bookingticket.utils.TicketQrUtils;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.NumberFormat;
@@ -41,9 +43,12 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView movieText;
     private TextView cinemaText;
     private TextView showtimeText;
+    private TextView createdAtText;
     private TextView seatsText;
     private TextView totalText;
     private TextView stateText;
+    private TextView qrTitleText;
+    private TextView qrCaptionText;
     private ImageView qrImage;
     private LinearLayout qrPanel;
     private ProgressBar progressBar;
@@ -66,6 +71,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LanguageManager.applySavedLanguage(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
@@ -74,7 +80,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         initViews();
         if (bookingCode == null || bookingCode.isEmpty()) {
-            showState("Không tìm thấy mã đặt vé");
+            showState(getString(R.string.booking_code_missing));
             setButtonsEnabled(false);
             return;
         }
@@ -99,16 +105,19 @@ public class PaymentActivity extends AppCompatActivity {
         movieText = findViewById(R.id.payment_movie);
         cinemaText = findViewById(R.id.payment_cinema);
         showtimeText = findViewById(R.id.payment_showtime);
+        createdAtText = findViewById(R.id.payment_created_at);
         seatsText = findViewById(R.id.payment_seats);
         totalText = findViewById(R.id.payment_total);
         stateText = findViewById(R.id.payment_state_text);
+        qrTitleText = findViewById(R.id.payment_qr_title);
+        qrCaptionText = findViewById(R.id.payment_qr_caption);
         qrImage = findViewById(R.id.payment_qr_image);
         qrPanel = findViewById(R.id.payment_qr_panel);
         progressBar = findViewById(R.id.payment_progress);
         confirmButton = findViewById(R.id.btn_confirm_payment);
         cancelButton = findViewById(R.id.btn_cancel_payment);
 
-        cancelButton.setOnClickListener(v -> cancelBooking("Đã hủy đặt vé"));
+        cancelButton.setOnClickListener(v -> cancelBooking(getString(R.string.payment_cancel_success)));
     }
 
     private void loadBooking() {
@@ -126,7 +135,7 @@ public class PaymentActivity extends AppCompatActivity {
                     return;
                 }
 
-                showState("Không tải được thông tin đặt vé");
+                showState(getString(R.string.payment_load_error));
                 setButtonsEnabled(false);
             }
 
@@ -134,7 +143,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onFailure(Call<Booking> call, Throwable t) {
                 if (call.isCanceled()) return;
                 setLoading(false);
-                showState("Lỗi kết nối: " + t.getMessage());
+                showState(getString(R.string.connection_error_format, t.getMessage()));
                 setButtonsEnabled(false);
             }
         });
@@ -168,7 +177,7 @@ public class PaymentActivity extends AppCompatActivity {
                 if (call.isCanceled()) return;
                 if (showLoading) {
                     setLoading(false);
-                    showState("Lỗi kết nối: " + t.getMessage());
+                    showState(getString(R.string.connection_error_format, t.getMessage()));
                     setButtonsEnabled(false);
                 }
             }
@@ -177,19 +186,19 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void bindBooking(Booking booking) {
         String code = valueOrDash(booking.getBookingCode());
-        bookingCodeText.setText("Mã đặt vé: " + code);
+        bookingCodeText.setText(getString(R.string.booking_code_format, code));
         movieText.setText(valueOrDash(booking.getMovieTitle()));
-        cinemaText.setText("Rạp: " + joinNonEmpty(booking.getCinemaName(), booking.getRoomName()));
-        showtimeText.setText("Suất chiếu: " + valueOrDash(booking.getShowTime()));
-        seatsText.setText("Ghế: " + valueOrDash(booking.getSeatsString()));
+        cinemaText.setText(getString(R.string.cinema_format, joinNonEmpty(booking.getCinemaName(), booking.getRoomName())));
+        showtimeText.setText(getString(R.string.showtime_format, valueOrDash(booking.getShowTime())));
+        createdAtText.setText(getString(R.string.booked_at_format, valueOrDash(booking.getCreatedAt())));
+        seatsText.setText(getString(R.string.seats_format, valueOrDash(booking.getSeatsString())));
         totalText.setText(formatCurrency(booking.getTotalPrice()));
 
         updateStatusUi(booking);
-        if (isPending(booking)) {
-            Glide.with(this)
-                    .load(buildQrUrl(booking))
-                    .fitCenter()
-                    .into(qrImage);
+        if (TicketQrUtils.isPaidBooking(booking)) {
+            showTicketQr(booking);
+        } else if (isPending(booking)) {
+            showPaymentQr(booking);
             startCountdown(booking);
             startPaymentStatusPolling();
         }
@@ -197,15 +206,16 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void updateStatusUi(Booking booking) {
         String status = booking.getStatus();
-        statusBadge.setText(statusText(status));
+        statusBadge.setText(TicketQrUtils.isPaidBooking(booking) ? getString(R.string.booking_status_paid) : statusText(status));
 
-        boolean pending = isPending(booking);
-        qrPanel.setVisibility(pending ? View.VISIBLE : View.GONE);
+        boolean paid = TicketQrUtils.isPaidBooking(booking);
+        boolean pending = isPending(booking) && !paid;
+        qrPanel.setVisibility(pending || paid ? View.VISIBLE : View.GONE);
         cancelButton.setVisibility(pending ? View.VISIBLE : View.GONE);
         timerText.setVisibility(pending ? View.VISIBLE : View.GONE);
 
         if (pending) {
-            showState("Đang chờ thanh toán tự động. App sẽ cập nhật khi ngân hàng ghi nhận giao dịch.");
+            showState(getString(R.string.payment_pending_auto));
             confirmButton.setVisibility(View.GONE);
             cancelButton.setEnabled(true);
             return;
@@ -215,14 +225,36 @@ public class PaymentActivity extends AppCompatActivity {
         stopPaymentStatusPolling();
         confirmButton.setVisibility(View.VISIBLE);
         confirmButton.setEnabled(true);
-        confirmButton.setText("Xong");
+        confirmButton.setText(R.string.done);
         confirmButton.setOnClickListener(v -> finish());
 
         if (Constants.BOOKING_STATUS_CANCELLED.equals(status)) {
-            showState("Đặt vé đã bị hủy hoặc đã quá thời gian thanh toán.");
+            showState(getString(R.string.payment_cancelled_state));
+        } else if (paid) {
+            showState(getString(R.string.payment_ticket_paid_state));
         } else {
-            showState("Thanh toán thành công. Vé của bạn đã được xác nhận.");
+            showState(getString(R.string.payment_confirmed_state));
         }
+    }
+
+    private void showPaymentQr(Booking booking) {
+        qrTitleText.setText(R.string.payment_qr_payment_title);
+        qrImage.setContentDescription(getString(R.string.payment_qr_payment_title));
+        qrCaptionText.setText(R.string.payment_qr_payment_caption);
+        Glide.with(this)
+                .load(buildPaymentQrUrl(booking))
+                .fitCenter()
+                .into(qrImage);
+    }
+
+    private void showTicketQr(Booking booking) {
+        qrTitleText.setText(R.string.payment_qr_ticket_title);
+        qrImage.setContentDescription(getString(R.string.payment_qr_ticket_title));
+        qrCaptionText.setText(R.string.payment_qr_ticket_caption);
+        Glide.with(this)
+                .load(TicketQrUtils.buildTicketQrUrl(booking))
+                .fitCenter()
+                .into(qrImage);
     }
 
     private void startCountdown(Booking booking) {
@@ -230,8 +262,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         long remainingMs = getRemainingPaymentMs(booking);
         if (remainingMs <= 0) {
-            timerText.setText("Hết thời gian thanh toán");
-            cancelBooking("Đặt vé đã quá thời gian thanh toán");
+            timerText.setText(R.string.payment_timeout);
+            cancelBooking(getString(R.string.payment_cancel_expired));
             return;
         }
 
@@ -241,15 +273,15 @@ public class PaymentActivity extends AppCompatActivity {
                 long totalSeconds = millisUntilFinished / 1000;
                 long minutes = totalSeconds / 60;
                 long seconds = totalSeconds % 60;
-                timerText.setText(String.format(Locale.US, "Thời gian còn lại: %02d:%02d", minutes, seconds));
+                timerText.setText(getString(R.string.payment_time_remaining_format, minutes, seconds));
             }
 
             @Override
             public void onFinish() {
-                timerText.setText("Hết thời gian thanh toán");
+                timerText.setText(R.string.payment_timeout);
                 refreshBooking(false);
-                if (currentBooking != null && isPending(currentBooking)) {
-                    cancelBooking("Đặt vé đã quá thời gian thanh toán");
+                if (currentBooking != null && isPending(currentBooking) && !TicketQrUtils.isPaidBooking(currentBooking)) {
+                    cancelBooking(getString(R.string.payment_cancel_expired));
                 }
             }
         };
@@ -257,7 +289,7 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void cancelBooking(String successMessage) {
-        if (currentBooking == null || !isPending(currentBooking)) return;
+        if (currentBooking == null || !isPending(currentBooking) || TicketQrUtils.isPaidBooking(currentBooking)) return;
 
         setLoading(true);
         setButtonsEnabled(false);
@@ -276,7 +308,7 @@ public class PaymentActivity extends AppCompatActivity {
                 }
 
                 setButtonsEnabled(true);
-                showState("Không thể hủy đặt vé. Vui lòng thử lại.");
+                showState(getString(R.string.payment_cancel_failed));
             }
 
             @Override
@@ -284,12 +316,12 @@ public class PaymentActivity extends AppCompatActivity {
                 if (call.isCanceled()) return;
                 setLoading(false);
                 setButtonsEnabled(true);
-                showState("Lỗi hủy đặt vé: " + t.getMessage());
+                showState(getString(R.string.payment_cancel_error_format, t.getMessage()));
             }
         });
     }
 
-    private String buildQrUrl(Booking booking) {
+    private String buildPaymentQrUrl(Booking booking) {
         return Uri.parse("https://img.vietqr.io/image/MBBank-3018686868686-qr_only.png")
                 .buildUpon()
                 .appendQueryParameter("amount", String.valueOf(Math.round(booking.getTotalPrice())))
@@ -344,10 +376,10 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private String statusText(String status) {
-        if (Constants.BOOKING_STATUS_CONFIRMED.equals(status)) return "Đã xác nhận";
-        if (Constants.BOOKING_STATUS_COMPLETED.equals(status)) return "Hoàn thành";
-        if (Constants.BOOKING_STATUS_CANCELLED.equals(status)) return "Đã hủy";
-        return "Chờ thanh toán";
+        if (Constants.BOOKING_STATUS_CONFIRMED.equals(status)) return getString(R.string.booking_status_confirmed);
+        if (Constants.BOOKING_STATUS_COMPLETED.equals(status)) return getString(R.string.booking_status_completed);
+        if (Constants.BOOKING_STATUS_CANCELLED.equals(status)) return getString(R.string.booking_status_cancelled);
+        return getString(R.string.booking_status_pending);
     }
 
     private void setLoading(boolean loading) {

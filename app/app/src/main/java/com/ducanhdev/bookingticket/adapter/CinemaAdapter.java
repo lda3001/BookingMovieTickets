@@ -60,12 +60,14 @@ public class CinemaAdapter extends RecyclerView.Adapter<CinemaAdapter.CinemaView
         }
 
         void bind(Cinema cinema) {
-            cinemaName.setText(valueOrFallback(cinema.getName(), "Cinema"));
+            cinemaName.setText(valueOrFallback(cinema.getName(), itemView.getContext().getString(R.string.cinema_fallback)));
             cinemaCity.setText(valueOrFallback(cinema.getCity(), ""));
-            cinemaAddress.setText(valueOrFallback(cinema.getAddress(), "Address updating"));
-            cinemaRooms.setText(cinema.getTotalRooms() + " rooms");
-            cinemaPhone.setText(valueOrFallback(cinema.getPhone(), "No phone"));
-            cinemaStatus.setText(cinema.isActive() ? "Active" : "Inactive");
+            cinemaAddress.setText(valueOrFallback(cinema.getAddress(), itemView.getContext().getString(R.string.cinema_address_updating)));
+            cinemaRooms.setText(itemView.getContext().getString(R.string.cinema_rooms_format, cinema.getTotalRooms()));
+            cinemaPhone.setText(valueOrFallback(cinema.getPhone(), itemView.getContext().getString(R.string.cinema_no_phone)));
+            cinemaStatus.setText(cinema.isActive()
+                    ? R.string.cinema_active
+                    : R.string.cinema_inactive);
         }
 
         private String valueOrFallback(String value, String fallback) {

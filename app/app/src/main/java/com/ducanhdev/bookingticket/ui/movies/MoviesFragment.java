@@ -2,9 +2,12 @@ package com.ducanhdev.bookingticket.ui.movies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,7 +23,9 @@ import com.ducanhdev.bookingticket.R;
 import com.ducanhdev.bookingticket.adapter.MovieAdapter;
 import com.ducanhdev.bookingticket.api.ApiClient;
 import com.ducanhdev.bookingticket.model.Movie;
+import com.ducanhdev.bookingticket.utils.MovieSearchUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,9 +45,12 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
     private TextView tabNowPlaying;
     private TextView tabComingSoon;
     private TextView tabAllMovies;
+    private EditText searchInput;
 
     private MovieAdapter movieAdapter;
+    private final List<Movie> currentMovies = new ArrayList<>();
     private int selectedTab = TAB_NOW_PLAYING;
+    private String searchQuery = "";
     private Call<List<Movie>> activeCall;
 
     @Nullable
@@ -57,6 +65,7 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
         initViews(view);
         setupRecycler();
         setupTabs();
+        setupSearch();
         loadMovies();
     }
 
@@ -77,6 +86,7 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
         tabNowPlaying = view.findViewById(R.id.tab_now_playing);
         tabComingSoon = view.findViewById(R.id.tab_coming_soon);
         tabAllMovies = view.findViewById(R.id.tab_all_movies);
+        searchInput = view.findViewById(R.id.movie_search_input);
 
         swipeRefresh.setColorSchemeResources(R.color.primary);
         swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.surface);
@@ -103,6 +113,24 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
         loadMovies();
     }
 
+    private void setupSearch() {
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchQuery = s == null ? "" : s.toString().trim();
+                applyMovieSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
     private void loadMovies() {
         if (activeCall != null) {
             activeCall.cancel();
@@ -117,12 +145,13 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
                 hideLoading();
 
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Movie> movies = response.body();
-                    movieAdapter.setMovies(movies);
-                    showState(movies.isEmpty() ? "Không có phim để hiển thị" : null);
+                    currentMovies.clear();
+                    currentMovies.addAll(response.body());
+                    applyMovieSearch();
                 } else {
+                    currentMovies.clear();
                     movieAdapter.setMovies(null);
-                    showState("Không thể tải danh sách phim");
+                    showState(getString(R.string.movies_load_error));
                 }
             }
 
@@ -130,10 +159,26 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
             public void onFailure(Call<List<Movie>> call, Throwable t) {
                 if (!isAdded() || call.isCanceled()) return;
                 hideLoading();
+                currentMovies.clear();
                 movieAdapter.setMovies(null);
-                showState("Lỗi kết nối: " + t.getMessage());
+                showState(getString(R.string.connection_error_format, t.getMessage()));
             }
         });
+    }
+
+    private void applyMovieSearch() {
+        if (movieAdapter == null) return;
+
+        List<Movie> filteredMovies = MovieSearchUtils.filterMovies(currentMovies, searchQuery);
+        movieAdapter.setMovies(filteredMovies);
+
+        if (currentMovies.isEmpty()) {
+            showState(getString(R.string.movies_empty));
+        } else if (filteredMovies.isEmpty()) {
+            showState(getString(R.string.movies_search_empty));
+        } else {
+            showState(null);
+        }
     }
 
     private Call<List<Movie>> createMovieCall() {
@@ -172,10 +217,10 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnMovieClic
     }
 
     private void styleTab(TextView tab, boolean selected) {
-        tab.setBackgroundResource(selected ? R.drawable.bg_purple_chip : R.drawable.bg_chip);
+        tab.setBackgroundResource(selected ? R.drawable.bg_movie_tab_selected : R.drawable.bg_chip);
         tab.setTextColor(ContextCompat.getColor(
                 requireContext(),
-                selected ? R.color.white : R.color.text_secondary
+                selected ? R.color.movie_tab_selected_text : R.color.text_secondary
         ));
         tab.setTypeface(null, selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
     }
