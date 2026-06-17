@@ -122,6 +122,33 @@ app.get('/api/payment/initiate', async (req, res) => {
     });
   }
 });
+
+app.get('/api/payment/sync', async (req, res) => {
+  try {
+    req.query.source = req.query.source || 'api';
+    await paymentController.initiatePayment(req, res);
+  } catch (error) {
+    console.error('[PAYMENT SYNC] API sync error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to sync bank transactions'
+    });
+  }
+});
+
+app.post('/api/payment/sync', async (req, res) => {
+  try {
+    req.query.source = req.query.source || 'api';
+    await paymentController.initiatePayment(req, res);
+  } catch (error) {
+    console.error('[PAYMENT SYNC] API sync error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to sync bank transactions'
+    });
+  }
+});
+
 app.get('/api/hello', async (req, res) => {
   try {
     res.json({
@@ -190,11 +217,15 @@ function startPaymentSyncWorker() {
 
     paymentSyncRunning = true;
     try {
-      const result = await paymentController.syncPendingPayments();
-      const processed = result?.payload?.data?.totalProcessed || 0;
-      if (processed > 0) {
-        console.log(`[PAYMENT SYNC] Confirmed ${processed} booking(s)`);
-      }
+      const result = await paymentController.syncPendingPayments('worker');
+      const data = result?.payload?.data || {};
+      const message = result?.payload?.message || 'no message';
+      const detail = result?.statusCode >= 400 && Object.keys(data).length > 0
+        ? `, detail=${JSON.stringify(data)}`
+        : '';
+      console.log(
+        `[PAYMENT SYNC] worker result: status=${result?.statusCode || 0}, checked=${data.checkedTransactions || 0}, new=${data.newTransactionsCount || 0}, processed=${data.totalProcessed || 0}, message=${message}${detail}`
+      );
     } catch (error) {
       console.error('[PAYMENT SYNC] Error:', error.message);
     } finally {

@@ -329,7 +329,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="118dp"
                 android:layout_marginTop="10dp"
@@ -338,7 +338,7 @@
                 <include layout="@layout/view_profile_movie_card" />
                 <include layout="@layout/view_profile_movie_card" />
 
-            </LinearLayout>
+            </LinearLayout> -->
 
             <LinearLayout
                 android:id="@+id/menu_transactions"
@@ -371,7 +371,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
@@ -382,7 +382,7 @@
                 <include layout="@layout/view_profile_menu_item" />
                 <include layout="@layout/view_profile_menu_item" />
 
-            </LinearLayout>
+            </LinearLayout> -->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_logout"

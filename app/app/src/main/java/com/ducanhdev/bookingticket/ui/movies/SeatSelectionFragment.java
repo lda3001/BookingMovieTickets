@@ -105,7 +105,7 @@ public class SeatSelectionFragment extends Fragment {
         showTime = args.getString(ARG_SHOW_TIME, "");
         basePrice = args.getDouble(ARG_PRICE, 0);
         if (basePrice <= 0) {
-            basePrice = 75000;
+            basePrice = Constants.PRICE_NORMAL;
         }
     }
 
@@ -296,7 +296,7 @@ public class SeatSelectionFragment extends Fragment {
         double total = 0;
         for (String seatCode : selectedSeats) {
             String row = seatCode.replaceAll("\\d", "");
-            total += isVipRow(row) ? basePrice * 1.2 : basePrice;
+            total += isVipRow(row) ? basePrice * Constants.PRICE_VIP_MULTIPLIER : basePrice;
         }
         return total;
     }
@@ -346,15 +346,30 @@ public class SeatSelectionFragment extends Fragment {
     private boolean isVipRow(String rowLabel) {
         if (rowLabel == null || rowLabel.isEmpty()) return false;
         if (vipRows != null && !vipRows.trim().isEmpty()) {
-            String normalized = vipRows.replace(" ", "").toUpperCase(Locale.US);
+            String normalized = vipRows
+                    .replace("[", "")
+                    .replace("]", "")
+                    .replace("\"", "")
+                    .replace("'", "")
+                    .replace(" ", "")
+                    .toUpperCase(Locale.US);
+            int rowNumber = rowLabel.toUpperCase(Locale.US).charAt(0) - 'A' + 1;
             for (String row : normalized.split(",")) {
-                if (rowLabel.equalsIgnoreCase(row)) return true;
+                if (rowLabel.equalsIgnoreCase(row) || isSameNumericRow(row, rowNumber)) return true;
             }
             return false;
         }
 
         int rowIndex = rowLabel.toUpperCase(Locale.US).charAt(0) - 'A';
         return rowIndex >= Math.max(0, totalRows - 2);
+    }
+
+    private boolean isSameNumericRow(String row, int rowNumber) {
+        try {
+            return Integer.parseInt(row) == rowNumber;
+        } catch (NumberFormatException ignored) {
+            return false;
+        }
     }
 
     private String rowLabel(int rowIndex) {

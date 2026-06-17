@@ -40,4 +40,5 @@ public class Constants {
     // Prices (in VND)
     public static final int PRICE_NORMAL = 75000;
     public static final int PRICE_VIP = 90000;
+    public static final double PRICE_VIP_MULTIPLIER = 1.2;
 }

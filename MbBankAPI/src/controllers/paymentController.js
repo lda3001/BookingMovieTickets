@@ -14,7 +14,7 @@ class PaymentController {
   }
 
   // Hàm trích xuất bookingCode từ nội dung chuyển khoản
-  async syncPendingPayments() {
+  async syncPendingPayments(source = 'worker') {
     return new Promise((resolve) => {
       const result = {
         statusCode: 200,
@@ -33,7 +33,7 @@ class PaymentController {
         }
       };
 
-      this.initiatePayment({}, res).catch((error) => {
+      this.initiatePayment({ query: { source } }, res).catch((error) => {
         resolve({
           statusCode: 500,
           payload: {
@@ -45,28 +45,42 @@ class PaymentController {
     });
   }
 
-   extractBookingCode(description) {
-  // for BANK ACB
+  extractBookingCode(description) {
+    if (!description) return null;
 
-  const lines = description.split(/\s+/); // Tách theo từng từ
-
-  for (let i = 0; i < lines.length; i++) {
-    if (/^GC$/i.test(lines[i])) {
-      const next = lines[i + 1];
-      if (/^\d+$/.test(next)) {
-        return `GC${next}`;
+    const lines = description.split(/\s+/);
+    for (let i = 0; i < lines.length; i++) {
+      if (/^GC$/i.test(lines[i])) {
+        const next = lines[i + 1];
+        if (/^\d+$/.test(next)) {
+          return `GC${next}`;
+        }
       }
     }
+
+    const merged = description.replace(/\s+/g, '');
+    const match = merged.match(/GC(\d{4,})/i);
+    if (match) {
+      return `GC${match[1]}`;
+    }
+
+    return null;
   }
 
-  const merged = description.replace(/\s+/g, '');
-  const match = merged.match(/GC(\d{4,})/i);
-  if (match) {
-    return `GC${match[1]}`;
-  }
+  summarizeBankResponse(response) {
+    if (!response || typeof response !== 'object') {
+      return response;
+    }
 
-  return null;
-}
+    return {
+      keys: Object.keys(response),
+      responseCode: response.responseCode || response.code || response.errorCode || response.result?.responseCode,
+      message: response.message || response.errorDesc || response.result?.message || response.result?.responseMessage,
+      transactionHistoryListType: Array.isArray(response.transactionHistoryList)
+        ? 'array'
+        : typeof response.transactionHistoryList
+    };
+  }
 
 
   // Kiểm tra session còn hợp lệ không
@@ -85,7 +99,10 @@ class PaymentController {
   }
 
   async initiatePayment(req, res) {
+    const source = req?.query?.source || 'manual';
+    const startedAt = Date.now();
     try {
+      console.log(`[PAYMENT SYNC] ${source} scan started`);
       // Get MB Bank credentials from environment variables
       const mbUsername = process.env.MB_USERNAME;
       const mbPassword = process.env.MB_PASSWORD;
@@ -107,10 +124,13 @@ class PaymentController {
         // Login to MB Bank nếu session không hợp lệ
         const loginResult = await mbBankService.login(mbUsername, mbPassword);
         if (!loginResult.sessionId) {
+          console.log('[PAYMENT SYNC] MB login failed', this.summarizeBankResponse(loginResult));
           return res.status(500).json({
             success: false,
-            message: 'Không thể kết nối với ngân hàng!',
-            data: JSON.stringify(loginResult)
+            message: 'Unable to connect to MB Bank',
+            data: {
+              bankResponse: this.summarizeBankResponse(loginResult)
+            }
           });
         }
         sessionId = loginResult.sessionId;
@@ -127,23 +147,33 @@ class PaymentController {
         mbUsername
       );
       if (!transactions || !transactions.transactionHistoryList) {
+        console.log(
+          `[PAYMENT SYNC] ${source} scan failed: missing transaction history`,
+          this.summarizeBankResponse(transactions)
+        );
         return res.status(500).json({
           success: false,
-          message: 'Không thể lấy danh sách giao dịch!'
+          message: 'Unable to get bank transaction history',
+          data: {
+            bankResponse: this.summarizeBankResponse(transactions)
+          }
         });
       }
 
       // Process new transactions
       let totalProcessed = 0;
       let newTransactionsCount = 0;
+      const checkedTransactions = Array.isArray(transactions.transactionHistoryList)
+        ? transactions.transactionHistoryList.length
+        : 0;
       if (Array.isArray(transactions.transactionHistoryList)) {
         for (const transaction of transactions.transactionHistoryList) {
           try {
-            // Extract userId from description
+            // Extract booking code from transfer description.
             const BookingCode = this.extractBookingCode(transaction.description);
 
             if (!BookingCode) {
-              console.log('Không tìm thấy userId trong nội dung chuyển khoản:', transaction.description);
+              console.log('Không tìm thấy bookingCode trong nội dung chuyển khoản:', transaction.description);
               continue;
             }
 
@@ -230,10 +260,16 @@ class PaymentController {
         }
       }
 
+      console.log(
+        `[PAYMENT SYNC] ${source} scan finished: checked=${checkedTransactions}, new=${newTransactionsCount}, processed=${totalProcessed}, durationMs=${Date.now() - startedAt}`
+      );
+
       res.json({
         success: true,
         message: 'Xử lý giao dịch thành công!',
         data: {
+          checkedTransactions,
+          newTransactionsCount,
           totalProcessed,
           //transactions: transactions
         }
@@ -242,13 +278,13 @@ class PaymentController {
     } catch (error) {
       console.error('Payment error:', error);
       // Nếu lỗi liên quan đến session, xóa session hiện tại
-      if (error.message && error.message.includes('session')) {
+      if (error.message && error.message.toLowerCase().includes('session')) {
         this.sessionData.sessionId = null;
         this.sessionData.lastLoginTime = null;
       }
       res.status(500).json({
         success: false,
-        message: 'error: ' + error
+        message: error.message || String(error)
       });
     }
   }
