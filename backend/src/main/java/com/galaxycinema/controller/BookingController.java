@@ -51,15 +51,15 @@ public class BookingController {
     }
 
     @GetMapping("/code/{bookingCode}")
-    @PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Lấy đặt vé theo mã", description = "Trả về thông tin chi tiết của một đặt vé theo mã đặt vé")
     public ResponseEntity<BookingResponse> getBookingByCode(@PathVariable String bookingCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String userEmail = authentication.getName();
+        // User user = userRepository.findByEmail(userEmail)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
        
-        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.getBookingByCode(bookingCode, user.getId())));
+        return ResponseEntity.ok(mappers.toBookingResponse(bookingService.getBookingByCode(bookingCode)));
     }
 
     @PostMapping

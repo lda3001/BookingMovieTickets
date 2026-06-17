@@ -32,6 +32,7 @@
     "@uiw/react-md-editor": "^3.19.5",
     "@xeger/quill-image-actions": "^0.7.2",
     "@xeger/quill-image-formats": "^0.7.2",
+    "@yudiel/react-qr-scanner": "^2.5.0",
     "antd": "^5.17.0",
     "html5-qrcode": "^2.3.8",
     "nanoid": "^5.0.9",

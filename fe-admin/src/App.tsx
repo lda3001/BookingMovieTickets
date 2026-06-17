@@ -56,10 +56,9 @@ import { MenuEdit, MenuList } from "./pages/menu";
 import { API_URL } from "./utils/helper";
 import { CategoryPostEdit, CategoryPostList } from "./pages/categoryPost";
 import { PostCreate } from "./pages/posts/create";
-import { UserList } from "./pages/users";
-import { OrderUserShow } from "./pages/users/show";
+import { CustomerList, CustomerShow, CustomerCreate, CustomerEdit } from "./pages/customers";
 import { MovieList, MovieCreate, MovieEdit, MovieShow } from "./pages/movies";
-import { CinemaList, CinemaEdit, CinemaShow } from "./pages/cinemas";
+import { CinemaList, CinemaCreate, CinemaEdit, CinemaShow } from "./pages/cinemas";
 import { RoomList, RoomCreate, RoomEdit, RoomShow } from "./pages/rooms";
 import { ShowtimeList, ShowtimeCreate, ShowtimeEdit, ShowtimeShow } from "./pages/showtimes";
 import { BookingList, BookingShow } from "./pages/bookings";
@@ -275,39 +274,41 @@ const App: React.FC = () => {
                   icon: <DashboardOutlined />,
                 },
               },
-              {
-                name: "menus",
-                list: "/menus",
-                edit: "/menus/edit/:id",
-                meta: {
-                  label: "Menu",
-                  icon: <MenuOutlined />,
-                },
-              },
-              {
-                name: "posts",
-                list: "/posts",
-                show: "/posts/show/:id",
-                edit: "/posts/edit/:id",
-                meta: {
-                  label: "Bài Viết",
-                  icon: <FormOutlined />,
-                },
-              },
-              {
-                name: "categoryposts",
-                list: "/categoryposts",
-                show: "/categoryposts/show/:id",
-                edit: "/categoryposts/edit/:id",
-                meta: {
-                  label: "Danh mục Bài Viết",
-                  icon: <ProfileOutlined />,
-                },
-              },
+              // {
+              //   name: "menus",
+              //   list: "/menus",
+              //   edit: "/menus/edit/:id",
+              //   meta: {
+              //     label: "Menu",
+              //     icon: <MenuOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "posts",
+              //   list: "/posts",
+              //   show: "/posts/show/:id",
+              //   edit: "/posts/edit/:id",
+              //   meta: {
+              //     label: "Bài Viết",
+              //     icon: <FormOutlined />,
+              //   },
+              // },
+              // {
+              //   name: "categoryposts",
+              //   list: "/categoryposts",
+              //   show: "/categoryposts/show/:id",
+              //   edit: "/categoryposts/edit/:id",
+              //   meta: {
+              //     label: "Danh mục Bài Viết",
+              //     icon: <ProfileOutlined />,
+              //   },
+              // },
               {
                 name: "users",
-                list: "/users",
-                show: "/users/show/:id",
+                list: "/customers",
+                create: "/customers/create",
+                edit: "/customers/edit/:id",
+                show: "/customers/show/:id",
                 meta: {
                   label: "Khách Hàng",
                   icon: <UserOutlined />,
@@ -331,6 +332,7 @@ const App: React.FC = () => {
               {
                 name: "cinemas",
                 list: "/cinemas",
+                create: "/cinemas/create",
                 edit: "/cinemas/edit/:id",
                 show: "/cinemas/show/:id",
                 meta: {
@@ -442,10 +444,11 @@ const App: React.FC = () => {
                   <Route path="edit/:id" element={<CategoryPostEdit />} />
                   <Route path="show/:id" element={<CategoryShow />} />
                 </Route>
-                <Route path="/users">
-                  <Route index element={<UserList />} />
-                
-                  <Route path="show/:id" element={<OrderUserShow />} />
+                <Route path="/customers">
+                  <Route index element={<CustomerList />} />
+                  <Route path="create" element={<CustomerCreate />} />
+                  <Route path="edit/:id" element={<CustomerEdit />} />
+                  <Route path="show/:id" element={<CustomerShow />} />
                 </Route>
                
                 
@@ -462,6 +465,7 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/cinemas">
                   <Route index element={<CinemaList />} />
+                  <Route path="create" element={<CinemaCreate />} />
                   <Route path="edit/:id" element={<CinemaEdit />} />
                   <Route path="show/:id" element={<CinemaShow />} />
                 </Route>

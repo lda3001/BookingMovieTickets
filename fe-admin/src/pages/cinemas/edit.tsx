@@ -11,16 +11,6 @@ export const CinemaEdit = () => {
     query: queryResult,
   } = useForm<ICinema>({
     action: "edit",
-    transform: (values: any) => {
-      return {
-        name: values.name,
-        address: values.address,
-        phone: values.phone,
-        city: values.city,
-        totalRooms: values.totalRooms,
-        isActive: values.isActive,
-      };
-    },
   });
 
   const postData = queryResult?.data?.data;
@@ -58,21 +48,59 @@ export const CinemaEdit = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item label="Địa chỉ" name="address">
-          <Input />
+        <Form.Item 
+          label="Địa chỉ" 
+          name="address"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập địa chỉ rạp" />
         </Form.Item>
 
         <Flex gap={20}>
-          <Form.Item label="Thành phố" name="city" style={{ flex: 1 }}>
-            <Input />
+          <Form.Item 
+            label="Thành phố" 
+            name="city" 
+            style={{ flex: 1 }}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập thành phố",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập thành phố" />
           </Form.Item>
-          <Form.Item label="Số điện thoại" name="phone" style={{ flex: 1 }}>
-            <Input />
+          <Form.Item 
+            label="Số điện thoại" 
+            name="phone" 
+            style={{ flex: 1 }}
+            rules={[
+              {
+                pattern: /^[0-9]{10,11}$/,
+                message: "Số điện thoại phải từ 10-11 chữ số",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập số điện thoại" />
           </Form.Item>
         </Flex>
 
-        <Form.Item label="Số phòng" name="totalRooms">
-          <InputNumber min={0} style={{ width: "100%" }} />
+        <Form.Item 
+          label="Số phòng" 
+          name="totalRooms"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số phòng",
+            },
+          ]}
+        >
+          <InputNumber min={0} max={50} style={{ width: "100%" }} placeholder="Nhập số phòng chiếu" />
         </Form.Item>
       </Form>
     </Edit>

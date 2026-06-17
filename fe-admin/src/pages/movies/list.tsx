@@ -69,7 +69,7 @@ export const MovieList = () => {
       return filters;
     },
   });
-
+ 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={"middle"}>
       <Card>
@@ -87,6 +87,7 @@ export const MovieList = () => {
           </Form.Item>
         </Form>
       </Card>
+      <Card>{tableProps.dataSource?.length} phim</Card>
       <Card>
         <Flex justify="end" style={{ marginBottom: 16 }} gap={10}>
           <Button

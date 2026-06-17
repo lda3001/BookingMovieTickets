@@ -106,17 +106,20 @@ export interface OrderDetail {
 
 export interface IUser {
   id: string;
-  username: string;
+  fullName: string; // Backend uses fullName
   email: string;
+  phone?: string;
+  dateOfBirth?: string;
   role: string;
-  typeAccount: string;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
-  orders: IOrder[];
+  bookings?: IBooking[]; // Backend uses bookings instead of orders
 }
 export interface IUserResponse {
   status: string;
   data: IUser;
+  bookings?: IBooking[];
 }
 
 export interface IMovie {
@@ -201,10 +204,14 @@ export interface IBooking {
   bookingCode: string;
   user?: IUser;
   userId?: string;
+  userFullName?: string;
+  userEmail?: string;
   showtimeId?: number;
   showTime?: string;
   movieTitle?: string;
   seatCodes?: string[];
+  cinemaName?: string;
+  roomName?: string;
   bookedSeats?: IBookedSeat[];
   totalPrice?: number;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";

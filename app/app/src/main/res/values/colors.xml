@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary">#E91B38</color>
+    <color name="primary_dark">#A80F24</color>
+    <color name="primary_light">#FF4A63</color>
+    <color name="accent_purple">#7C4DFF</color>
+    <color name="accent_blue">#245BFF</color>
+    <color name="accent_teal">#26D7D0</color>
+    <color name="accent_rose">#FF2F68</color>
+
+    <color name="background">#F7F8FC</color>
+    <color name="background_secondary">#EEF1F7</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_variant">#E4E8F0</color>
+    <color name="card_background">#FFFFFFFF</color>
+
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#4B5563</color>
+    <color name="text_hint">#8A94A6</color>
+
+    <color name="screen_gradient_start">#FFF0F3</color>
+    <color name="screen_gradient_center">#F7F8FC</color>
+    <color name="screen_gradient_end">#EEF2FF</color>
+    <color name="header_gradient_start">#FFE2E8</color>
+    <color name="header_gradient_center">#F7F8FC</color>
+    <color name="header_gradient_end">#E8ECFF</color>
+    <color name="panel_fill">#FFFFFFFF</color>
+    <color name="panel_stroke">#DFE5EF</color>
+    <color name="chip_fill">#F1F3F8</color>
+    <color name="chip_stroke">#DFE5EF</color>
+    <color name="input_fill">#FFFFFFFF</color>
+    <color name="input_stroke">#D9DFEA</color>
+    <color name="bottom_nav_fill">#FFFFFFFF</color>
+    <color name="movie_overlay_start">#CC050812</color>
+    <color name="movie_overlay_center">#66050812</color>
+    <color name="movie_overlay_end">#00050812</color>
+    <color name="neon_frame_fill">#F8FAFF</color>
+    <color name="neon_frame_stroke">#B9C7FF</color>
+    <color name="primary_chip_fill">#22E91B38</color>
+    <color name="purple_chip_fill">#EEE8FF</color>
+    <color name="movie_tab_selected_fill">#E91B38</color>
+    <color name="movie_tab_selected_stroke">#A80F24</color>
+    <color name="movie_tab_selected_text">#FFFFFFFF</color>
+
+    <color name="rating_star">#FCD34D</color>
+    <color name="success">#22C55E</color>
+    <color name="error">#EF4444</color>
+    <color name="warning">#F59E0B</color>
+    <color name="info">#3B82F6</color>
+
+    <color name="seat_normal">#6357D9</color>
+    <color name="seat_vip">#F59E0B</color>
+    <color name="seat_booked">#CDD3DD</color>
+    <color name="seat_selected">#E91B38</color>
+
+    <color name="age_rating_p">#22C55E</color>
+    <color name="age_rating_k">#22C55E</color>
+    <color name="age_rating_t13">#3B82F6</color>
+    <color name="age_rating_t16">#F59E0B</color>
+    <color name="age_rating_t18">#EF4444</color>
+
+    <color name="nav_selected">#E91B38</color>
+    <color name="nav_unselected">#8A94A6</color>
+</resources>

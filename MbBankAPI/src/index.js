@@ -9,13 +9,17 @@ const http = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
 const sequelize = require('./models/index');
-
-
+const loadWasm = require('./loadWasm')
+const fs = require('fs');
+const mbBankService = require('./services/mbBankService');
 const paymentController = require('./controllers/paymentController');
 
 
 const { Op } = require('sequelize');
 const Transaction = require('./models/Transaction');
+const PAYMENT_SYNC_INTERVAL_MS = Number(process.env.PAYMENT_SYNC_INTERVAL_MS || 15000);
+const PAYMENT_AUTO_SYNC_ENABLED = process.env.PAYMENT_AUTO_SYNC_ENABLED !== 'false';
+let paymentSyncRunning = false;
 
 
 // Import associations
@@ -118,6 +122,33 @@ app.get('/api/payment/initiate', async (req, res) => {
     });
   }
 });
+
+app.get('/api/payment/sync', async (req, res) => {
+  try {
+    req.query.source = req.query.source || 'api';
+    await paymentController.initiatePayment(req, res);
+  } catch (error) {
+    console.error('[PAYMENT SYNC] API sync error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to sync bank transactions'
+    });
+  }
+});
+
+app.post('/api/payment/sync', async (req, res) => {
+  try {
+    req.query.source = req.query.source || 'api';
+    await paymentController.initiatePayment(req, res);
+  } catch (error) {
+    console.error('[PAYMENT SYNC] API sync error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to sync bank transactions'
+    });
+  }
+});
+
 app.get('/api/hello', async (req, res) => {
   try {
     res.json({
@@ -128,6 +159,24 @@ app.get('/api/hello', async (req, res) => {
     res.status(401).json({
       success: false,
       message: 'Token không hợp lệ!'
+    });
+  }
+});
+
+app.post('/api/bder', async (req, res) => {
+  try {
+    const {data} = req.body;
+    const dataEnc = await mbBankService.bder(data);
+    res.json({
+      success: true,
+      message: 'Bder thành công!',
+      data: dataEnc
+    });
+  } catch (error) {
+    console.error('Error bder:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Lỗi khi đăng nhập!', error: error.message
     });
   }
 });
@@ -152,9 +201,47 @@ app.get('/api/payment/verify/:transactionId', async (req, res) => {
   }
 });
 
+function startPaymentSyncWorker() {
+  if (!PAYMENT_AUTO_SYNC_ENABLED) {
+    console.log('Payment auto sync disabled');
+    return;
+  }
+
+  if (!process.env.MB_USERNAME || !process.env.MB_PASSWORD || !process.env.MB_ACCOUNT_NO) {
+    console.log('Payment auto sync skipped: missing MB bank environment variables');
+    return;
+  }
+
+  const runPaymentSync = async () => {
+    if (paymentSyncRunning) return;
+
+    paymentSyncRunning = true;
+    try {
+      const result = await paymentController.syncPendingPayments('worker');
+      const data = result?.payload?.data || {};
+      const message = result?.payload?.message || 'no message';
+      const detail = result?.statusCode >= 400 && Object.keys(data).length > 0
+        ? `, detail=${JSON.stringify(data)}`
+        : '';
+      console.log(
+        `[PAYMENT SYNC] worker result: status=${result?.statusCode || 0}, checked=${data.checkedTransactions || 0}, new=${data.newTransactionsCount || 0}, processed=${data.totalProcessed || 0}, message=${message}${detail}`
+      );
+    } catch (error) {
+      console.error('[PAYMENT SYNC] Error:', error.message);
+    } finally {
+      paymentSyncRunning = false;
+    }
+  };
+
+  setTimeout(runPaymentSync, 5000);
+  setInterval(runPaymentSync, PAYMENT_SYNC_INTERVAL_MS);
+  console.log(`Payment auto sync started: every ${PAYMENT_SYNC_INTERVAL_MS}ms`);
+}
+
 
 // Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  startPaymentSyncWorker();
 }); 

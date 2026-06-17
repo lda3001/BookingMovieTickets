@@ -12,21 +12,21 @@ class MBBankService {
     this.jar = new CookieJar();
     this.client = wrapper(axios.create({ jar: this.jar }));
     this.auth = "Basic RU1CUkVUQUlMV0VCOlNEMjM0ZGZnMzQlI0BGR0AzNHNmc2RmNDU4NDNm";
+    this.wasmPath = path.resolve(__dirname, './main.wasm');
     this.urls = {
       transaction: 'https://online.mbbank.com.vn/api/retail-transactionms/transactionms/get-account-transaction-history'
     };
   }
 
   async downloadWasmFile() {
-    const wasmPath = path.resolve(__dirname, './main.wasm');
-    if (!fs.existsSync(wasmPath)) {
-    
+    if (!fs.existsSync(this.wasmPath)) {
+
       const response = await this.client({
         url: "https://online.mbbank.com.vn/assets/wasm/main.wasm",
         method: "GET",
         responseType: "stream",
       });
-      const writer = fs.createWriteStream(wasmPath);
+      const writer = fs.createWriteStream(this.wasmPath);
       response.data.pipe(writer);
       return new Promise((resolve, reject) => {
         writer.on("finish", resolve);
@@ -39,10 +39,10 @@ class MBBankService {
     const response = await this.client.post(
       "https://online.mbbank.com.vn/api/retail-internetbankingms/getCaptchaImage",
       {
-    refNo: "2024071018571949",
-    deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948",
-    sessionId: "",
-  },
+        refNo: "2024071018571949",
+        deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948",
+        sessionId: "",
+      },
       {
         headers: {
           Authorization: this.auth,
@@ -56,66 +56,97 @@ class MBBankService {
   }
 
   async solveCaptcha(base64Image) {
-    const url = "http://103.72.96.214:8277/api/captcha/mbbank";
-    const response = await axios.post(url, { base64: base64Image }, {
-      headers: { "Content-Type": "application/json" }
+    const url = "https://anticaptcha.top/api/captcha";
+
+    const body = {
+      apikey: "758e8953c5670a752a2cfa61a902e5bd",
+      img: base64Image,
+      type: 18,
+
+      // tùy captcha, cần thì bật:
+      // numeric: 1,
+      casesensitive: 1,
+      // calc: 1
+    };
+
+    const response = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
-    
-    if (!response.data || response.data.status !== "success" || !response.data.captcha) {
-      throw new Error("Failed to solve captcha");
+
+    //console.log("Captcha response:", response.data);
+
+    if (
+      !response.data ||
+      !response.data.success ||
+      !response.data.captcha
+    ) {
+      throw new Error(
+        `Failed to solve captcha: ${JSON.stringify(response.data)}`
+      );
     }
-    
+
     return response.data.captcha;
   }
 
   async login(username, password) {
     try {
       await this.downloadWasmFile();
-    
-    const base64Image = await this.getCaptcha();
-    const captchaSolution = await this.solveCaptcha(base64Image);
 
-    const request = {
-      userId: username,
-      password: crypto.createHash("md5").update(password).digest("hex"),
-      captcha: captchaSolution,
-      ibAuthen2faString: "c722fa8dd6f5179150f472497e022ba0",
-      sessionId: null,
-       refNo: "0123456789-2024071018223800",
-      deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948",
-    };
+      const base64Image = await this.getCaptcha();
+      const captchaSolution = await this.solveCaptcha(base64Image);
 
-    const dataEnc = await loadWasm.loadWasm(fs.readFileSync("./main.wasm"), request, "0");
-    
+      const request = {
+        userId: username,
+        password: crypto.createHash("md5").update(password).digest("hex"),
+        captcha: captchaSolution,
+        ibAuthen2faString: "c722fa8dd6f5179150f472497e022ba0",
+        sessionId: null,
+        refNo: "0123456789-2024071018223800",
+        deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948",
+      };
 
-    const response = await this.client.post(
-      "https://online.mbbank.com.vn/api/retail_web/internetbanking/v2.0/doLogin",
-      { dataEnc },
-      {
-        headers: {
-          accept: "application/json, text/plain, */*",
-          app: "MB_WEB",
-          authorization: this.auth,
-          "content-type": "application/json; charset=UTF-8",
-          refno: `${Date.now()}`,
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-        },
-      }
-    );
+      const dataEnc = await loadWasm.loadWasm(fs.readFileSync(this.wasmPath), request, "0");
+
+
+      const response = await this.client.post(
+        "https://online.mbbank.com.vn/api/retail_web/internetbanking/v2.0/doLogin",
+        { dataEnc },
+        {
+          headers: {
+            accept: "application/json, text/plain, */*",
+            app: "MB_WEB",
+            authorization: this.auth,
+            "content-type": "application/json; charset=UTF-8",
+            refno: `${Date.now()}`,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+          },
+        }
+      );
 
       return response.data;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
     }
-    
+
+  }
+  async bder(request) {
+    try {
+      const dataEnc = await loadWasm.loadWasm(fs.readFileSync(this.wasmPath), request, "0");
+      return dataEnc;
+    } catch (error) {
+      console.error('Error bder:', error);
+      throw error;
+    }
   }
 
   async getTransactionHistory(sessionId, accountNo, deviceIdCommon, username) {
     try {
       const fromDate = new Date();
       fromDate.setDate(fromDate.getDate() - 1);
-      
+
       const data = {
         accountNo: accountNo,
         deviceIdCommon: deviceIdCommon,
@@ -186,7 +217,7 @@ class MBBankService {
       throw error;
     }
   }
-  
+
 }
 
 module.exports = new MBBankService(); 

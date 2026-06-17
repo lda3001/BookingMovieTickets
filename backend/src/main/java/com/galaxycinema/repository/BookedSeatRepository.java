@@ -15,8 +15,7 @@ public interface BookedSeatRepository extends JpaRepository<BookedSeat, Long> {
         FROM BookedSeat bs
         JOIN bs.booking b
         WHERE bs.showtime.id = :showtimeId
-        AND b.status = 'CONFIRMED'
-        AND b.paymentStatus = 'PAID'
+        AND b.status IN ('PENDING', 'CONFIRMED', 'COMPLETED')
     """)
     List<String> findBookedSeatCodesByShowtimeId(@Param("showtimeId") Long showtimeId);
 

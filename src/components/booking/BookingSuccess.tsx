@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
-import { notFound, useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './BookingSuccess.module.css';
-import { Booking } from '@/types/api';
+import { Booking, BookingStatus } from '@/types/api';
 import dayjs from '@/lib/dayjs';
 import { CheckCircle, Download, Mail, Printer, Home } from 'lucide-react';
 
@@ -13,9 +13,18 @@ interface BookingSuccessProps {
 
 export default function BookingSuccess({ booking }: BookingSuccessProps) {
     const router = useRouter();
-    if (booking.status !== "CONFIRMED") {
-        notFound();
-        return;
+    const isValidStatus =
+        booking.status === BookingStatus.CONFIRMED ||
+        booking.status === BookingStatus.COMPLETED;
+
+    useEffect(() => {
+        if (!isValidStatus) {
+            router.replace('/');
+        }
+    }, [isValidStatus, router]);
+
+    if (!isValidStatus) {
+        return null;
     }
 
     const formatShowtime = (timeStr: string | undefined) => {
