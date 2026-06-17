@@ -37,7 +37,8 @@
     <string name="profile_title">Tài khoản</string>
     <string name="user_fallback">Người dùng</string>
     <string name="elite_badge">CineLux Elite</string>
-    <string name="account_bookings_stat">28\nĐặt vé</string>
+    <string name="account_bookings_stat">0\nVé đặt</string>
+    <string name="account_bookings_stat_format">%1$d\nVé đặt</string>
     <string name="account_points_stat">1.240\nĐiểm</string>
     <string name="account_vouchers_stat">4\nƯu đãi</string>
     <string name="booking_history_title">Lịch sử đặt vé</string>

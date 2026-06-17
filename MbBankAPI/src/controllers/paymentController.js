@@ -76,9 +76,11 @@ class PaymentController {
       keys: Object.keys(response),
       responseCode: response.responseCode || response.code || response.errorCode || response.result?.responseCode,
       message: response.message || response.errorDesc || response.result?.message || response.result?.responseMessage,
-      transactionHistoryListType: Array.isArray(response.transactionHistoryList)
-        ? 'array'
-        : typeof response.transactionHistoryList
+      transactionHistoryListType: response.transactionHistoryList === null
+        ? 'null'
+        : Array.isArray(response.transactionHistoryList)
+          ? 'array'
+          : typeof response.transactionHistoryList
     };
   }
 
@@ -98,6 +100,101 @@ class PaymentController {
     this.sessionData.lastLoginTime = Date.now();
   }
 
+  resetSession() {
+    this.sessionData.sessionId = null;
+    this.sessionData.lastLoginTime = null;
+  }
+
+  isSessionInvalidResponse(response) {
+    if (!response || typeof response !== 'object') {
+      return false;
+    }
+
+    const text = [
+      response.message,
+      response.errorDesc,
+      response.result?.message,
+      response.result?.responseMessage,
+      response.transactionHistoryList?.message,
+      response.transactionHistoryList?.responseMessage
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return text.includes('session invalid') || (text.includes('session') && text.includes('invalid'));
+  }
+
+  async loginToMbBank(username, password, source) {
+    const loginResult = await mbBankService.login(username, password);
+    if (!loginResult?.sessionId) {
+      console.log(`[PAYMENT SYNC] ${source} MB login failed`, this.summarizeBankResponse(loginResult));
+      return {
+        ok: false,
+        bankResponse: loginResult
+      };
+    }
+
+    this.saveSession(loginResult.sessionId);
+    console.log(`[PAYMENT SYNC] ${source} created MB session`);
+    return {
+      ok: true,
+      sessionId: loginResult.sessionId
+    };
+  }
+
+  async getTransactionHistoryWithRetry({ username, password, accountNo, deviceIdCommon, source }) {
+    const attempts = [];
+
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      let bankSessionId;
+      if (attempt === 1 && this.isSessionValid()) {
+        bankSessionId = this.sessionData.sessionId;
+        console.log(`[PAYMENT SYNC] ${source} using cached MB session`);
+      } else {
+        const login = await this.loginToMbBank(username, password, source);
+        if (!login.ok) {
+          return {
+            ok: false,
+            bankResponse: login.bankResponse,
+            attempts
+          };
+        }
+        bankSessionId = login.sessionId;
+      }
+
+      const response = await mbBankService.getTransactionHistory(
+        bankSessionId,
+        accountNo,
+        deviceIdCommon,
+        username
+      );
+      attempts.push(this.summarizeBankResponse(response));
+
+      if (this.isSessionInvalidResponse(response)) {
+        console.log(
+          `[PAYMENT SYNC] ${source} MB session invalid on attempt ${attempt}, refreshing session`,
+          this.summarizeBankResponse(response)
+        );
+        this.resetSession();
+        if (attempt < 2) {
+          continue;
+        }
+      }
+
+      return {
+        ok: true,
+        transactions: response,
+        attempts
+      };
+    }
+
+    return {
+      ok: false,
+      attempts
+    };
+  }
+
   async initiatePayment(req, res) {
     const source = req?.query?.source || 'manual';
     const startedAt = Date.now();
@@ -115,38 +212,28 @@ class PaymentController {
         });
       }
 
-      let sessionId;
-      // Kiểm tra và sử dụng session hiện tại nếu còn hợp lệ
-      if (this.isSessionValid()) {
-        sessionId = this.sessionData.sessionId;
-        console.log('Sử dụng session hiện tại:', sessionId);
-      } else {
-        // Login to MB Bank nếu session không hợp lệ
-        const loginResult = await mbBankService.login(mbUsername, mbPassword);
-        if (!loginResult.sessionId) {
-          console.log('[PAYMENT SYNC] MB login failed', this.summarizeBankResponse(loginResult));
-          return res.status(500).json({
-            success: false,
-            message: 'Unable to connect to MB Bank',
-            data: {
-              bankResponse: this.summarizeBankResponse(loginResult)
-            }
-          });
-        }
-        sessionId = loginResult.sessionId;
-        this.saveSession(sessionId);
-        console.log('Tạo session mới:', sessionId);
+      const deviceIdCommon = `ms7jhh48-mbib-0000-0000-2024071018571948`;
+      const historyResult = await this.getTransactionHistoryWithRetry({
+        username: mbUsername,
+        password: mbPassword,
+        accountNo: mbAccountNo,
+        deviceIdCommon,
+        source
+      });
+
+      if (!historyResult.ok) {
+        return res.status(500).json({
+          success: false,
+          message: 'Unable to connect to MB Bank',
+          data: {
+            bankResponse: this.summarizeBankResponse(historyResult.bankResponse),
+            attempts: historyResult.attempts || []
+          }
+        });
       }
 
-      // Get transaction history
-      const deviceIdCommon = `ms7jhh48-mbib-0000-0000-2024071018571948`;
-      const transactions = await mbBankService.getTransactionHistory(
-        sessionId,
-        mbAccountNo,
-        deviceIdCommon,
-        mbUsername
-      );
-      if (!transactions || !transactions.transactionHistoryList) {
+      const transactions = historyResult.transactions;
+      if (!transactions || !Array.isArray(transactions.transactionHistoryList)) {
         console.log(
           `[PAYMENT SYNC] ${source} scan failed: missing transaction history`,
           this.summarizeBankResponse(transactions)
@@ -155,7 +242,8 @@ class PaymentController {
           success: false,
           message: 'Unable to get bank transaction history',
           data: {
-            bankResponse: this.summarizeBankResponse(transactions)
+            bankResponse: this.summarizeBankResponse(transactions),
+            attempts: historyResult.attempts || []
           }
         });
       }

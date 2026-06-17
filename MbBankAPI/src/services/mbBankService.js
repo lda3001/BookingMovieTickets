@@ -9,13 +9,17 @@ const loadWasm = require('../loadWasm')
 
 class MBBankService {
   constructor() {
-    this.jar = new CookieJar();
-    this.client = wrapper(axios.create({ jar: this.jar }));
     this.auth = "Basic RU1CUkVUQUlMV0VCOlNEMjM0ZGZnMzQlI0BGR0AzNHNmc2RmNDU4NDNm";
     this.wasmPath = path.resolve(__dirname, './main.wasm');
     this.urls = {
       transaction: 'https://online.mbbank.com.vn/api/retail-transactionms/transactionms/get-account-transaction-history'
     };
+    this.resetClient();
+  }
+
+  resetClient() {
+    this.jar = new CookieJar();
+    this.client = wrapper(axios.create({ jar: this.jar }));
   }
 
   async downloadWasmFile() {
@@ -92,6 +96,7 @@ class MBBankService {
 
   async login(username, password) {
     try {
+      this.resetClient();
       await this.downloadWasmFile();
 
       const base64Image = await this.getCaptcha();
