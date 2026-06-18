@@ -18,7 +18,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     
-    // Form state
+    // Form stateee
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,7 +43,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
     const formatDateForBackend = (dateStr: string): string => {
         if (!dateStr) return '';
-        // Convert from YYYY-MM-DD to dd/MM/yyyy
+        // Convert From YYYY-MM-DD to dd/MM/YYYY
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -58,7 +58,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
         try {
             if (isRegister) {
-                // Validation cho đăng ký
+                // Validation đăng ký
                 if (!email || !password) {
                     setError('Vui lòng điền đầy đủ email và mật khẩu');
                     setLoading(false);
@@ -100,7 +100,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 onLoginSuccess?.();
                 onClose();
             } else {
-                // Đăng nhập
+                // log in validation
                 if (!email || !password) {
                     setError('Vui lòng điền đầy đủ email và mật khẩu');
                     setLoading(false);
